@@ -199,18 +199,18 @@ public class Drivetrain extends SubsystemBase {
     // Convert the commanded speeds into the correct units for the drivetrain
     // double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED;
     // double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
+      double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
+      double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
 
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
     //System.out.println("xspeed drive: " + xSpeedDelivered);
     //System.out.println("yspeed drive: " + ySpeedDelivered);
 
-double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED * 0.75; // get rid of 0.75
+    double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED * 0.75; // get rid of 0.75
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(gyro.getAngle()))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
@@ -264,7 +264,8 @@ double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED * 0.75;
   }
 
   public double getAngle(){
-    return gyro.getAngle();
+    //return gyro.getYaw();
+    return -1 * gyro.getAngle();
   }
 
   public double getPitch(){

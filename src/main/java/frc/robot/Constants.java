@@ -13,7 +13,24 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+
+  public static final class IntakeConstants {
+
+  }
+
+  public static final class HopperConstants {
+
+  }
+
+  public static final class ShooterConstants {
+
+  }
+
+  public static final class ClimbConstants {
+
+  }
+
+  public static final class DrivetrainConstants {
+    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
   }
 }

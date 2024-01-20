@@ -45,7 +45,10 @@ public class Intake extends SubsystemBase {
     rollerNEO.set(0);
   }
 
-  
+  public void liftIntake()
+  {
+    
+  }
 
   @Override
   public void periodic() {

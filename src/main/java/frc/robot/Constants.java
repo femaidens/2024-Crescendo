@@ -23,7 +23,21 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-
+    //feedforward
+    public static final double kS = 0;
+    public static final double kV = 0;
+    //pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    //conversion
+    /*
+     * to obtain vcf, use dimensional analysis to convert from rpm to m/s
+     * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
+     */
+    public static final double VELOCITY_CONVERSION_FACTOR = 0;
+    //limits
+    public static final int SHOOTER_CURRENT_LIMIT = 0;
   }
 
   public static final class ClimbConstants {

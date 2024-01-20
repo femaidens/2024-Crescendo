@@ -32,7 +32,8 @@ public final class Ports {
     }
   
     public static final class ShooterPorts {
-  
+        public static final int LEFT_SHOOTER_MOTOR_PORT = 0;
+        public static final int RIGHT_SHOOTER_MOTOR_PORT = 0;
     }
   
     public static final class ClimbPorts {

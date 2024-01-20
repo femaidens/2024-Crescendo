@@ -19,7 +19,7 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-
+    public static final int HOPPER_CURRENT_LIMIT = 0;
   }
 
   public static final class ShooterConstants {

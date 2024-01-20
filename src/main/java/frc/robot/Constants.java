@@ -33,4 +33,9 @@ public final class Constants {
   public static final class DrivetrainConstants {
     // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
   }
+
+  public static final class ClimberConstants 
+  {
+    public static final double climbArmSpeed = 0.3;
+  }
 }

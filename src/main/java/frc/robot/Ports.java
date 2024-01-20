@@ -10,7 +10,11 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class Ports {
-
+    public static final class JoystickPorts {
+      public static final int OPER_JOY = 0;
+      public static final int DRIVE_JOY = 1;
+    }
+    
     public static final class DrivetrainPorts {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rathker the allowed maximum speeds

@@ -53,11 +53,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setDesiredVelocity(double speed){
+    //speed in meters/second
     double voltage = shooterFF.calculate(speed);
     double error = shooterPID.calculate(leftShooterEncoder.getVelocity(), speed);
 
     leftShooterMotor.setVoltage(voltage + error);
-  //might need to switch other way
+  //might need to switch inversion
   }
 
 

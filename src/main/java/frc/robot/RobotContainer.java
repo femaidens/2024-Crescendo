@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -28,8 +30,9 @@ public class RobotContainer {
     //private final Drivetrain drivetrain = new Drivetrain();
 
   // The driver's controller
-  XboxController operJoy = new XboxController(Ports.JoystickPorts.OPER_JOY);
-  XboxController driveJoy = new XboxController(Ports.JoystickPorts.DRIVE_JOY);
+  CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+  private final Intake intake = new Intake();
   // private final Joystick lateralJoy = new Joystick(Ports.JoystickPorts.LATERAL_JOY);
   // private final Joystick rotationJoy = new Joystick(Ports.JoystickPorts.ROTATION_JOY);
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -40,6 +43,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
 
     // auton config
     configureAuton();
@@ -78,6 +82,20 @@ public class RobotContainer {
       // new SetClawAngle(intake, IntakeConstants.clawAngle)));
 
     */
+
+    Trigger RunRollerButton = operJoy.a(); //change buttons later
+    RunRollerButton
+      .whileTrue(new RunCommand(
+        () -> intake.setRollerSpeed(Constants.IntakeConstants.rollerSpeed), intake) //need to code for when it is false
+
+   Trigger LiftIntake = operJoy.a(); //change buttons later
+    LiftIntake
+      .whenPressed(new RunCommand(
+        () -> intake.RunRoller(), intake));
+
+  }
+    
+
   }
 
   /**

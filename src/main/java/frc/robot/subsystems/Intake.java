@@ -20,6 +20,7 @@ public class Intake extends SubsystemBase {
   private static CANSparkMax rollerNEO;
   private static SparkAbsoluteEncoder encoder;
   private static PIDController intakePIDController;
+  private static boolean isRunning;
   //private double setpoint;
 
   public Intake() {
@@ -28,16 +29,25 @@ public class Intake extends SubsystemBase {
     encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
     intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
     //setpoint = encoder.getPosition();
+    isRunning = false;
   }
 
   public void setRotationSpeed(double speed)
   {
     rotationNEO.set(speed);
+    if( speed == 0)
+    {
+      isRunning = false;
+    }
+    else
+    {
+      isRunning = true;
+    }
   }
 
-  public void setRollerSpeed()
+  public void setRollerSpeed(double speed)
   {
-    rollerNEO.set(Constants.IntakeConstants.rollerSpeed);
+    rollerNEO.set(speed);
   }
 
   public void stopRotation()
@@ -45,10 +55,10 @@ public class Intake extends SubsystemBase {
     rotationNEO.set(0);
   }
 
-  public void stopRoller()
-  {
-    rollerNEO.set(0);
-  }
+  // public void stopRoller()
+  // {
+  //   rollerNEO.set(0);
+  // }
 
   public double getAbsoluteEncoderAngle()
   {
@@ -66,6 +76,11 @@ public class Intake extends SubsystemBase {
      double intakeAngleVoltage = intakePIDController.calculate(getAbsoluteEncoderAngle(), Constants.IntakeConstants.rotLowerSetPoint);
       rotationNEO.setVoltage(intakeAngleVoltage);
       System.out.println("Running Intake Lower Rotation PID");
+  }
+
+  public double getVoltage()
+  {
+    return rollerNEO.getVoltage()
   }
 
   @Override

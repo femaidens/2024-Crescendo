@@ -9,11 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
-// import frc.robot.autons.Path1;
-// import frc.robot.autons.Path2;
-// import frc.robot.autons.TestAuton1;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -29,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems
-    private final Drivetrain drivetrain = new Drivetrain();
+    //private final Drivetrain drivetrain = new Drivetrain();
 
   // The driver's controller
   XboxController operJoy = new XboxController(Ports.JoystickPorts.OPER_JOY);
@@ -44,32 +40,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    drivetrain.resetGyro();
-    drivetrain.resetEncoders();
 
     // auton config
     configureAuton();
 
     // Configure default commands
-    drivetrain.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> drivetrain.drive( // all joy.get values were prev negative
-                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
-                MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-                true, true),
-            drivetrain)
-
-        // new RunCommand(
-        //     () -> drivetrain.drive(
-        //         MathUtil.applyDeadband(-lateralJoy.getY(), 0.05),
-        //         MathUtil.applyDeadband(-lateralJoy.getX(), 0.05),
-        //         MathUtil.applyDeadband(-rotationJoy.getX(), 0.05),
-        //         true),
-        //     drivetrain)
-    );
+ 
   }
 
   public void configureAuton() {
@@ -90,18 +66,8 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driveJoy, XboxController.Button.kA.value)
-        .whileTrue(
-          new RunCommand(
-            () -> drivetrain.setX(),
-            drivetrain));
-
     // resets robot heading (gyro)
-    new JoystickButton(driveJoy, 6) // RB
-        .onTrue(
-            new RunCommand(
-              () -> drivetrain.resetGyro(),
-              drivetrain));
+
     /*
     // figure out better/more efficient way of creating/binding these cmds to buttons
     final Trigger midCubeButton = new JoystickButton(operJoy, Ports.XboxControllerMap.Button.A);

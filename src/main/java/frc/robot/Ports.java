@@ -28,11 +28,21 @@ public final class Ports {
     }
   
     public static final class HopperPorts {
-  
+        public static final int BEAM_BREAK_INTAKE_PORT = 0;
+        public static final int BEAM_BREAK_SHOOTER_PORT = 0;
+
+        public static final int HOPPER_MOTOR_PORT = 0;
     }
   
     public static final class ShooterPorts {
-  
+        public static final int LEFT_SHOOTER_MOTOR_PORT = 0;
+        public static final int RIGHT_SHOOTER_MOTOR_PORT = 0;
+
+        public static final int LEFT_SHOOTER_FLEX_PORT = 0;
+        public static final int RIGHT_SHOOTER_FLEX_PORT = 0;
+
+        public static final int SHOOTER_ANGLE_PORT = 0;
+
     }
   
     public static final class ClimbPorts {

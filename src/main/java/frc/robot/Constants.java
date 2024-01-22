@@ -38,6 +38,9 @@ public final class Constants {
     public static final double VELOCITY_CONVERSION_FACTOR = 0;
     //limits
     public static final int SHOOTER_CURRENT_LIMIT = 0;
+
+    //auto constants
+    public static final double SHOOTER_METERS_SECOND = 2.0;
   }
 
   public static final class ShooterAngleConstants {

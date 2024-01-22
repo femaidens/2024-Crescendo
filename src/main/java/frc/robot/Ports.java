@@ -4,42 +4,21 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 /** Add your docs here. */
-public final class Ports {
-    public static final class LEDPorts {
-
-    }
-
+public class Ports {
     public static final class JoystickPorts {
-        public static final int DRIVE_JOY = 0;
-        public static final int OPER_JOY = 1; // left side of laptop
+      public static final int OPER_JOY = 0;
+      public static final int DRIVE_JOY = 1;
     }
-
-    public static final class ButtonPorts {
-
-    }
-
-    public static final class DrivetrainPorts {
-
-    }
-
-    public static final class IntakePorts {
-
-    }
-  
-    public static final class HopperPorts {
-  
-    }
-  
-    public static final class ShooterPorts {
-  
-    }
-  
-    public static final class ClimbPorts {
-        public static final int armRightMotor = 0;
-        public static final int armLeftMotor = 1;
-        public static final int extendClimb = 1;
-        public static final int retractClimb = 0;
-    }
+    
+  public static final class IntakePorts{
+    public static final int rotationNEOPort = 2;
+    public static final int rollerNEOPort = 3;
+    public static final int encoderPort = 4;
+  }
 
 }

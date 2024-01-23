@@ -46,7 +46,7 @@ public class Hopper extends SubsystemBase {
       hopperMotor.set(0.5);
     }else{
       stopHopperMotor();
-      System.out.println("beam break shooter sensor activated \n")
+      System.out.println("beam break shooter sensor activated \n");
     }
   }
 

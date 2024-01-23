@@ -23,6 +23,8 @@ public class ShooterAngle extends SubsystemBase {
 
   private final PIDController shooterAnglePID;
 
+  private double setpoint;
+
   //possibly add an armFF later
 
   /** Creates a new ShooterAngle. */
@@ -40,19 +42,50 @@ public class ShooterAngle extends SubsystemBase {
 
   }
 
-  public void setShooterAngle(double angle){
+  /*
+   * @param the angle setpoint, in degrees
+   * sets the shooter angle, in degrees
+   */
+  public void setShooterAutoAngle(double angle){
     double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle);
     shooterAngleMotor.setVoltage(voltage);
+    
   }
 
+  /*
+   * auto moves the shooter up, increases angle relative to horizontal axis
+   */
   public void shooterAngleUp(){
     shooterAngleMotor.setVoltage(0.5);
   }
 
+  /*
+   * auto moves the shooter down, decreases angle relative to the horizontal
+   */
   public void shooterAngleDown(){
     shooterAngleMotor.setVoltage(-0.5);
   }
 
+  /*
+   * joystick axis changes shooter angle
+   */
+  public void setShooterAngle(double input){
+    double voltage = input * 0.7;
+    shooterAngleMotor.setVoltage(voltage);
+    setpoint = shooterAngleEncoder.getPosition();
+  }
+
+  /*
+   * maintains the angle that it was last set to
+   */
+  public void maintainAngle(){
+    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), setpoint);
+    shooterAngleMotor.setVoltage(voltage);
+  }
+
+  /*
+   * stops motor for shooter angle
+   */
   public void shooterAngleStop(){
     shooterAngleMotor.setVoltage(0);
   }

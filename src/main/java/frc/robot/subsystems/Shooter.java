@@ -88,7 +88,6 @@ public class Shooter extends SubsystemBase {
 
   }
 
-
   public void stopShooter(){
     leftShooterMotor.setVoltage(0);
   }

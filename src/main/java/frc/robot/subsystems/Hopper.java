@@ -31,6 +31,26 @@ public class Hopper extends SubsystemBase {
     
   }
 
+  public void stopHopperMotor(){
+    hopperMotor.setVoltage(0);
+  }
+
+  public void checkbeamBreakIntake(){
+    if(beamBreakIntake.get()){
+      hopperMotor.set(0.5);
+      //retract intake + stop intake motors
+  }
+
+  public void checkbeamBreakShooter(){
+    if(!beamBreakShooter.get()){
+      hopperMotor.set(0.5);
+    }else{
+      stopHopperMotor();
+      System.out.println("beam break shooter sensor activated \n")
+    }
+  }
+
+  public void 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

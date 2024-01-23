@@ -50,7 +50,6 @@ public class Hopper extends SubsystemBase {
     }
   }
 
-  public void 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

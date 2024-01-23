@@ -39,6 +39,7 @@ public class Hopper extends SubsystemBase {
     if(beamBreakIntake.get()){
       hopperMotor.set(0.5);
       //retract intake + stop intake motors
+    }
   }
 
   public void checkbeamBreakShooter(){
@@ -54,4 +55,4 @@ public class Hopper extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-}
+  }

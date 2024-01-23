@@ -7,16 +7,12 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Ports;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private static CANSparkMax rotationNEO;
+  //private static CANSparkMax rotationNEO;
   private static CANSparkMax rollerNEO;
   private static SparkAbsoluteEncoder encoder;
   // private static PIDController intakePIDController;
@@ -26,7 +22,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     //rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort, MotorType.kBrushless);
     rollerNEO = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
+    //encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
     //intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
     //setpoint = encoder.getPosition();
     // isRunning = false;

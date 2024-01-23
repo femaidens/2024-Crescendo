@@ -46,7 +46,10 @@ public final class Ports {
     }
   
     public static final class ClimbPorts {
-  
+        public static final int armRightMotor = 0;
+        public static final int armLeftMotor = 1;
+        public static final int extendClimb = 1;
+        public static final int retractClimb = 0;
     }
 
 }

@@ -74,12 +74,14 @@ public class Shooter extends SubsystemBase {
     // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
   }
 
+  /*
+   * @param the setpoint velocity of the wheels, in meters/second
+   * sets the velocity of shooter wheels in meters per second 
+   * 
+   * the inversion of the motors might need to be switched
+   */
   public void setDesiredVelocity(double speed){
-    /*
-    * speed in meters/second
-    * getRate() in WPI might be better than getVelocity if conversion in Constants doesn't work
-    * might need to switch inversion to left side
-    */
+    // getRate() in WPI might be better than getVelocity if conversion in Constants doesn't work
     double voltage = shooterFF.calculate(speed);
     double error = shooterPID.calculate(leftShooterEncoder.getVelocity(), speed);
 
@@ -88,6 +90,9 @@ public class Shooter extends SubsystemBase {
 
   }
 
+  /*
+   * stops the motors for the shooter wheels
+   */
   public void stopShooter(){
     leftShooterMotor.setVoltage(0);
   }

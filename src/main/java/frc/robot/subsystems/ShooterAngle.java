@@ -84,9 +84,17 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   /*
+   * @param the angle to compare the encoder reading with
+   * @return if the angle of the shooter is within the threshold of the setpoint
+   */
+  public boolean isAtAngle(double angle){
+    return Math.abs(angle - shooterAngleEncoder.getPosition()) < 2;
+  }
+
+  /*
    * stops motor for shooter angle
    */
-  public void shooterAngleStop(){
+  public void stopShooterAngle(){
     shooterAngleMotor.setVoltage(0);
   }
 

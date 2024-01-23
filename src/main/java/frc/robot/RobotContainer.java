@@ -38,6 +38,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    m_shooterAngle.setDefaultCommand(
+      new RunCommand(
+        () -> m_shooterAngle.maintainAngle(), m_shooterAngle)
+    );
   }
 
   /**
@@ -70,7 +75,10 @@ public class RobotContainer {
           () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle
         ))
         .onFalse(new RunCommand(
-          () -> m_shooterAngle.shooterAngleStop(), m_shooterAngle));
+          () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
+
+    //01/23/2024 stacky is sick 
+    
   }
 
   /**

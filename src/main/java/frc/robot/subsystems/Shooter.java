@@ -95,6 +95,14 @@ public class Shooter extends SubsystemBase {
    */
   public void stopShooter(){
     leftShooterMotor.setVoltage(0);
+    //leftShooterFlex.setVoltage(0);
+  }
+
+  /*
+   * @return the velocity of the shooter
+   */
+  public double getShooterSpeed(){
+    return leftShooterEncoder.getVelocity();
   }
 
   @Override

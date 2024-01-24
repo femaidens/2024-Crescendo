@@ -4,24 +4,29 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterVelocity extends Command {
   private final Shooter shooter;
   private final double speed; //in meters per second
+  private final Timer timer;  
   
   /** Creates a new ShooterVelocity. */
   public ShooterVelocity(Shooter  m_shooter, double m_speed) {
     shooter = m_shooter;
     speed = m_speed;
+    timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,12 +36,14 @@ public class ShooterVelocity extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.stopShooter();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //true when note leaves the shooter
-    return false;
+    //should be true when note leaves the shooter
+    return timer.hasElapsed(10.0);
   }
 }

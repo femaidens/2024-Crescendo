@@ -34,11 +34,11 @@ public class RobotContainer {
   private CommandXboxController m_driverController = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
   private CommandXboxController m_operController = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
 
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
 
     m_shooterAngle.setDefaultCommand(
       new RunCommand(

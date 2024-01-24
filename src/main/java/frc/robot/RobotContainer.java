@@ -8,6 +8,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.*;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterAngle;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -41,7 +42,9 @@ public class RobotContainer {
 
     m_shooterAngle.setDefaultCommand(
       new RunCommand(
-        () -> m_shooterAngle.maintainAngle(), m_shooterAngle)
+        () -> m_shooterAngle.setShooterAngle(
+          MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
+          m_shooterAngle)
     );
   }
 

@@ -36,6 +36,7 @@ public class ShooterVelocity extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //true when note leaves the shooter
     return false;
   }
 }

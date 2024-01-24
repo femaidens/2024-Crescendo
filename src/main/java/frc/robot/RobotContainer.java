@@ -46,6 +46,11 @@ public class RobotContainer {
           MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
           m_shooterAngle)
     );
+
+    m_shooter.setDefaultCommand(
+      new RunCommand(
+        () -> m_shooter.stopShooter(), m_shooter)
+    );
   }
 
   /**

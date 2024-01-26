@@ -53,7 +53,7 @@ public final class Constants {
   public static final class IntakeConstants{
     public static final double rotationSpeed = 0.5;
     public static final double rollerSpeed = 0.5;
-
+  }
     public static final class PIDConstants{
       public static final double kP = 0;
       public static final double kI = 0;
@@ -107,6 +107,5 @@ public final class Constants {
   public static final class ClimberConstants 
   {
     public static final double climbArmSpeed = 0.3;
-  }
   }
 }

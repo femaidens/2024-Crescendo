@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,6 +33,8 @@ public class MaxSwerveModule {
   private final SparkPIDController m_drivingPIDController;
   private final SparkPIDController m_turningPIDController;
 
+  private final SimpleMotorFeedforward driveFF;
+
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
@@ -57,6 +60,12 @@ public class MaxSwerveModule {
     m_turningPIDController = m_turningSparkMax.getPIDController();
     m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
     m_turningPIDController.setFeedbackDevice(m_turningEncoder);
+
+    driveFF = new SimpleMotorFeedforward(
+      DrivetrainConstants.ModuleConstants.kDrivingFFkS, 
+      DrivetrainConstants.ModuleConstants.kDrivingFFkV,
+      DrivetrainConstants.ModuleConstants.kDrivingFFkA
+      );
 
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
@@ -87,7 +96,6 @@ public class MaxSwerveModule {
     m_drivingPIDController.setP(DrivetrainConstants.ModuleConstants.kDrivingP);
     m_drivingPIDController.setI(DrivetrainConstants.ModuleConstants.kDrivingI);
     m_drivingPIDController.setD(DrivetrainConstants.ModuleConstants.kDrivingD);
-    m_drivingPIDController.setFF(DrivetrainConstants.ModuleConstants.kDrivingFF);
     m_drivingPIDController.setOutputRange(DrivetrainConstants.ModuleConstants.kDrivingMinOutput,
         DrivetrainConstants.ModuleConstants.kDrivingMaxOutput);
 
@@ -96,7 +104,6 @@ public class MaxSwerveModule {
     m_turningPIDController.setP(DrivetrainConstants.ModuleConstants.kTurningP);
     m_turningPIDController.setI(DrivetrainConstants.ModuleConstants.kTurningI);
     m_turningPIDController.setD(DrivetrainConstants.ModuleConstants.kTurningD);
-    m_turningPIDController.setFF(DrivetrainConstants.ModuleConstants.kTurningFF);
     m_turningPIDController.setOutputRange(DrivetrainConstants.ModuleConstants.kTurningMinOutput,
         DrivetrainConstants.ModuleConstants.kTurningMaxOutput);
 
@@ -165,6 +172,11 @@ public class MaxSwerveModule {
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
     m_drivingEncoder.setPosition(0);
+  }
+
+  public void setDriveSpeed(double speed) {
+    double driveFFCalculate = driveFF.calculate(speed);
+    double driveVoltage = driveFFCalculate;
   }
 
   public void setDriveVoltage(double voltage) {

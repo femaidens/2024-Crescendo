@@ -70,21 +70,6 @@ public class RobotContainer {
         //     drivetrain)
     );
 
-    Trigger driveQuasistaticButton = driveJoy.x();
-    driveQuasistaticButton.onTrue(
-      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
-
-    Trigger driveDynamicButton = driveJoy.b();
-    driveDynamicButton.onTrue(
-      drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
-
-    Trigger turnQuasistaticButton = driveJoy.a();
-    turnQuasistaticButton.onTrue(
-      drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
-
-    Trigger turnDynamicButton = driveJoy.y();
-    turnDynamicButton.onTrue(
-      drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
 
   public void configureAuton() {
@@ -106,15 +91,21 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Trigger extendClimbButton = operJoy.a();
-    extendClimbButton
-      .whileTrue(new InstantCommand(
-        () -> drivetrain.setX(), drivetrain));
+    Trigger driveQuasistaticButton = driveJoy.x();
+    driveQuasistaticButton.onTrue(
+      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger resetGyroButton = operJoy.rightBumper();
-    resetGyroButton
-      .onTrue(new RunCommand(
-        () -> drivetrain.resetGyro(), drivetrain));
+    Trigger driveDynamicButton = driveJoy.b();
+    driveDynamicButton.onTrue(
+      drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnQuasistaticButton = driveJoy.a();
+    turnQuasistaticButton.onTrue(
+      drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnDynamicButton = driveJoy.y();
+    turnDynamicButton.onTrue(
+      drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
 
     /*
     // figure out better/more efficient way of creating/binding these cmds to buttons

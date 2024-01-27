@@ -92,19 +92,19 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     Trigger driveQuasistaticButton = driveJoy.x();
-    driveQuasistaticButton.onTrue(
+    driveQuasistaticButton.whileTrue(
       drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
     Trigger driveDynamicButton = driveJoy.b();
-    driveDynamicButton.onTrue(
+    driveDynamicButton.whileTrue(
       drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
 
     Trigger turnQuasistaticButton = driveJoy.a();
-    turnQuasistaticButton.onTrue(
+    turnQuasistaticButton.whileTrue(
       drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
 
     Trigger turnDynamicButton = driveJoy.y();
-    turnDynamicButton.onTrue(
+    turnDynamicButton.whileTrue(
       drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
 
     /*

@@ -333,8 +333,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Command driveQuasistatic(SysIdRoutine.Direction direction) {
-    SysIdRoutine.Direction direction2 = direction;
-    return driveRoutine.quasistatic(direction2);
+    return driveRoutine.quasistatic(direction);
   }
 
   public Command turnQuasistatic(SysIdRoutine.Direction direction) {

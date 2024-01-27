@@ -74,15 +74,15 @@ public class RobotContainer {
     driveQuasistaticButton.onTrue(
       drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger driveDynamicButton = driveJoy.x();
+    Trigger driveDynamicButton = driveJoy.b();
     driveDynamicButton.onTrue(
       drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
 
-    Trigger turnQuasistaticButton = driveJoy.x();
+    Trigger turnQuasistaticButton = driveJoy.a();
     turnQuasistaticButton.onTrue(
       drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger turnDynamicButton = driveJoy.x();
+    Trigger turnDynamicButton = driveJoy.y();
     turnDynamicButton.onTrue(
       drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }

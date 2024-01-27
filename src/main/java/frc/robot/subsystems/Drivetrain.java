@@ -14,6 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
@@ -21,8 +23,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import static edu.wpi.first.units.Units.Volts;
 
 public class Drivetrain extends SubsystemBase {
   // Create MAXSwerveModules
@@ -46,6 +51,16 @@ public class Drivetrain extends SubsystemBase {
     DrivetrainPorts.REAR_RIGHT_DRIVE,
     DrivetrainPorts.REAR_RIGHT_TURNING,
     DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+
+  private final SysIdRoutine driveRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+      volts -> rearLeft.setTurnVoltage(volts.in(Volts)), 
+      null, this));
+
+  private final SysIdRoutine turnRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+      volts -> rearLeft.setTurnVoltage(volts.in(Volts)), null, this));
+
 
   // The gyro sensor
   private final AHRS gyro = new AHRS();
@@ -315,5 +330,22 @@ public class Drivetrain extends SubsystemBase {
   // returns turn rate (deg/s)
   public double getTurnRate() {
     return gyro.getRate() * (DrivetrainConstants.DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+  }
+
+  public Command driveQuasistatic(SysIdRoutine.Direction direction) {
+    SysIdRoutine.Direction direction2 = direction;
+    return driveRoutine.quasistatic(direction2);
+  }
+
+  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
+    return turnRoutine.quasistatic(direction);
+  }
+
+  public Command driveDynamic(SysIdRoutine.Direction direction) {
+    return driveRoutine.dynamic(direction);
+  }
+
+  public Command turnDynamic(SysIdRoutine.Direction direction) {
+    return turnRoutine.dynamic(direction);
   }
 }

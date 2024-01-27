@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 
 /*
@@ -68,6 +69,22 @@ public class RobotContainer {
         //         true),
         //     drivetrain)
     );
+
+    Trigger driveQuasistaticButton = driveJoy.x();
+    driveQuasistaticButton.onTrue(
+      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
+
+    Trigger driveDynamicButton = driveJoy.x();
+    driveDynamicButton.onTrue(
+      drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnQuasistaticButton = driveJoy.x();
+    turnQuasistaticButton.onTrue(
+      drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnDynamicButton = driveJoy.x();
+    turnDynamicButton.onTrue(
+      drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
 
   public void configureAuton() {

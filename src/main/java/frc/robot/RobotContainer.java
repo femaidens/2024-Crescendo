@@ -74,7 +74,7 @@ public class RobotContainer {
   }
     public void configureAuton() {
       SmartDashboard.putData("Choose Auto: ", autonChooser);
-
+      //autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(m_shooter, m_shooterAngle));
     // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle, armLateral));
     // autonChooser.addOption("p2", new Path2(drivetrain));
     // autonChooser.addOption("test auton", new TestAuton1(drivetrain, intake, armAngle, armLateral));

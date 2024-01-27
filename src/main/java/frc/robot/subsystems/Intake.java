@@ -78,9 +78,9 @@ public class Intake extends SubsystemBase {
       System.out.println("Running Intake Lower Rotation PID");
   }
 
-  public double getVoltage()
+  public boolean getRollerStatus()
   {
-    return rollerNEO.getVoltage()
+    return isRunning;
   }
 
   @Override

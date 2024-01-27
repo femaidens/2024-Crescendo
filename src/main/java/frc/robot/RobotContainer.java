@@ -12,7 +12,6 @@ import frc.robot.Constants.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -26,9 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-    //private final Drivetrain drivetrain = new Drivetrain();
-
+  // The robot's subsystems and commands are defined here...
   // The driver's controller
   CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
   CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
@@ -88,10 +85,10 @@ public class RobotContainer {
       .whileTrue(new RunCommand(
         () -> intake.setRollerSpeed(Constants.IntakeConstants.rollerSpeed), intake)); //need to code for when it is false
 
-   Trigger LiftIntake = operJoy.a(); //change buttons later
+   /*Trigger LiftIntake = operJoy.a(); //change buttons later
     LiftIntake
       .whileTrue(new RunCommand(
-        () -> intake.liftIntake(), intake));
+        () -> intake.liftIntake(), intake));*/
 
   }
 

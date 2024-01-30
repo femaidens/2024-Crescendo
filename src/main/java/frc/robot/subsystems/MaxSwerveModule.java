@@ -15,6 +15,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+
+import static edu.wpi.first.units.Units.RPM;
 
 import java.util.function.Consumer;
 
@@ -176,7 +179,7 @@ public class MaxSwerveModule {
 
   public void setDriveSpeed(double speed) {
     double driveFFCalculate = driveFF.calculate(speed);
-    double driveVoltage = driveFFCalculate;
+    double driveVoltage = driveFFCalculate + m_drivingPIDController.setReference(0.5, ControlType.kVoltage);
   }
 
   public void setDriveVoltage(double voltage) {

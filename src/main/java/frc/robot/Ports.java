@@ -20,5 +20,39 @@ public class Ports {
     public static final int rollerNEOPort = 3;
     public static final int encoderPort = 4;
   }
+    
+
+    public static final class ButtonPorts {
+
+    }
+
+    public static final class DrivetrainPorts {
+
+    }
+  
+    public static final class HopperPorts {
+        public static final int BEAM_BREAK_INTAKE_PORT = 0;
+        public static final int BEAM_BREAK_SHOOTER_PORT = 0;
+
+        public static final int HOPPER_MOTOR_PORT = 0;
+    }
+  
+    public static final class ShooterPorts {
+        public static final int LEFT_SHOOTER_MOTOR_PORT = 0;
+        public static final int RIGHT_SHOOTER_MOTOR_PORT = 0;
+
+        public static final int LEFT_SHOOTER_FLEX_PORT = 0;
+        public static final int RIGHT_SHOOTER_FLEX_PORT = 0;
+
+        public static final int SHOOTER_ANGLE_PORT = 0;
+
+    }
+  
+    public static final class ClimbPorts {
+        public static final int armRightMotor = 0;
+        public static final int armLeftMotor = 1;
+        public static final int extendClimb = 1;
+        public static final int retractClimb = 0;
+    }
 
 }

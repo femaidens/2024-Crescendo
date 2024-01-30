@@ -79,6 +79,9 @@ public final class Constants {
     public static final double kDrivingFFkS = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingFFkA = 0;
     public static final double kDrivingFFkV = 0; //adjust
+    public static final double kTurningFFkS = 1 / kDriveWheelFreeSpeedRps;
+    public static final double kTurningFFkA = 0;
+    public static final double kTurningFFkV = 0; //adjust
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 

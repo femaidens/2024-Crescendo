@@ -53,7 +53,7 @@ public final class Constants {
   public static final class IntakeConstants{
     public static final double rotationSpeed = 0.5;
     public static final double rollerSpeed = 0.5;
-
+  }
     public static final class PIDConstants{
       public static final double kP = 0;
       public static final double kI = 0;
@@ -62,5 +62,50 @@ public final class Constants {
 
     public static final double rotLiftSetPoint = 5;
     public static final double rotLowerSetPoint = 0;
+  public static final class HopperConstants {
+    public static final int HOPPER_CURRENT_LIMIT = 0;
+  }
+
+  public static final class ShooterConstants {
+    //feedforward
+    public static final double kS = 0;
+    public static final double kV = 0;
+    //pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    //conversion
+    /*
+     * to obtain vcf, use dimensional analysis to convert from rpm to m/s
+     * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
+     */
+    public static final double VELOCITY_CONVERSION_FACTOR = 0;
+    //limits
+    public static final int SHOOTER_CURRENT_LIMIT = 0;
+
+    //auto constants
+    public static final double SHOOTER_METERS_SECOND = 2.0;
+  }
+
+  public static final class ShooterAngleConstants {
+    //pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    //conversion
+    public static final double POSITION_CONVERSION_FACTOR = 360;
+    //limits
+    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
+    //autos
+    public static final double SHOOTER_ANGLE_UP = 60;
+  }
+
+  public static final class DrivetrainConstants {
+    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
+  }
+
+  public static final class ClimberConstants 
+  {
+    public static final double climbArmSpeed = 0.3;
   }
 }

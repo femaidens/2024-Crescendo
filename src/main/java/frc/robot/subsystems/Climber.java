@@ -32,15 +32,15 @@ public class Climber extends SubsystemBase {
   public static void extendClimbArm()
   {
     if(!topSwitch.get()){
-      armRight.set(0);
-      armLeft.set(0);
-      System.out.println("bottom limit activated");
-    }
-    else
-    {
       armRight.set(Constants.ClimberConstants.climbArmSpeed);
       armLeft.set(-Constants.ClimberConstants.climbArmSpeed);
       System.out.println("extending arm");
+    }
+    else
+    {
+      armRight.set(0);
+      armLeft.set(0);
+      System.out.println("top limit switch hit!");
     }
     
   }
@@ -48,14 +48,16 @@ public class Climber extends SubsystemBase {
   public static void retractClimbArm()
   {
     if(!botSwitch.get()){
-      armRight.set(0);
-      armLeft.set(0);
-      System.out.println("top limit activated");
+      armRight.set(-Constants.ClimberConstants.climbArmSpeed);
+      armLeft.set(Constants.ClimberConstants.climbArmSpeed);
+      System.out.println("retracting arm");
+      
     }
     else
     {
-      armRight.set(-Constants.ClimberConstants.climbArmSpeed);
-      armLeft.set(Constants.ClimberConstants.climbArmSpeed);
+      armRight.set(0);
+      armLeft.set(0);
+      System.out.println("bottom switch activated!");
     }
     
   }

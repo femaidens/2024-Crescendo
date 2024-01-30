@@ -35,15 +35,15 @@ public class Ports {
 
 
     // SPARK MAX CAN IDs
-    public static final int FRONT_LEFT_DRIVE = 11;
-    public static final int REAR_LEFT_DRIVE = 13;
-    public static final int FRONT_RIGHT_DRIVE = 15;
-    public static final int REAR_RIGHT_DRIVE = 17;
+    public static final int FRONT_LEFT_DRIVE = 3;
+    public static final int REAR_LEFT_DRIVE = 4;
+    public static final int FRONT_RIGHT_DRIVE = 5;
+    public static final int REAR_RIGHT_DRIVE = 6;
 
-    public static final int FRONT_LEFT_TURNING = 10;
-    public static final int REAR_LEFT_TURNING = 12;
-    public static final int FRONT_RIGHT_TURNING = 14;
-    public static final int REAR_RIGHT_TURNING = 16;
+    public static final int FRONT_LEFT_TURNING = 7;
+    public static final int REAR_LEFT_TURNING = 8;
+    public static final int FRONT_RIGHT_TURNING = 1;
+    public static final int REAR_RIGHT_TURNING = 2;
 
     public static final boolean kGyroReversed = false;
   }

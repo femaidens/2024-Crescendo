@@ -6,7 +6,11 @@ package frc.robot;
 
 import frc.robot.Ports.*;
 import frc.robot.subsystems.Drivetrain;
+
+import org.littletonrobotics.urcl.URCL;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +52,9 @@ public class RobotContainer {
 
     // auton config
     configureAuton();
+
+    // DataLogManager.start();
+    // URCL.start();
 
     // Configure default commands
     drivetrain.setDefaultCommand(

@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import static edu.wpi.first.units.Units.Volts;
+
 import java.util.List;
 
 public class Drivetrain extends SubsystemBase {
@@ -53,11 +54,11 @@ public class Drivetrain extends SubsystemBase {
     DrivetrainPorts.REAR_RIGHT_TURNING,
     DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
-  private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);;
+    private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
   private final SysIdRoutine driveRoutine = new SysIdRoutine(
     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-      volts -> modules.forEach(s -> s.setDriveVoltage(volts.in(Volts))), 
+      volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Volts))), 
       null, this));
 
   private final SysIdRoutine turnRoutine = new SysIdRoutine(

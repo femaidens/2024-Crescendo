@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -37,6 +38,7 @@ public class RobotContainer {
   CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
   CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
   private final Intake intake = new Intake();
+  private final Climber climber = new Climber();
   // private final Joystick lateralJoy = new Joystick(Ports.JoystickPorts.LATERAL_JOY);
   // private final Joystick rotationJoy = new Joystick(Ports.JoystickPorts.ROTATION_JOY);
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();

@@ -10,11 +10,11 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterVelocity extends Command {
   private final Shooter shooter;
-  private final double speed; //in meters per second
-  private final Timer timer;  
-  
+  private final double speed; // in meters per second
+  private final Timer timer;
+
   /** Creates a new ShooterVelocity. */
-  public ShooterVelocity(Shooter  m_shooter, double m_speed) {
+  public ShooterVelocity(Shooter m_shooter, double m_speed) {
     shooter = m_shooter;
     speed = m_speed;
     timer = new Timer();
@@ -43,7 +43,7 @@ public class ShooterVelocity extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //should be true when note leaves the shooter
+    // should be true when note leaves the shooter
     return timer.hasElapsed(10.0);
   }
 }

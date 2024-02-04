@@ -20,10 +20,8 @@ public class SpinShooterUp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelCommandGroup(
-        new ShooterVelocity(m_shooter, ShooterConstants.SHOOTER_METERS_SECOND),
-        new SetShooterAngle(m_ShooterAngle, 60)
-      )
-    );
+        new ParallelCommandGroup(
+            new ShooterVelocity(m_shooter, ShooterConstants.SHOOTER_METERS_SECOND),
+            new SetShooterAngle(m_ShooterAngle, 60)));
   }
 }

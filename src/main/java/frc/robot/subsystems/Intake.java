@@ -17,11 +17,9 @@ import frc.robot.Ports.HopperPorts;
 
 public class Intake extends SubsystemBase {
   //intake
-  // private static CANSparkMax rotationNEO;
   private static CANSparkMax rollerNEO;
   private static SparkAbsoluteEncoder encoder;
-  // private static PIDController intakePIDController;
-  private static boolean isRunning;
+  // private static boolean isRunning;
   //private double setpoint;
 
   //hopper
@@ -31,13 +29,8 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     //intake
-    // rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort,
-    // MotorType.kBrushless);
     rollerNEO = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    //encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
-    //intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
-    //setpoint = encoder.getPosition();
-    isRunning = false;
+    // isRunning = false;
 
     //hopper
     beamBreakIntake = new DigitalInput(HopperPorts.BEAM_BREAK_INTAKE_PORT);
@@ -47,55 +40,19 @@ public class Intake extends SubsystemBase {
     hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
   }
 
-  // public void setRotationSpeed(double speed)
-  // {
-  // rotationNEO.set(speed);
-  // if( speed == 0)
-  // {
-  // isRunning = false;
-  // }
-  // else
-  // {
-  // isRunning = true;
-  // }
-  // }
-
   //intake methods
   public void setRollerSpeed(double speed) {
     rollerNEO.set(speed);
   }
 
-  // public void stopRotation()
-  // {
-  // rotationNEO.set(0);
-  // }
-
   public double getAbsoluteEncoderAngle() {
     return encoder.getPosition();
   }
 
-  // public void liftIntake()
+  // public boolean getRollerStatus()
   // {
-  // double intakeAngleVoltage =
-  // intakePIDController.calculate(getAbsoluteEncoderAngle(),
-  // Constants.IntakeConstants.rotLiftSetPoint);
-  // rotationNEO.setVoltage(intakeAngleVoltage);
-  // System.out.println("Running Intake Lift Rotation PID");
+  //   return isRunning;
   // }
-
-  // public void lowerIntake()
-  // {
-  // double intakeAngleVoltage =
-  // intakePIDController.calculate(getAbsoluteEncoderAngle(),
-  // Constants.IntakeConstants.rotLowerSetPoint);
-  // rotationNEO.setVoltage(intakeAngleVoltage);
-  // System.out.println("Running Intake Lower Rotation PID");
-  // }
-
-  public boolean getRollerStatus()
-  {
-    return isRunning;
-  }
 
   //hopper methods
   public void stopHopperMotor() {

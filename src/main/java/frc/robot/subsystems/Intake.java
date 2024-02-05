@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
 public class Intake extends SubsystemBase {
-  /** Creates a new Intake. */
   // private static CANSparkMax rotationNEO;
   private static CANSparkMax rollerNEO;
   private static SparkAbsoluteEncoder encoder;

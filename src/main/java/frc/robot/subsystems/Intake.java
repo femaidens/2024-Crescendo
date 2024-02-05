@@ -6,11 +6,17 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.Ports;
+import frc.robot.Ports.HopperPorts;
 
 public class Intake extends SubsystemBase {
+  //intake
   // private static CANSparkMax rotationNEO;
   private static CANSparkMax rollerNEO;
   private static SparkAbsoluteEncoder encoder;
@@ -18,7 +24,13 @@ public class Intake extends SubsystemBase {
   private static boolean isRunning;
   //private double setpoint;
 
+  //hopper
+  private final DigitalInput beamBreakIntake;
+  private final DigitalInput beamBreakShooter;
+  private final CANSparkMax hopperMotor;
+
   public Intake() {
+    //intake
     // rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort,
     // MotorType.kBrushless);
     rollerNEO = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
@@ -26,6 +38,13 @@ public class Intake extends SubsystemBase {
     //intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
     //setpoint = encoder.getPosition();
     isRunning = false;
+
+    //hopper
+    beamBreakIntake = new DigitalInput(HopperPorts.BEAM_BREAK_INTAKE_PORT);
+    beamBreakShooter = new DigitalInput(HopperPorts.BEAM_BREAK_SHOOTER_PORT);
+    hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR_PORT, MotorType.kBrushless);
+    hopperMotor.setIdleMode(IdleMode.kBrake);
+    hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
   }
 
   // public void setRotationSpeed(double speed)
@@ -41,6 +60,7 @@ public class Intake extends SubsystemBase {
   // }
   // }
 
+  //intake methods
   public void setRollerSpeed(double speed) {
     rollerNEO.set(speed);
   }
@@ -75,6 +95,27 @@ public class Intake extends SubsystemBase {
   public boolean getRollerStatus()
   {
     return isRunning;
+  }
+
+  //hopper methods
+  public void stopHopperMotor() {
+    hopperMotor.setVoltage(0);
+  }
+
+  public void checkbeamBreakIntake() {
+    if (beamBreakIntake.get()) {
+      hopperMotor.set(0.5);
+      // retract intake + stop intake motors
+    }
+  }
+
+  public void checkbeamBreakShooter() {
+    if (!beamBreakShooter.get()) {
+      hopperMotor.set(0.5);
+    } else {
+      stopHopperMotor();
+      System.out.println("beam break shooter sensor activated \n");
+    }
   }
 
   @Override

@@ -52,6 +52,12 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final double rotationSpeed = 0.5;
     public static final double rollerSpeed = 0.5;
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double VELOCITY_CONVERSION_FACTOR = 0.0;
   }
 
   public static final class PIDConstants {

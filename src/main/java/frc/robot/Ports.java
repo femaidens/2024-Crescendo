@@ -30,8 +30,10 @@ public class Ports {
   }
 
   public static final class HopperPorts {
-    public static final int BEAM_BREAK_INTAKE_PORT = 0;
-    public static final int BEAM_BREAK_SHOOTER_PORT = 0;
+    public static final int BEAM_INTAKE_RECEIVER_PORT = 0;
+    public static final int BEAM_INTAKE_EMITTER_PORT = 0;
+    public static final int BEAM_SHOOTER_RECEIVER_PORT = 0;
+    public static final int BEAM_SHOOTER_EMITTER_PORT = 0;
 
     public static final int HOPPER_MOTOR_PORT = 0;
   }

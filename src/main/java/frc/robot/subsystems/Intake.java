@@ -30,10 +30,10 @@ public class Intake extends SubsystemBase {
   private static SimpleMotorFeedforward ff;
 
   //hopper
-  private DigitalInput intakeBeamReceiver;
-  private DigitalOutput intakeBeamEmitter;
-  private final DigitalInput shooterBeamReceiver;
-  private final DigitalOutput shooterBeamEmitter;
+  // private DigitalInput intakeBeamReceiver;
+  // private DigitalOutput intakeBeamEmitter;
+  // private final DigitalInput shooterBeamReceiver;
+  // private final DigitalOutput shooterBeamEmitter;
   private final CANSparkMax hopperMotor;
 
   public Intake() {
@@ -46,10 +46,10 @@ public class Intake extends SubsystemBase {
 
 
     //hopper
-    intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
-    intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
-    shooterBeamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
-    shooterBeamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
+    // intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
+    // // intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
+    // shooterBeamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
+    // shooterBeamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
     hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR_PORT, MotorType.kBrushless);
     hopperMotor.setIdleMode(IdleMode.kBrake);
     hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
@@ -81,23 +81,26 @@ public class Intake extends SubsystemBase {
     intakeMotor.setVoltage(0);
   }
 
-  public void disableBeam() {
-    intakeBeamEmitter.close();
-    intakeBeamReceiver.close();
-  }
+  // public void disableBeam() {
+  //   intakeBeamEmitter.close();
+  //   intakeBeamReceiver.close();
+  // }
 
-  public void enableBeam() {
-    intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
-    intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
-  }
+  // public void enableBeam() {
+  //   intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
+  //   intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
+  // }
 
-  public boolean getStatus() {
-   if( intakeBeamEmitter.get() && intakeBeamReceiver.get())
-   {
-    return true;
-   }
-   return false;
-  }
+  // public boolean getStatus() {
+  //  if( intakeBeamEmitter.get() && intakeBeamReceiver.get())
+  //  {
+  //   System.out.println("beam break uninterrupted");
+  //   return true;
+  //  }
+  //   System.out.println("beam break interrupted");
+  //   return false;
+  // }
+
   // public void checkBeamBreakIntake() {
   //   if (intakeBeamReceiver.get() && intakeBeamEmitter.get()) {
   //     hopperMotor.set(0.5);

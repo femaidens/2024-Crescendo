@@ -42,7 +42,6 @@ public class Intake extends SubsystemBase {
     ff = new SimpleMotorFeedforward(Constants.IntakeConstants.kS, Constants.IntakeConstants.kV);
     intakeEncoder.setVelocityConversionFactor(Constants.IntakeConstants.VELOCITY_CONVERSION_FACTOR);
 
-
     //hopper
     beamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
     beamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
@@ -68,7 +67,7 @@ public class Intake extends SubsystemBase {
   }
 
   //hopper or beam break methods
-  
+
   public void disableBeam() {
     beamEmitter.set(false);
   }

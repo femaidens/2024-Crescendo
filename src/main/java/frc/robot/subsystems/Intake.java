@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase {
 
   //enableBeam, disableBeam, getBeamStatus
   //intake methods
-  public void setRollerSpeed(double speed) {
+  public void setIntakeSpeed(double speed) {
     intakeMotor.set(speed);
   }
 

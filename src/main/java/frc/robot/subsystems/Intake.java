@@ -30,10 +30,8 @@ public class Intake extends SubsystemBase {
   private static SimpleMotorFeedforward ff;
 
   //hopper
-  // private DigitalInput intakeBeamReceiver;
-  // private DigitalOutput intakeBeamEmitter;
-  // private final DigitalInput shooterBeamReceiver;
-  // private final DigitalOutput shooterBeamEmitter;
+  private final DigitalInput beamReceiver;
+  private final DigitalOutput beamEmitter;
   private final CANSparkMax hopperMotor;
 
   public Intake() {
@@ -46,16 +44,13 @@ public class Intake extends SubsystemBase {
 
 
     //hopper
-    // intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
-    // // intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
-    // shooterBeamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
-    // shooterBeamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
+    beamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
+    beamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
     hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR_PORT, MotorType.kBrushless);
     hopperMotor.setIdleMode(IdleMode.kBrake);
     hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
   }
 
-  //enableBeam, disableBeam, getBeamStatus
   //intake methods
   public void setIntakeSpeed(double speed) {
     intakeMotor.set(speed);
@@ -73,33 +68,26 @@ public class Intake extends SubsystemBase {
   }
 
   //hopper or beam break methods
-  public void stopHopperMotor() {
-    hopperMotor.setVoltage(0);
+  
+  public void disableBeam() {
+    beamEmitter.set(false);
   }
 
-  public void stopIntakeMotor() {
-    intakeMotor.setVoltage(0);
+  public void enableBeam() {
+    beamEmitter.set(true);
   }
 
-  // public void disableBeam() {
-  //   intakeBeamEmitter.close();
-  //   intakeBeamReceiver.close();
-  // }
-
-  // public void enableBeam() {
-  //   intakeBeamReceiver = new DigitalInput(HopperPorts.BEAM_INTAKE_RECEIVER_PORT);
-  //   intakeBeamEmitter = new DigitalOutput(HopperPorts.BEAM_INTAKE_EMITTER_PORT);
-  // }
-
-  // public boolean getStatus() {
-  //  if( intakeBeamEmitter.get() && intakeBeamReceiver.get())
-  //  {
-  //   System.out.println("beam break uninterrupted");
-  //   return true;
-  //  }
-  //   System.out.println("beam break interrupted");
-  //   return false;
-  // }
+  public boolean getStatus() {
+   if( beamEmitter.get() && beamReceiver.get())
+   {
+    System.out.println("beam break uninterrupted");
+    return true;
+   }
+    System.out.println("beam break interrupted");
+    intakeMotor.set(0);
+    hopperMotor.set(0);
+    return false;
+  }
 
   // public void checkBeamBreakIntake() {
   //   if (intakeBeamReceiver.get() && intakeBeamEmitter.get()) {

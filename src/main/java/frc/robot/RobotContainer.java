@@ -4,18 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.*;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.ShooterAngle;
+import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 
 /*
@@ -33,21 +28,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // The driver's controller
-  CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-  CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private final Intake intake = new Intake();
-  // private final Joystick lateralJoy = new Joystick(Ports.JoystickPorts.LATERAL_JOY);
-  // private final Joystick rotationJoy = new Joystick(Ports.JoystickPorts.ROTATION_JOY);
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-  private final Shooter m_shooter = new Shooter();
-  private final ShooterAngle m_shooterAngle = new ShooterAngle();
+  private final Drivetrain drivetrain = new Drivetrain();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // private final CommandXboxController driveJoy =
   //     new CommandXboxController(JoystickPorts.OPER_JOY);
-  private CommandXboxController m_driverController = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController m_operController = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -59,18 +47,6 @@ public class RobotContainer {
     // auton config
     configureAuton();
 
-    // Configure default commands
-    m_shooterAngle.setDefaultCommand(
-      new RunCommand(
-        () -> m_shooterAngle.setShooterAngle(
-          MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
-          m_shooterAngle)
-    );
-
-    m_shooter.setDefaultCommand(
-      new RunCommand(
-        () -> m_shooter.stopShooter(), m_shooter)
-    );
   }
     public void configureAuton() {
       SmartDashboard.putData("Choose Auto: ", autonChooser);
@@ -101,7 +77,22 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureButtonBindings() {
-    // resets robot heading (gyro)
+
+    Trigger driveQuasistaticButton = driveJoy.x();
+    driveQuasistaticButton.whileTrue(
+      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
+
+    Trigger driveDynamicButton = driveJoy.b();
+    driveDynamicButton.whileTrue(
+      drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnQuasistaticButton = driveJoy.a();
+    turnQuasistaticButton.whileTrue(
+      drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+
+    Trigger turnDynamicButton = driveJoy.y();
+    turnDynamicButton.whileTrue(
+      drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
 
     /*
     // figure out better/more efficient way of creating/binding these cmds to buttons
@@ -112,33 +103,33 @@ public class RobotContainer {
       // new SetArmExtension(armLateral, PositionConfig.highConeExtend), 
       // new SetClawAngle(intake, IntakeConstants.clawAngle)));
 
+    
+    final Trigger resetIntakeButton = new JoystickButton(operJoy, ButtonPorts.RESET_INTAKE_BUTTON_PORT);
+    resetIntakeButton.onTrue(
+      // Commands.parallel(
+      new SetArmAngle(armAngle, ArmConstants.DEFAULT_ARM_ANGLE));
+      // new SetArmExtension(armLateral, PositionConfig.defaultExtension), 
+      // new SetClawAngle(intake, IntakeConstants.defaultClawAngle)));
+
+    final Trigger floorScoreButton = new JoystickButton(operJoy, ButtonPorts.FLOOR_SCORE_BUTTON_PORT);
+    floorScoreButton.onTrue(Commands.sequence(
+      new OpenClaw(intake), 
+      new SetArmExtension(armLateral, PositionConfig.defaultExtension), 
+      new SetClawAngle(intake, IntakeConstants.clawAngle)));
+
+    final Trigger floorIntakeButton = new JoystickButton(operJoy, ButtonPorts.FLOOR_INTAKE_BUTTON_PORT);
+    floorIntakeButton.onTrue(Commands.sequence(
+      new OpenClaw(intake), 
+      new IntakeGP(intake), 
+      new CloseClaw(intake)));
+
+    final Trigger humanPlayerButton = new JoystickButton(operJoy, ButtonPorts.HP_BUTTON_PORT);
+    humanPlayerButton.onTrue(Commands.sequence(
+      new SetArmAngle(armAngle, PositionConfig.highConeAngle))); 
+      // new SetArmExtension(armLateral, PositionConfig.midConeExtend), 
+      // new SetClawAngle(intake, IntakeConstants.clawAngle)));
+    // substation distance (95cm) is similar to mid node distance (90cm)
     */
-
-    Trigger RunRollerButton = operJoy.a(); //change buttons later
-    RunRollerButton
-      .whileTrue(new RunCommand(
-        () -> intake.setRollerSpeed(Constants.IntakeConstants.rollerSpeed), intake)); //need to code for when it is false
-
-   /*Trigger LiftIntake = operJoy.a(); //change buttons later
-    LiftIntake
-      .whileTrue(new RunCommand(
-        () -> intake.liftIntake(), intake));*/
-  Trigger shooterSpin = m_operController.a();
-      shooterSpin
-        .onTrue(new RunCommand(
-          () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_METERS_SECOND), m_shooter))
-        .onFalse(new RunCommand(
-          () -> m_shooter.stopShooter(), m_shooter));
-
-    Trigger shooterUp = m_operController.b();
-      shooterUp
-        .onTrue(new RunCommand(
-          () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle
-        ))
-        .onFalse(new RunCommand(
-          () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
-
-    //01/23/2024 stacky is sick 
   }
 
 

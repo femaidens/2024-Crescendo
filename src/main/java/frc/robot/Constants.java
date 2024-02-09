@@ -25,6 +25,76 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
+  public static final class IntakeConstants {
+
+  }
+
+  public static final class HopperConstants {
+
+  }
+
+  public static final class ShooterConstants {
+
+  }
+
+  public static final class ClimbConstants {
+
+  }
+
+  public static final class DrivetrainConstants {
+    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
+    public static final class ModuleConstants {
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // robot that drives faster).
+    public static final int kDrivingMotorPinionTeeth = 14;
+
+    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // the steering motor in the MAXSwerve Module.
+    public static final boolean kTurningEncoderInverted = true;
+
+    // Calculations required for driving motor conversion factors and feed forward
+    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
+    public static final double kWheelDiameterMeters = 0.0762;
+    public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+        / kDrivingMotorReduction;
+
+    public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
+        / kDrivingMotorReduction; // meters
+    public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
+        / kDrivingMotorReduction) / 60.0; // meters per second
+
+    public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
+    public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+
+    public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
+    public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
+
+    public static final double kDrivingP = 0.04;
+    public static final double kDrivingI = 0;
+    public static final double kDrivingD = 0;
+    public static final double kDrivingFFkS = 1 / kDriveWheelFreeSpeedRps;
+    public static final double kDrivingFFkA = 0;
+    public static final double kDrivingFFkV = 0; //adjust
+    public static final double kDrivingMinOutput = -1;
+    public static final double kDrivingMaxOutput = 1;
+
+    public static final double kTurningP = 1;
+    public static final double kTurningI = 0;
+    public static final double kTurningD = 0;
+    public static final double kTurningMinOutput = -1;
+    public static final double kTurningMaxOutput = 1;
+
+    public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
+    public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
+
+    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kTurningMotorCurrentLimit = 20; // amps
+  }
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
@@ -49,63 +119,39 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class DriveConstants {
+    // Angular offsets of the modules relative to the chassis in radians
+    public static final double FL_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;
+    public static final double FR_CHASSIS_ANGULAR_OFFSET = 0;
+    public static final double RL_CHASSIS_ANGULAR_OFFSET = Math.PI;
+    public static final double RR_CHASSIS_ANGULAR_OFFSET = Math.PI / 2;
 
-  public static final class IntakeConstants{
-    public static final double rotationSpeed = 0.5;
-    public static final double rollerSpeed = 0.5;
-  }
-    public static final class PIDConstants{
-      public static final double kP = 0;
-      public static final double kI = 0;
-      public static final double kD = 0;
-    }
+            // slew rate constants
+    public static final double DIR_SLEW_RATE = 1.2; // radians per second
+    public static final double MAG_SLEW_RATE = 1.8; // percent per second (1 = 100%)
+    public static final double ROT_SLEW_RATE = 2.0; // percent per second (1 = 100%)
 
-    public static final double rotLiftSetPoint = 5;
-    public static final double rotLowerSetPoint = 0;
-  public static final class HopperConstants {
-    public static final int HOPPER_CURRENT_LIMIT = 0;
-  }
+    // Chassis configuration
+    public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
+    // Distance between centers of right and left wheels on robot
+    public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
+    // Distance between front and back wheels on robot -> replace with known values
+    
+    public static final double MAX_SPEED = 4.8; // max speed meters per second *** LOOK INTO MAX ALLOWED SPEED
+    public static final double MAX_ANGULAR_SPEED = 2 * Math.PI; // radians per second
 
-  public static final class ShooterConstants {
-    //feedforward
-    public static final double kS = 0;
-    public static final double kV = 0;
-    //pid
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    //conversion
-    /*
-     * to obtain vcf, use dimensional analysis to convert from rpm to m/s
-     * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
-     */
-    public static final double VELOCITY_CONVERSION_FACTOR = 0;
-    //limits
-    public static final int SHOOTER_CURRENT_LIMIT = 0;
+    public static final boolean GYRO_REVERSED = false;
 
-    //auto constants
-    public static final double SHOOTER_METERS_SECOND = 2.0;
-  }
-
-  public static final class ShooterAngleConstants {
-    //pid
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    //conversion
-    public static final double POSITION_CONVERSION_FACTOR = 360;
-    //limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
-    //autos
-    public static final double SHOOTER_ANGLE_UP = 60;
-  }
-
-  public static final class DrivetrainConstants {
-    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+        new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // fl
+        new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2), // fr
+        new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2), // rl
+        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)); // rr
   }
 
   public static final class ClimberConstants 
   {
     public static final double climbArmSpeed = 0.3;
+  }
   }
 }

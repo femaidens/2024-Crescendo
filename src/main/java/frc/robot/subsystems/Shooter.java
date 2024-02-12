@@ -30,12 +30,13 @@ public class Shooter extends SubsystemBase {
   private final SimpleMotorFeedforward shooterFF;
 
   private final PIDController shooterPID;
+
   /** Creates a new Shooter. */
   public Shooter() {
     leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
     rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
 
-    rightShooterMotor.setIdleMode(IdleMode.kCoast); //double check w/ engineering later
+    rightShooterMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
     leftShooterMotor.setIdleMode(IdleMode.kCoast);
 
     rightShooterMotor.follow(leftShooterMotor, true);
@@ -49,15 +50,16 @@ public class Shooter extends SubsystemBase {
     leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
     rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
 
-
     shooterFF = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV);
 
     shooterPID = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
 
     // //rightShooterMotor.setInverted(true); //double check if it's left or right
 
-    // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT, MotorType.kBrushless);
-    // rightShooterFlex = new CANSparkFlex(ShooterPorts.RIGHT_SHOOTER_FLEX_PORT, MotorType.kBrushless);
+    // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT,
+    // MotorType.kBrushless);
+    // rightShooterFlex = new CANSparkFlex(ShooterPorts.RIGHT_SHOOTER_FLEX_PORT,
+    // MotorType.kBrushless);
 
     // rightShooterFlex.follow(leftShooterFlex, true);
 
@@ -76,12 +78,13 @@ public class Shooter extends SubsystemBase {
 
   /*
    * @param the setpoint velocity of the wheels, in meters/second
-   * sets the velocity of shooter wheels in meters per second 
+   * sets the velocity of shooter wheels in meters per second
    * 
    * the inversion of the motors might need to be switched
    */
-  public void setDesiredVelocity(double speed){
-    // getRate() in WPI might be better than getVelocity if conversion in Constants doesn't work
+  public void setDesiredVelocity(double speed) {
+    // getRate() in WPI might be better than getVelocity if conversion in Constants
+    // doesn't work
     double voltage = shooterFF.calculate(speed);
     double error = shooterPID.calculate(leftShooterEncoder.getVelocity(), speed);
 
@@ -93,15 +96,15 @@ public class Shooter extends SubsystemBase {
   /*
    * stops the motors for the shooter wheels
    */
-  public void stopShooter(){
+  public void stopShooter() {
     leftShooterMotor.setVoltage(0);
-    //leftShooterFlex.setVoltage(0);
+    // leftShooterFlex.setVoltage(0);
   }
 
   /*
    * @return the velocity of the shooter
    */
-  public double getShooterSpeed(){
+  public double getShooterSpeed() {
     return leftShooterEncoder.getVelocity();
   }
 

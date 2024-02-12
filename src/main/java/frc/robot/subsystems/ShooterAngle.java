@@ -25,12 +25,12 @@ public class ShooterAngle extends SubsystemBase {
 
   private double setpoint;
 
-  //possibly add an armFF later
+  // possibly add an armFF later
 
   /** Creates a new ShooterAngle. */
   public ShooterAngle() {
     shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE_PORT, MotorType.kBrushless);
-    shooterAngleMotor.setIdleMode(IdleMode.kBrake); //check with engineering
+    shooterAngleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
     shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
 
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
@@ -39,67 +39,67 @@ public class ShooterAngle extends SubsystemBase {
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
-
   }
 
   /*
    * @param the angle setpoint, in degrees
    * sets the shooter angle, in degrees
    */
-  public void setShooterAutoAngle(double angle){
+  public void setShooterAutoAngle(double angle) {
     double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle);
     shooterAngleMotor.setVoltage(voltage);
-    
+
   }
 
   /*
    * auto moves the shooter up, increases angle relative to horizontal axis
    */
-  public void shooterAngleUp(){
+  public void shooterAngleUp() {
     shooterAngleMotor.setVoltage(0.5);
   }
 
   /*
    * auto moves the shooter down, decreases angle relative to the horizontal
    */
-  public void shooterAngleDown(){
+  public void shooterAngleDown() {
     shooterAngleMotor.setVoltage(-0.5);
   }
 
   /*
    * joystick axis changes shooter angle
    */
-  public void setShooterAngle(double input){
-    if(Math.abs(input) > 0){
+  public void setShooterAngle(double input) {
+    if (Math.abs(input) > 0) {
       double voltage = input * 0.7;
       shooterAngleMotor.setVoltage(voltage);
       setpoint = shooterAngleEncoder.getPosition();
     } else {
       maintainAngle();
     }
-   
+
   }
 
   /*
    * maintains the angle that it was last set to
    */
-  public void maintainAngle(){
+  public void maintainAngle() {
     double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), setpoint);
     shooterAngleMotor.setVoltage(voltage);
   }
 
   /*
    * @param the angle to compare the encoder reading with
+   * 
    * @return if the angle of the shooter is within the threshold of the setpoint
    */
-  public boolean isAtAngle(double angle){
+  public boolean isAtAngle(double angle) {
     return Math.abs(angle - shooterAngleEncoder.getPosition()) < 2;
   }
 
   /*
    * stops motor for shooter angle
    */
-  public void stopShooterAngle(){
+  public void stopShooterAngle() {
     shooterAngleMotor.setVoltage(0);
   }
 

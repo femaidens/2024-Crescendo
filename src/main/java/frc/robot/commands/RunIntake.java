@@ -8,28 +8,30 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
-public class RunRoller extends Command {
+public class RunIntake extends Command {
   /** Creates a new RunRoller. */
   private final Intake intake = new Intake();
-  public RunRoller(Intake intake) {
+
+  public RunIntake(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setRollerSpeed(Constants.IntakeConstants.ROLLER_SPEED);
+    intake.setIntakeSpeed(Constants.IntakeConstants.rollerSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setRollerSpeed(0);
+    intake.setIntakeSpeed(0);
   }
 
   // Returns true when the command should end.

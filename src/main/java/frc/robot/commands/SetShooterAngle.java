@@ -10,6 +10,7 @@ import frc.robot.subsystems.ShooterAngle;
 public class SetShooterAngle extends Command {
   private final ShooterAngle shooterAngle;
   private final double angle;
+
   /** Creates a new SetShooterAngle. */
   public SetShooterAngle(ShooterAngle m_shooterAngle, double m_angle) {
     shooterAngle = m_shooterAngle;
@@ -20,7 +21,8 @@ public class SetShooterAngle extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

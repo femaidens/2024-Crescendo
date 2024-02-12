@@ -13,11 +13,15 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.ShooterPorts;
+import static edu.wpi.first.units.Units.Volts;
 
 public class Shooter extends SubsystemBase {
+  //eft and right relative to robot direction
   private final CANSparkMax leftShooterMotor;
   private final CANSparkMax rightShooterMotor;
 
@@ -30,6 +34,17 @@ public class Shooter extends SubsystemBase {
   private final SimpleMotorFeedforward shooterFF;
 
   private final PIDController shooterPID;
+
+  private final SysIdRoutine leftRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(), 
+    new SysIdRoutine.Mechanism(
+      volts -> runLeftShooter(volts.in(Volts)), null, this));
+
+  private final SysIdRoutine rightRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(),
+    new SysIdRoutine.Mechanism(
+      volts -> runRightShooter(volts.in(Volts)), null, this));
+  
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -108,6 +123,33 @@ public class Shooter extends SubsystemBase {
     return leftShooterEncoder.getVelocity();
   }
 
+  /*
+   * sysids
+   */
+  public void runLeftShooter(double voltage){
+    leftShooterMotor.setVoltage(voltage);
+  }
+
+  public void runRightShooter(double voltage){
+    rightShooterMotor.setVoltage(voltage);
+  }
+  
+  public Command leftQuas(SysIdRoutine.Direction direction){
+    return leftRoutine.quasistatic(direction);
+  }
+
+  public Command leftDyna(SysIdRoutine.Direction direction){
+    return leftRoutine.dynamic(direction);
+  }
+
+  public Command rightQuas(SysIdRoutine.Direction direction){
+    return rightRoutine.quasistatic(direction);
+  }
+
+  public Command rightDyna(SysIdRoutine.Direction direction){
+    return rightRoutine.dynamic(direction);
+  }
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

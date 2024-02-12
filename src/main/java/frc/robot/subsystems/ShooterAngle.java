@@ -68,7 +68,7 @@ public class ShooterAngle extends SubsystemBase {
    * joystick axis changes shooter angle
    */
   public void setShooterAngle(double input) {
-    if (Math.abs(input) > 0) {
+    if (Math.abs(input) > 0.1) {
       double voltage = input * 0.7;
       shooterAngleMotor.setVoltage(voltage);
       setpoint = shooterAngleEncoder.getPosition();

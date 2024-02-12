@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -139,18 +140,41 @@ public class RobotContainer {
     Trigger shooterSpin = m_operController.a();
     shooterSpin
         .onTrue(new RunCommand(
-            () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_METERS_SECOND), m_shooter))
-        .onFalse(new RunCommand(
-            () -> m_shooter.stopShooter(), m_shooter));
+            () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_RAD_SECOND), m_shooter));
+        // .onFalse(new RunCommand(
+        //     () -> m_shooter.stopShooter(), m_shooter));
 
-    Trigger shooterUp = m_operController.b();
-    shooterUp
-        .onTrue(new RunCommand(
-            () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle))
-        .onFalse(new RunCommand(
-            () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
+    // Trigger shooterUp = m_operController.b();
+    // shooterUp
+    //     .onTrue(new RunCommand(
+    //         () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle))
+    //     .onFalse(new RunCommand(
+    //         () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
 
     // 01/23/2024 stacky is sick
+    Trigger leftQuasForward = m_operController.rightBumper();
+    leftQuasForward
+        .whileTrue(
+          m_shooter.leftQuas(SysIdRoutine.Direction.kForward)
+        );
+
+    Trigger leftQuasReverse = m_operController.leftBumper();
+    leftQuasReverse
+        .whileTrue(
+          m_shooter.leftQuas(SysIdRoutine.Direction.kReverse)
+        );
+
+    Trigger leftDynaForward = m_operController.rightTrigger();
+    leftDynaForward
+        .whileTrue(
+          m_shooter.leftDyna(SysIdRoutine.Direction.kForward)
+        );
+
+    Trigger leftDynaReverse = m_operController.leftTrigger();
+    leftDynaReverse
+        .whileTrue(
+          m_shooter.leftDyna(SysIdRoutine.Direction.kReverse)
+        );
   }
 
   /**

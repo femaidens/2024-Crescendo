@@ -78,14 +78,14 @@ public final class Constants {
     // conversion
     /*
      * to obtain vcf, use dimensional analysis to convert from rpm to m/s
-     * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
+     * given rpm * 1/(gear ratio) * (2 * Pi) * 60 (for seconds)
      */
-    public static final double VELOCITY_CONVERSION_FACTOR = 0;
+    public static final double VELOCITY_CONVERSION_FACTOR = 2.0 * Math.PI / 60.0;
     // limits
     public static final int SHOOTER_CURRENT_LIMIT = 0;
 
     // auto constants
-    public static final double SHOOTER_METERS_SECOND = 2.0;
+    public static final double SHOOTER_RAD_SECOND = 2.0;
   }
 
   public static final class ShooterAngleConstants {
@@ -94,11 +94,11 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     // conversion
-    public static final double POSITION_CONVERSION_FACTOR = 360;
+    public static final double POSITION_CONVERSION_FACTOR = 360.0;
     // limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
+    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 30;
     // autos
-    public static final double SHOOTER_ANGLE_UP = 60;
+    public static final double SHOOTER_ANGLE_UP = 60.0;
   }
 
   public static final class DrivetrainConstants {

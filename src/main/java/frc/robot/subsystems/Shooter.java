@@ -46,8 +46,8 @@ public class Shooter extends SubsystemBase {
     leftShooterEncoder = leftShooterMotor.getEncoder();
     rightShooterEncoder = rightShooterMotor.getEncoder();
 
-    leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
+    rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
 
 
     shooterFF = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV);

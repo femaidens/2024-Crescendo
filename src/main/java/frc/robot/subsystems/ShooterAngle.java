@@ -34,7 +34,7 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
 
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POSITION_CONVERSION_FACTOR);
+    shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
     
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);

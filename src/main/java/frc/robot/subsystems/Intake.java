@@ -5,27 +5,32 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.*;
 import frc.robot.Ports;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  //private static CANSparkMax rotationNEO;
-  private static CANSparkMax rollerNEO;
-  private static SparkAbsoluteEncoder encoder;
-  // private static PIDController intakePIDController;
+  private static CANSparkMax intakeMotor;
+  private static RelativeEncoder intakeEncoder;
+  private static PIDController intakePID;
+
   private static boolean isRunning;
-  //private double setpoint;
+  private double vSetpoint;
 
   public Intake() {
     //rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort, MotorType.kBrushless);
-    rollerNEO = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    //encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
-    //intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
-    //setpoint = encoder.getPosition();
+    intakeMotor = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
+    intakeEncoder = intakeMotor.getEncoder(); 
+    intakePID = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
+
     isRunning = false;
+    vSetpoint = 0;
   }
 
   // public void setRotationSpeed(double speed)
@@ -43,7 +48,7 @@ public class Intake extends SubsystemBase {
 
   public void setRollerSpeed(double speed)
   {
-    rollerNEO.set(speed);
+    intakeMotor.set(speed);
   }
 
   // public void stopRotation()
@@ -53,7 +58,7 @@ public class Intake extends SubsystemBase {
 
   public double getAbsoluteEncoderAngle()
   {
-    return encoder.getPosition();
+    return intakeEncoder.getPosition();
   }
 
   // public void liftIntake()

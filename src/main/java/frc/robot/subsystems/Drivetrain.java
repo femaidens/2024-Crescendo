@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import static edu.wpi.first.units.Units.Volts;
+import frc.robot.DrivetrainConstants.*;
 
 import java.util.List;
 
@@ -37,22 +38,22 @@ public class Drivetrain extends SubsystemBase {
   private final MaxSwerveModule frontLeft = new MaxSwerveModule(
     DrivetrainPorts.FRONT_LEFT_DRIVE,
     DrivetrainPorts.FRONT_LEFT_TURNING,
-    DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule frontRight = new MaxSwerveModule(
     DrivetrainPorts.FRONT_RIGHT_DRIVE,
     DrivetrainPorts.FRONT_RIGHT_TURNING,
-    DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule rearLeft = new MaxSwerveModule(
     DrivetrainPorts.REAR_LEFT_DRIVE,
     DrivetrainPorts.REAR_LEFT_TURNING,
-    DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule rearRight = new MaxSwerveModule(
     DrivetrainPorts.REAR_RIGHT_DRIVE,
     DrivetrainPorts.REAR_RIGHT_TURNING,
-    DrivetrainConstants.DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
     private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
@@ -74,14 +75,14 @@ public class Drivetrain extends SubsystemBase {
   private double currentTranslationDir = 0.0;
   private double currentTranslationMag = 0.0;
 
-  private SlewRateLimiter magLimiter = new SlewRateLimiter(DrivetrainConstants.DriveConstants.MAG_SLEW_RATE);
-  private SlewRateLimiter rotLimiter = new SlewRateLimiter(DrivetrainConstants.DriveConstants.ROT_SLEW_RATE);
+  private SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.MAG_SLEW_RATE);
+  private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.ROT_SLEW_RATE);
   private double prevTime = WPIUtilJNI.now() * 1e-6;
   private double speedFactor = 0.3; // change back to 1.0
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      DrivetrainConstants.DriveConstants.DRIVE_KINEMATICS,
+      DriveConstants.DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(gyro.getAngle()),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
@@ -169,7 +170,7 @@ public class Drivetrain extends SubsystemBase {
       double directionSlewRate;
 
       if (currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(DrivetrainConstants.DriveConstants.DIR_SLEW_RATE / currentTranslationMag);
+        directionSlewRate = Math.abs(DriveConstants.DIR_SLEW_RATE / currentTranslationMag);
       } 
       
       else {
@@ -218,21 +219,21 @@ public class Drivetrain extends SubsystemBase {
     // Convert the commanded speeds into the correct units for the drivetrain
     // double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED;
     // double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
-      double xSpeedDelivered = xSpeedCommanded * DrivetrainConstants.DriveConstants.MAX_SPEED * speedFactor;
-      double ySpeedDelivered = ySpeedCommanded * DrivetrainConstants.DriveConstants.MAX_SPEED * speedFactor;
+      double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
+      double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
 
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
     //System.out.println("xspeed drive: " + xSpeedDelivered);
     //System.out.println("yspeed drive: " + ySpeedDelivered);
 
-    double rotDelivered = currentRotation * DrivetrainConstants.DriveConstants.MAX_ANGULAR_SPEED * 0.75; // get rid of 0.75
-    var swerveModuleStates = DrivetrainConstants.DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
+    double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED * 0.75; // get rid of 0.75
+    var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DrivetrainConstants.DriveConstants.MAX_SPEED);
+        swerveModuleStates, DriveConstants.MAX_SPEED);
 
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
@@ -259,7 +260,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DrivetrainConstants.DriveConstants.MAX_SPEED);
+        desiredStates, DriveConstants.MAX_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     rearLeft.setDesiredState(desiredStates[2]);
@@ -333,7 +334,7 @@ public class Drivetrain extends SubsystemBase {
    */
   // returns turn rate (deg/s)
   public double getTurnRate() {
-    return gyro.getRate() * (DrivetrainConstants.DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+    return gyro.getRate() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
   public Command driveQuasistatic(SysIdRoutine.Direction direction) {

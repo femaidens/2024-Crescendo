@@ -25,8 +25,8 @@ import java.util.function.Consumer;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.DrivetrainConstants.DriveConstants;
+import frc.robot.DrivetrainConstants;
+
 
 public class MaxSwerveModule {
   private final CANSparkMax m_drivingSparkMax;

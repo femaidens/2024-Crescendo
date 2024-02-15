@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShooterConstants.WheelConstants;
 import frc.robot.Ports.ShooterPorts;
 
 public class Shooter extends SubsystemBase {
@@ -41,18 +42,18 @@ public class Shooter extends SubsystemBase {
 
     rightShooterMotor.follow(leftShooterMotor, true);
 
-    rightShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    leftShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    rightShooterMotor.setSmartCurrentLimit(WheelConstants.SHOOTER_CURRENT_LIMIT);
+    leftShooterMotor.setSmartCurrentLimit(WheelConstants.SHOOTER_CURRENT_LIMIT);
 
     leftShooterEncoder = leftShooterMotor.getEncoder();
     rightShooterEncoder = rightShooterMotor.getEncoder();
 
-    leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
-    rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VEL_CFACTOR);
+    leftShooterEncoder.setVelocityConversionFactor(WheelConstants.VEL_CFACTOR);
+    rightShooterEncoder.setVelocityConversionFactor(WheelConstants.VEL_CFACTOR);
 
-    shooterFF = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV);
+    shooterFF = new SimpleMotorFeedforward(WheelConstants.kS, WheelConstants.kV);
 
-    shooterPID = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
+    shooterPID = new PIDController(WheelConstants.kP, WheelConstants.kI, WheelConstants.kD);
 
     // //rightShooterMotor.setInverted(true); //double check if it's left or right
 

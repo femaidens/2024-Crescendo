@@ -6,8 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShooterConstants.*;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterAngle;
 
@@ -21,7 +20,7 @@ public class SpinShooterUp extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ParallelCommandGroup(
-            new ShooterVelocity(m_shooter, ShooterConstants.SHOOTER_METERS_SECOND),
+            new ShooterVelocity(m_shooter, WheelConstants.SHOOTER_METERS_SECOND),
             new SetShooterAngle(m_ShooterAngle, 60)));
   }
 }

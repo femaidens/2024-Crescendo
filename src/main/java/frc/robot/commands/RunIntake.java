@@ -25,7 +25,7 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setIntakeSpeed(Constants.IntakeConstants.rollerSpeed);
+    intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED);
   }
 
   // Called once the command ends or is interrupted.

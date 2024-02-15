@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants;
 import frc.robot.Ports;
@@ -36,9 +37,7 @@ public class Intake extends SubsystemBase {
   private final DigitalInput beamReceiver;
   private final DigitalOutput beamEmitter;
   private final CANSparkMax hopperMotor;
-  /** Creates a new Intake. */
-  private static CANSparkMax intakeMotor;
-  private static RelativeEncoder intakeEncoder;
+
   private static PIDController intakePID;
 
   private static boolean isRunning;
@@ -47,7 +46,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     //intake
     intakeMotor = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    velocityPID = new PIDController(Constants.IntakeConstants.kP, Constants.IntakeConstants.kI, Constants.IntakeConstants.kD);
+    velocityPID = new PIDController(IntakeConstants.kP, Constants.IntakeConstants.kI, Constants.IntakeConstants.kD);
     intakeEncoder = intakeMotor.getEncoder();
     ff = new SimpleMotorFeedforward(Constants.IntakeConstants.kS, Constants.IntakeConstants.kV);
     intakeEncoder.setVelocityConversionFactor(Constants.IntakeConstants.VELOCITY_CONVERSION_FACTOR);

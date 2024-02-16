@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -33,14 +34,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
-
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("Limelight");
-  NetworkTableEntry tv = table.getEntry("tv");
-  NetworkTableEntry tx = table.getEntry("tx");
-  NetworkTableEntry ta = table.getEntry("ta");
-  NetworkTableEntry ts = table.getEntry("ts");
-  NetworkTableEntry ty = table.getEntry("ty");
-
     // Constants such as camera and target height stored. Change per robot and goal!
   public final double cameraHeight;
   public final double targetHeight;
@@ -65,21 +58,22 @@ public class Limelight extends SubsystemBase {
   // Get information from target.
   int targetID = target.getFiducialId();
   double poseAmbiguity = target.getPoseAmbiguity();
-  Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+  Transform3d bestCameraToTarget3d = target.getBestCameraToTarget();
   Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+  Transform2d bestCameraToTarget2d = target.getBestCameraToTarget();
+  //Pose2d targetPose = 
 
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-  Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), 
-  aprilTagFieldLayout.getTagPose(target.getFiducialId()), cameraToRobot);
+  Pose2d robotPose = PhotonUtils.estimateFieldToRobot(target.getBestCameraToTarget(), 
+  aprilTagFieldLayout.getTagPose(target.getFiducialId()), bestCameraToTarget3d);
 
-  cam = new PhotonCamera("testCamera");
   Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), 
   new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
-// Construct PhotonPoseEstimator
-  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
-
+  // Construct PhotonPoseEstimator
+  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(
+    aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCam);
   Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
 
   
@@ -91,9 +85,10 @@ public class Limelight extends SubsystemBase {
     result = camera.getLatestResult();
   }
 
-  public void estimateTranslationToTarget() {
+  public Translation2d estimateTranslationToTarget() {
     Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(
-    distanceMeters, Rotation2d.fromDegrees(-target.getYaw()));
+    goalRange, Rotation2d.fromDegrees(-target.getYaw()));
+    return translation;
   }
 
   public void capturePreProcessImage() {
@@ -104,9 +99,16 @@ public class Limelight extends SubsystemBase {
     camera.takeOutputSnapshot();
   }
 
+  public boolean targetsExist() {
+    boolean hasTargets = result.hasTargets();
+    return hasTargets;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     camera.setDriverMode(true);
+    photonPoseEstimator.setReferencePose(robotPose);
+    photonPoseEstimator.update();
   }
 }

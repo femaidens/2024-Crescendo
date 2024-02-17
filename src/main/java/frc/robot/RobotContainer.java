@@ -175,6 +175,27 @@ public class RobotContainer {
         .whileTrue(
           m_shooter.leftDyna(SysIdRoutine.Direction.kReverse)
         );
+
+    Trigger rightQuasForward = m_operController.a();
+    rightQuasForward
+        .whileTrue(
+          m_shooter.rightQuas(SysIdRoutine.Direction.kForward)
+        );
+    Trigger rightQuasReverse = m_operController.b();
+    rightQuasReverse
+        .whileTrue(
+          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+        );
+    Trigger rightDynaForward = m_operController.x();
+    rightDynaForward
+        .whileTrue(
+          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+        );
+    Trigger rightDynaReverse = m_operController.y();
+    rightDynaReverse
+        .whileTrue(
+          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+        );
   }
 
   /**

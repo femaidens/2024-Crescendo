@@ -22,14 +22,14 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class Shooter extends SubsystemBase {
   //eft and right relative to robot direction
-  private final CANSparkMax leftShooterMotor;
-  private final CANSparkMax rightShooterMotor;
+  private final CANSparkMax leftMotor;
+  private final CANSparkMax rightMotor;
 
   // private final CANSparkFlex leftShooterFlex;
   // private final CANSparkFlex rightShooterFlex;
 
-  private final RelativeEncoder leftShooterEncoder;
-  private final RelativeEncoder rightShooterEncoder;
+  private final RelativeEncoder leftEncoder;
+  private final RelativeEncoder rightEncoder;
 
   private final SimpleMotorFeedforward shooterFF;
 
@@ -48,22 +48,22 @@ public class Shooter extends SubsystemBase {
 
   /** Creates a new Shooter. */
   public Shooter() {
-    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
-    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
+    leftMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
 
-    rightShooterMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
-    leftShooterMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
+    leftMotor.setIdleMode(IdleMode.kCoast);
 
-    rightShooterMotor.follow(leftShooterMotor, true);
+    rightMotor.follow(leftMotor, true);
 
-    rightShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    leftShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    rightMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    leftMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
 
-    leftShooterEncoder = leftShooterMotor.getEncoder();
-    rightShooterEncoder = rightShooterMotor.getEncoder();
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
 
-    leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    leftEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    rightEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
 
     shooterFF = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV);
 
@@ -101,9 +101,9 @@ public class Shooter extends SubsystemBase {
     // getRate() in WPI might be better than getVelocity if conversion in Constants
     // doesn't work
     double voltage = shooterFF.calculate(speed);
-    double error = shooterPID.calculate(leftShooterEncoder.getVelocity(), speed);
+    double error = shooterPID.calculate(leftEncoder.getVelocity(), speed);
 
-    leftShooterMotor.setVoltage(voltage + error);
+    leftMotor.setVoltage(voltage + error);
     System.out.println(voltage + error);
 
   }
@@ -112,7 +112,7 @@ public class Shooter extends SubsystemBase {
    * stops the motors for the shooter wheels
    */
   public void stopShooter() {
-    leftShooterMotor.setVoltage(0);
+    leftMotor.setVoltage(0);
     // leftShooterFlex.setVoltage(0);
   }
 
@@ -120,18 +120,18 @@ public class Shooter extends SubsystemBase {
    * @return the velocity of the shooter
    */
   public double getShooterSpeed() {
-    return leftShooterEncoder.getVelocity();
+    return leftEncoder.getVelocity();
   }
 
   /*
    * sysids
    */
   public void runLeftShooter(double voltage){
-    leftShooterMotor.setVoltage(voltage);
+    leftMotor.setVoltage(voltage);
   }
 
   public void runRightShooter(double voltage){
-    rightShooterMotor.setVoltage(voltage);
+    rightMotor.setVoltage(voltage);
   }
   
   public Command leftQuas(SysIdRoutine.Direction direction){
@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Left: " + leftShooterEncoder.getVelocity());
-    System.out.println("Right: " + rightShooterEncoder.getVelocity());
+    System.out.println("Left: " + leftEncoder.getVelocity());
+    System.out.println("Right: " + rightEncoder.getVelocity());
   }
 }

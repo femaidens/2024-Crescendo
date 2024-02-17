@@ -82,7 +82,7 @@ public final class Constants {
      */
     public static final double VELOCITY_CONVERSION_FACTOR = 2.0 * Math.PI / 60.0;
     // limits
-    public static final int SHOOTER_CURRENT_LIMIT = 0;
+    public static final int SHOOTER_CURRENT_LIMIT = 30;
 
     // auto constants
     public static final double SHOOTER_RAD_SECOND = 2.0;

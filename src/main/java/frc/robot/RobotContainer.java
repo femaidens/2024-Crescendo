@@ -51,8 +51,17 @@ public class RobotContainer {
     // auton config
     configureAuton();
 
-    // DataLogManager.start();
-    // URCL.start();
+    drivetrain.setDefaultCommand(
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      new RunCommand(
+          () -> drivetrain.drive( // all joy.get values were prev negative
+              MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+              true, true),
+          drivetrain) // change field relative to true!!
+    );
 
   }
     public void configureAuton() {
@@ -108,43 +117,6 @@ public class RobotContainer {
     Trigger turnDynamicButton = driveJoy.y();
     turnDynamicButton.whileTrue(
       drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
-
-    /*
-    // figure out better/more efficient way of creating/binding these cmds to buttons
-    
-    final Trigger highConeButton = new JoystickButton(operJoy, Ports.XboxControllerMap.Button.Y);
-    highConeButton.onTrue(Commands.sequence(
-      new SetArmAngle(armAngle, PositionConfig.highConeAngle)));
-      // new SetArmExtension(armLateral, PositionConfig.highConeExtend), 
-      // new SetClawAngle(intake, IntakeConstants.clawAngle)));
-
-    
-    final Trigger resetIntakeButton = new JoystickButton(operJoy, ButtonPorts.RESET_INTAKE_BUTTON_PORT);
-    resetIntakeButton.onTrue(
-      // Commands.parallel(
-      new SetArmAngle(armAngle, ArmConstants.DEFAULT_ARM_ANGLE));
-      // new SetArmExtension(armLateral, PositionConfig.defaultExtension), 
-      // new SetClawAngle(intake, IntakeConstants.defaultClawAngle)));
-
-    final Trigger floorScoreButton = new JoystickButton(operJoy, ButtonPorts.FLOOR_SCORE_BUTTON_PORT);
-    floorScoreButton.onTrue(Commands.sequence(
-      new OpenClaw(intake), 
-      new SetArmExtension(armLateral, PositionConfig.defaultExtension), 
-      new SetClawAngle(intake, IntakeConstants.clawAngle)));
-
-    final Trigger floorIntakeButton = new JoystickButton(operJoy, ButtonPorts.FLOOR_INTAKE_BUTTON_PORT);
-    floorIntakeButton.onTrue(Commands.sequence(
-      new OpenClaw(intake), 
-      new IntakeGP(intake), 
-      new CloseClaw(intake)));
-
-    final Trigger humanPlayerButton = new JoystickButton(operJoy, ButtonPorts.HP_BUTTON_PORT);
-    humanPlayerButton.onTrue(Commands.sequence(
-      new SetArmAngle(armAngle, PositionConfig.highConeAngle))); 
-      // new SetArmExtension(armLateral, PositionConfig.midConeExtend), 
-      // new SetClawAngle(intake, IntakeConstants.clawAngle)));
-    // substation distance (95cm) is similar to mid node distance (90cm)
-    */
   }
 
 

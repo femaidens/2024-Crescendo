@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -35,21 +35,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // The driver's controller
-  CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-  CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private final Intake intake = new Intake();
-  private final Climber climber = new Climber();
-  // private final Joystick lateralJoy = new Joystick(Ports.JoystickPorts.LATERAL_JOY);
-  // private final Joystick rotationJoy = new Joystick(Ports.JoystickPorts.ROTATION_JOY);
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-  private final Shooter m_shooter = new Shooter();
-  private final ShooterAngle m_shooterAngle = new ShooterAngle();
+  private final CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  private final CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  // private final CommandXboxController driveJoy =
-  //     new CommandXboxController(JoystickPorts.OPER_JOY);
-  private CommandXboxController m_driverController = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController m_operController = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  private final Intake intake = new Intake();
+  private final Climb climb = new Climb();
+  private final Shooter shooter = new Shooter();
+  private final ShooterAngle shooterAngle = new ShooterAngle();
+
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -62,16 +56,16 @@ public class RobotContainer {
     configureAuton();
 
     // Configure default commands
-    m_shooterAngle.setDefaultCommand(
+    shooterAngle.setDefaultCommand(
       new RunCommand(
-        () -> m_shooterAngle.setShooterAngle(
-          MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
-          m_shooterAngle)
+        () -> shooterAngle.setShooterAngle(
+          MathUtil.applyDeadband(operJoy.getLeftY(), 0.1)),
+          shooterAngle)
     );
 
-    m_shooter.setDefaultCommand(
+    shooter.setDefaultCommand(
       new RunCommand(
-        () -> m_shooter.stopShooter(), m_shooter)
+        () -> shooter.stopShooter(), shooter)
     );
   }
     public void configureAuton() {
@@ -90,8 +84,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
    * passing it to a
    * {@link JoystickButton}.
-    // Configure the trigger bindings
-    configureBindings();
+   */
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -103,18 +96,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureButtonBindings() {
-    // resets robot heading (gyro)
-
-    /*
-    // figure out better/more efficient way of creating/binding these cmds to buttons
-    
-    final Trigger highConeButton = new JoystickButton(operJoy, Ports.XboxControllerMap.Button.Y);
-    highConeButton.onTrue(Commands.sequence(
-      new SetArmAngle(armAngle, PositionConfig.highConeAngle)));
-      // new SetArmExtension(armLateral, PositionConfig.highConeExtend), 
-      // new SetClawAngle(intake, IntakeConstants.clawAngle)));
-
-    */
 
     Trigger RunRollerButton = operJoy.a(); //change buttons later
     RunRollerButton
@@ -125,20 +106,20 @@ public class RobotContainer {
     LiftIntake
       .whileTrue(new RunCommand(
         () -> intake.liftIntake(), intake));*/
-  Trigger shooterSpin = m_operController.a();
+  Trigger shooterSpin = operJoy.a();
       shooterSpin
         .onTrue(new RunCommand(
-          () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_METERS_SECOND), m_shooter))
+          () -> shooter.setDesiredVelocity(ShooterConstants.SHOOTER_METERS_SECOND), shooter))
         .onFalse(new RunCommand(
-          () -> m_shooter.stopShooter(), m_shooter));
+          () -> shooter.stopShooter(), shooter));
 
-    Trigger shooterUp = m_operController.b();
+    Trigger shooterUp = operJoy.b();
       shooterUp
         .onTrue(new RunCommand(
-          () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle
+          () -> shooterAngle.shooterAngleUp(), shooterAngle
         ))
         .onFalse(new RunCommand(
-          () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
+          () -> shooterAngle.stopShooterAngle(), shooterAngle));
 
     //01/23/2024 stacky is sick 
   }
@@ -149,16 +130,16 @@ public class RobotContainer {
     Trigger extendClimbButton = operJoy.b();
     extendClimbButton
       .onTrue(new InstantCommand(
-        () -> Climber.extendClimbArm(), climber))
+        () -> climb.extendClimbArm(), climb))
       .onFalse(new InstantCommand(
-        () -> Climber.stopClimb(), climber));
+        () -> climb.stopClimb(), climb));
 
     Trigger retractClimbButton = operJoy.b();
     retractClimbButton
       .onTrue(new InstantCommand(
-        () -> Climber.retractClimbArm(), climber))
+        () -> climb.retractClimbArm(), climb))
       .onFalse(new InstantCommand(
-        () -> Climber.stopClimb(), climber));
+        () -> climb.stopClimb(), climb));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

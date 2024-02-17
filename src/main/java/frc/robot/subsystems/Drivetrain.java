@@ -66,7 +66,10 @@ public class Drivetrain extends SubsystemBase {
     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
       volts -> rearLeft.setTurnVoltage(volts.in(Volts)), null, this));
 
-
+  private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+      volts -> modules.forEach(m -> m.setTurnVoltage(volts.in(Volts))),
+      null, this));
   // The gyro sensor
   private final AHRS gyro = new AHRS();
 

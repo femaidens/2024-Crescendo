@@ -11,6 +11,7 @@ import frc.robot.subsystems.Intake;
 public class RunRoller extends Command {
   /** Creates a new RunRoller. */
   private final Intake intake = new Intake();
+
   public RunRoller(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
@@ -18,7 +19,8 @@ public class RunRoller extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

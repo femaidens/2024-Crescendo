@@ -28,24 +28,24 @@ public class Hopper extends SubsystemBase {
     hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR_PORT, MotorType.kBrushless);
     hopperMotor.setIdleMode(IdleMode.kBrake);
     hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
-    
+
   }
 
-  public void stopHopperMotor(){
+  public void stopHopperMotor() {
     hopperMotor.setVoltage(0);
   }
 
-  public void checkbeamBreakIntake(){
-    if(beamBreakIntake.get()){
+  public void checkbeamBreakIntake() {
+    if (beamBreakIntake.get()) {
       hopperMotor.set(0.5);
-      //retract intake + stop intake motors
+      // retract intake + stop intake motors
     }
   }
 
-  public void checkbeamBreakShooter(){
-    if(!beamBreakShooter.get()){
+  public void checkbeamBreakShooter() {
+    if (!beamBreakShooter.get()) {
       hopperMotor.set(0.5);
-    }else{
+    } else {
       stopHopperMotor();
       System.out.println("beam break shooter sensor activated \n");
     }
@@ -55,4 +55,4 @@ public class Hopper extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  }
+}

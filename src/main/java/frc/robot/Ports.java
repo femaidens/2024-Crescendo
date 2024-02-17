@@ -15,6 +15,7 @@ public class Ports {
     public static final int DRIVE_JOY = 1;
   }
 
+<<<<<<< HEAD
   public static final class DrivetrainPorts {
     // SPARK MAX CAN IDs
     public static final int FRONT_LEFT_DRIVE = 3;
@@ -29,10 +30,15 @@ public class Ports {
   }
 
   public static final class IntakePorts {
+=======
+  public static final class IntakePorts {
+    public static final int rotationNEOPort = 2;
+>>>>>>> 92c5f34460a68e7db18587391e7d9667a459b8c1
     public static final int rollerNEOPort = 3;
     public static final int encoderPort = 4;
   }
 
+<<<<<<< HEAD
   public static final class HopperPorts {
     public static final int BEAM_BREAK_INTAKE_PORT = 0;
     public static final int BEAM_BREAK_SHOOTER_PORT = 0;
@@ -50,6 +56,34 @@ public class Ports {
     public static final int SHOOTER_ANGLE_PORT = 0;
   }
 
+=======
+  public static final class ButtonPorts {
+
+  }
+
+  public static final class DrivetrainPorts {
+
+  }
+
+  public static final class HopperPorts {
+    public static final int BEAM_BREAK_INTAKE_PORT = 0;
+    public static final int BEAM_BREAK_SHOOTER_PORT = 0;
+
+    public static final int HOPPER_MOTOR_PORT = 0;
+  }
+
+  public static final class ShooterPorts {
+    public static final int LEFT_SHOOTER_MOTOR_PORT = 0;
+    public static final int RIGHT_SHOOTER_MOTOR_PORT = 0;
+
+    public static final int LEFT_SHOOTER_FLEX_PORT = 0;
+    public static final int RIGHT_SHOOTER_FLEX_PORT = 0;
+
+    public static final int SHOOTER_ANGLE_PORT = 0;
+
+  }
+
+>>>>>>> 92c5f34460a68e7db18587391e7d9667a459b8c1
   public static final class ClimbPorts {
     public static final int armRightMotor = 0;
     public static final int armLeftMotor = 1;

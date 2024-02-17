@@ -30,28 +30,6 @@ public final class Constants {
     public static final double kDriveDeadband = 0.05;
   }
 
-<<<<<<< HEAD
-=======
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-  }
-
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
-  }
-
->>>>>>> 92c5f34460a68e7db18587391e7d9667a459b8c1
   public static final class IntakeConstants {
     public static final double rotationSpeed = 0.5;
     public static final double rollerSpeed = 0.5;
@@ -63,12 +41,6 @@ public final class Constants {
     public static final double kD = 0;
   }
 
-<<<<<<< HEAD
-=======
-  public static final double rotLiftSetPoint = 5;
-  public static final double rotLowerSetPoint = 0;
-
->>>>>>> 92c5f34460a68e7db18587391e7d9667a459b8c1
   public static final class HopperConstants {
     public static final int HOPPER_CURRENT_LIMIT = 0;
   }
@@ -107,14 +79,6 @@ public final class Constants {
     public static final double SHOOTER_ANGLE_UP = 60;
   }
 
-<<<<<<< HEAD
-=======
-  public static final class DrivetrainConstants {
-    // swerve constants have a couple diff classes, so just put all of them at the
-    // bottom of the constants class (aka here)
-  }
-
->>>>>>> 92c5f34460a68e7db18587391e7d9667a459b8c1
   public static final class ClimberConstants {
     public static final double climbArmSpeed = 0.3;
   }

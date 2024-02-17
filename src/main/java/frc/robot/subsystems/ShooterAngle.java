@@ -45,7 +45,7 @@ public class ShooterAngle extends SubsystemBase {
    * sets the shooter angle, in degrees
    */
   public void setShooterAutoAngle(double angle) {
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle);
+    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle+18.3);//offset of 18.3 degrees 
     shooterAngleMotor.setVoltage(voltage);
 
   }
@@ -92,7 +92,7 @@ public class ShooterAngle extends SubsystemBase {
    * @return if the angle of the shooter is within the threshold of the setpoint
    */
   public boolean isAtAngle(double angle) {
-    return Math.abs(angle - shooterAngleEncoder.getPosition()) < 2;
+    return Math.abs(angle+18.3 - shooterAngleEncoder.getPosition()) < 2;
   }
 
   /*

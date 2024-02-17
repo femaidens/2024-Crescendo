@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -15,140 +13,117 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
+import static edu.wpi.first.units.Units.Volts;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.HopperConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants;
-import frc.robot.Ports;
-import frc.robot.Ports.HopperPorts;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+import frc.robot.Constants.*;
+import frc.robot.Ports.*;
 
 public class Intake extends SubsystemBase {
-  //intake
-  private static CANSparkMax intakeMotor;
-  private static SparkAbsoluteEncoder encoder;
-  private static PIDController velocityPID;
-  private static RelativeEncoder intakeEncoder;
-  private static SimpleMotorFeedforward ff;
-
-  //hopper
-  private final DigitalInput beamReceiver;
-  private final DigitalOutput beamEmitter;
+  
+  private final CANSparkMax intakeMotor;
   private final CANSparkMax hopperMotor;
 
-  private static PIDController intakePID;
+  private final RelativeEncoder intakeEncoder;
+  private final RelativeEncoder hopperEncoder;
 
-  private static boolean isRunning;
+  private final PIDController intakePID;
+  private final SimpleMotorFeedforward ff;
+
+  private final DigitalInput receiver;
+  private final DigitalOutput emitter;
+
+  // private final SysIdRoutine intakeRoutine;
+
   private double vSetpoint;
 
   public Intake() {
-    //intake
-    intakeMotor = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    velocityPID = new PIDController(IntakeConstants.kP, Constants.IntakeConstants.kI, Constants.IntakeConstants.kD);
+    intakeMotor = new CANSparkMax(IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
+    hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR, MotorType.kBrushless);
+
     intakeEncoder = intakeMotor.getEncoder();
-    ff = new SimpleMotorFeedforward(Constants.IntakeConstants.kS, Constants.IntakeConstants.kV);
-    intakeEncoder.setVelocityConversionFactor(Constants.IntakeConstants.VELOCITY_CONVERSION_FACTOR);
-
-    //hopper
-    beamReceiver = new DigitalInput(HopperPorts.BEAM_SHOOTER_RECEIVER_PORT);
-    beamEmitter = new DigitalOutput(HopperPorts.BEAM_SHOOTER_EMITTER_PORT);
-    hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR_PORT, MotorType.kBrushless);
-    hopperMotor.setIdleMode(IdleMode.kBrake);
-    hopperMotor.setSmartCurrentLimit(HopperConstants.HOPPER_CURRENT_LIMIT);
-  }
-
-  //intake methods
-  public void setIntakeSpeed(double speed) {
-    intakeMotor.set(speed);
-    //rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort, MotorType.kBrushless);
-    intakeMotor = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
-    intakeEncoder = intakeMotor.getEncoder(); 
+    hopperEncoder = hopperMotor.getEncoder();
+    
+    intakeEncoder.setVelocityConversionFactor(IntakeConstants.VEL_CFACTOR);
+    hopperEncoder.setVelocityConversionFactor(HopperConstants.VEL_CFACTOR);
+    
     intakePID = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
+    ff = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
+    
+    receiver = new DigitalInput(HopperPorts.RECEIVER);
+    emitter = new DigitalOutput(HopperPorts.EMITTER);
 
-    isRunning = false;
+    hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
+    intakeMotor.setIdleMode(IdleMode.kCoast); // should freely spin?
+
+    hopperMotor.setSmartCurrentLimit(HopperConstants.CURRENT_LIMIT);
+    intakeMotor.setSmartCurrentLimit(IntakeConstants.CURRENT_LIMIT); 
+
+    intakeMotor.burnFlash();
+    hopperMotor.burnFlash();
+    
     vSetpoint = 0;
   }
 
-  // public void setRotationSpeed(double speed)
-  // {
-  //   rotationNEO.set(speed);
-  //   if( speed == 0)
-  //   {
-  //     isRunning = false;
-  //   }
-  //   else
-  //   {
-  //     isRunning = true;
-  //   }
-  // }
-
-  public void setRollerSpeed(double speed)
-  {
-    intakeMotor.set(speed);
-  }
-
-  // public void stopRotation()
-  // {
-  //   rotationNEO.set(0);
-  // }
-
-  public double getAbsoluteEncoderAngle()
-  {
-    return intakeEncoder.getPosition();
-  }
-
-  public void velocityPID(double setpoint){
-    double voltage = ff.calculate(setpoint);
-    double error = velocityPID.calculate(intakeEncoder.getVelocity(), setpoint);
+  public void setVelocity(){
+    double voltage = ff.calculate(vSetpoint);
+    double error = intakePID.calculate(intakeEncoder.getVelocity(), vSetpoint);
 
     intakeMotor.setVoltage(error + voltage);
   }
 
-  //hopper or beam break methods
-
-  public void disableBeam() {
-    beamEmitter.set(false);
+  public void setVelocitySetpoint(double setpoint) {
+    vSetpoint = setpoint;
   }
 
-  public void enableBeam() {
-    beamEmitter.set(true);
+  public void setIntakeSpeed(double speed) {
+    intakeMotor.set(speed);
   }
 
-  public boolean getStatus() {
-   if( beamEmitter.get() && beamReceiver.get())
-   {
-    System.out.println("beam break uninterrupted");
-    return true;
-   }
-    System.out.println("beam break interrupted");
-    intakeMotor.set(0);
-    hopperMotor.set(0);
-    return false;
+  // for transition between hopper and shooter wheels
+  public void setHopperSpeed(double speed) {
+    hopperMotor.set(speed);
   }
 
-  // public void checkBeamBreakIntake() {
-  //   if (intakeBeamReceiver.get() && intakeBeamEmitter.get()) {
-  //     hopperMotor.set(0.5);
-  //     // retract intake + stop intake motors
-  //   } else {
-  //     stopIntakeMotor();
-  //     System.out.println("beam break intake sensor activated \n");
-  //   }
-  // }
+  public double getIntakeVelocity() {
+    return intakeEncoder.getVelocity();
+  }
 
-  // public void checkBeamBreakShooter() {
-  //   if (!shooterBeamEmitter.get() && !shooterBeamReceiver.get()) {
-  //     hopperMotor.set(0.5);
-  //   } else {
-  //     stopHopperMotor();
-  //     System.out.println("beam break shooter sensor activated \n");
-  //   }
-  // }
+  public double getHopperVelocity() {
+    return hopperEncoder.getVelocity();
+  }
+
+  public void stopIntakeMotor() {
+    intakeMotor.stopMotor();
+  }
+
+  public void stopHopperMotor() {
+    hopperMotor.stopMotor();
+  }
+
+  // beam breaker code
+  public boolean getReceiverStatus() {
+    return receiver.get();
+  }
+
+  public boolean getEmitterStatus() {
+    return emitter.get();
+  }
+
+  public void setEmitter(boolean status) {
+    emitter.set(status);
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Intake Velocity", getIntakeVelocity());
+    SmartDashboard.putNumber("Hopper Velocity", getHopperVelocity());
+
+    SmartDashboard.putNumber("Intake Setpoint", vSetpoint);
   }
 }

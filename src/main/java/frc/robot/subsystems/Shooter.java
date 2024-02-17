@@ -34,16 +34,16 @@ public class Shooter extends SubsystemBase {
 
   /** Creates a new Shooter. */
   public Shooter() {
-    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
-    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
+    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
+    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
 
     rightShooterMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
     leftShooterMotor.setIdleMode(IdleMode.kCoast);
 
     rightShooterMotor.follow(leftShooterMotor, true);
 
-    rightShooterMotor.setSmartCurrentLimit(WheelConstants.SHOOTER_CURRENT_LIMIT);
-    leftShooterMotor.setSmartCurrentLimit(WheelConstants.SHOOTER_CURRENT_LIMIT);
+    rightShooterMotor.setSmartCurrentLimit(WheelConstants.CURRENT_LIMIT);
+    leftShooterMotor.setSmartCurrentLimit(WheelConstants.CURRENT_LIMIT);
 
     leftShooterEncoder = leftShooterMotor.getEncoder();
     rightShooterEncoder = rightShooterMotor.getEncoder();

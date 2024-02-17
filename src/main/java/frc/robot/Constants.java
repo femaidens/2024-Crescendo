@@ -26,9 +26,6 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class OIConstants {
-    public static final int DRIVE_JOY = 0;
-    public static final int OPER_JOY = 1;
-
     public static final double kDriveDeadband = 0.05;
   }
 
@@ -37,13 +34,17 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final int HOPPER_CURRENT_LIMIT = 0;
-    public static final double VEL_CFACTOR = 360.0 / 60.0;
+    public static final int CURRENT_LIMIT = 0;
+    public static final double SHOOTING_SPEED = 0.05;
+
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
   }
 
   public static final class IntakeConstants {
     public static final double ROLLER_SPEED = 0.5;
-    public static final double VELOCITY_CONVERSION_FACTOR = 0.0;
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    
+    public static final int CURRENT_LIMIT = 0;
 
     // pid constants
     public static final double kP = 0.0;
@@ -73,14 +74,14 @@ public final class Constants {
       public static final double kI = 0;
       public static final double kD = 0;
 
-      /*
-       * CONVERSION
+      /* CONVERSION
        * to obtain vcf, use dimensional analysis to convert from rpm to m/s
        * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
        */
       public static final double VEL_CFACTOR = 0;
+
       // limits
-      public static final int SHOOTER_CURRENT_LIMIT = 0;
+      public static final int CURRENT_LIMIT = 0;
 
       // auto constants
       public static final double SHOOTER_METERS_SECOND = 2.0;

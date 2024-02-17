@@ -30,82 +30,56 @@ public final class Constants {
     public static final double kDriveDeadband = 0.05;
   }
 
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-  }
-
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
-  }
-
-
-  public static final class IntakeConstants{
+  public static final class IntakeConstants {
     public static final double rotationSpeed = 0.5;
     public static final double rollerSpeed = 0.5;
   }
-    public static final class PIDConstants{
-      public static final double kP = 0;
-      public static final double kI = 0;
-      public static final double kD = 0;
-    }
 
-    public static final double rotLiftSetPoint = 5;
-    public static final double rotLowerSetPoint = 0;
+  public static final class PIDConstants {
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+  }
+
   public static final class HopperConstants {
     public static final int HOPPER_CURRENT_LIMIT = 0;
   }
 
   public static final class ShooterConstants {
-    //feedforward
+    // feedforward
     public static final double kS = 0;
     public static final double kV = 0;
-    //pid
+    // pid
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    //conversion
+    // conversion
     /*
      * to obtain vcf, use dimensional analysis to convert from rpm to m/s
      * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
      */
     public static final double VELOCITY_CONVERSION_FACTOR = 0;
-    //limits
+    // limits
     public static final int SHOOTER_CURRENT_LIMIT = 0;
 
-    //auto constants
+    // auto constants
     public static final double SHOOTER_METERS_SECOND = 2.0;
   }
 
   public static final class ShooterAngleConstants {
-    //pid
+    // pid
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    //conversion
+    // conversion
     public static final double POSITION_CONVERSION_FACTOR = 360;
-    //limits
+    // limits
     public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
-    //autos
+    // autos
     public static final double SHOOTER_ANGLE_UP = 60;
   }
 
-  public static final class DrivetrainConstants {
-    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
-  }
-
-  public static final class ClimberConstants 
-  {
+  public static final class ClimberConstants {
     public static final double climbArmSpeed = 0.3;
   }
 }

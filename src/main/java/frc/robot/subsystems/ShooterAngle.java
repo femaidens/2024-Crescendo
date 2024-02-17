@@ -41,11 +41,11 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   /*
-   * @param the angle setpoint, in degrees
+   * @param the angle setpoint - angle is relative to the horizontal, in degrees
    * sets the shooter angle, in degrees
    */
-  public void setShooterAutoAngle(double angle) {
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle+18.3);//offset of 18.3 degrees 
+  public void setAutoAngle(double angle) {
+    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle - 18.3);//offset of 18.3 degrees, is subtracted
     shooterAngleMotor.setVoltage(voltage);
 
   }
@@ -53,24 +53,24 @@ public class ShooterAngle extends SubsystemBase {
   /*
    * auto moves the shooter up, increases angle relative to horizontal axis
    */
-  public void shooterAngleUp() {
-    shooterAngleMotor.setVoltage(0.5);
+  public void angleUp() {
+    shooterAngleMotor.set(0.5);
   }
 
   /*
    * auto moves the shooter down, decreases angle relative to the horizontal
    */
-  public void shooterAngleDown() {
-    shooterAngleMotor.setVoltage(-0.5);
+  public void angleDown() {
+    shooterAngleMotor.set(-0.5);
   }
 
   /*
-   * joystick axis changes shooter angle
+   * @param input joystick axis, changes shooter angle
    */
-  public void setShooterAngle(double input) {
+  public void setAngle(double input) {
     if (Math.abs(input) > 0.1) {
-      double voltage = input * 0.7;
-      shooterAngleMotor.setVoltage(voltage);
+      double speed = input * 0.7;
+      shooterAngleMotor.set(speed);
       setpoint = shooterAngleEncoder.getPosition();
     } else {
       maintainAngle();
@@ -79,7 +79,7 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   /*
-   * maintains the angle that it was last set to
+   * maintains the angle that it was last set to with the joystick axis
    */
   public void maintainAngle() {
     double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), setpoint);
@@ -92,13 +92,13 @@ public class ShooterAngle extends SubsystemBase {
    * @return if the angle of the shooter is within the threshold of the setpoint
    */
   public boolean isAtAngle(double angle) {
-    return Math.abs(angle+18.3 - shooterAngleEncoder.getPosition()) < 2;
+    return Math.abs(angle - 18.3 - shooterAngleEncoder.getPosition()) < 2;
   }
 
   /*
    * stops motor for shooter angle
    */
-  public void stopShooterAngle() {
+  public void stopAngle() {
     shooterAngleMotor.setVoltage(0);
   }
 

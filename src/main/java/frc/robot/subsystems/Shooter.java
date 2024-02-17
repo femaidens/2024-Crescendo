@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -153,7 +154,9 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Left: " + leftEncoder.getVelocity());
-    System.out.println("Right: " + rightEncoder.getVelocity());
+    // System.out.println("Left: " + leftEncoder.getVelocity());
+    // System.out.println("Right: " + rightEncoder.getVelocity());
+    SmartDashboard.putNumber("Left velocity: ", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Right velocity: ", rightEncoder.getVelocity());
   }
 }

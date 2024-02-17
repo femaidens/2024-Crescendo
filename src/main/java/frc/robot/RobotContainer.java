@@ -64,7 +64,7 @@ public class RobotContainer {
     // Configure default commands
     m_shooterAngle.setDefaultCommand(
         new RunCommand(
-            () -> m_shooterAngle.setShooterAngle(
+            () -> m_shooterAngle.setAngle(
                 MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
             m_shooterAngle));
 
@@ -137,12 +137,12 @@ public class RobotContainer {
      * .whileTrue(new RunCommand(
      * () -> intake.liftIntake(), intake));
      */
-    Trigger shooterSpin = m_operController.a();
-    shooterSpin
-        .onTrue(new RunCommand(
-            () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_RAD_SECOND), m_shooter));
-        // .onFalse(new RunCommand(
-        //     () -> m_shooter.stopShooter(), m_shooter));
+    // Trigger shooterSpin = m_operController.a();
+    // shooterSpin
+    //     .onTrue(new RunCommand(
+    //         () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_RAD_SECOND), m_shooter));
+    //     // .onFalse(new RunCommand(
+    //     //     () -> m_shooter.stopShooter(), m_shooter));
 
     // Trigger shooterUp = m_operController.b();
     // shooterUp
@@ -189,12 +189,12 @@ public class RobotContainer {
     Trigger rightDynaForward = m_operController.x();
     rightDynaForward
         .whileTrue(
-          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+          m_shooter.rightDyna(SysIdRoutine.Direction.kReverse)
         );
     Trigger rightDynaReverse = m_operController.y();
     rightDynaReverse
         .whileTrue(
-          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+          m_shooter.rightDyna(SysIdRoutine.Direction.kReverse)
         );
   }
 

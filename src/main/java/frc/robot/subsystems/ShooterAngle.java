@@ -11,15 +11,16 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.ShooterPorts;
 
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkMax shooterAngleMotor;
+  private final CANSparkMax angleMotor;
 
-  private final AbsoluteEncoder shooterAngleEncoder;
+  private final AbsoluteEncoder angleEncoder;
 
   private final PIDController shooterAnglePID;
 
@@ -29,12 +30,12 @@ public class ShooterAngle extends SubsystemBase {
 
   /** Creates a new ShooterAngle. */
   public ShooterAngle() {
-    shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE_PORT, MotorType.kBrushless);
-    shooterAngleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
-    shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
+    angleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE_PORT, MotorType.kBrushless);
+    angleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
+    angleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
 
-    shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POSITION_CONVERSION_FACTOR);
+    angleEncoder = angleMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    angleEncoder.setPositionConversionFactor(ShooterAngleConstants.POSITION_CONVERSION_FACTOR);
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
@@ -42,11 +43,11 @@ public class ShooterAngle extends SubsystemBase {
 
   /*
    * @param the angle setpoint - angle is relative to the horizontal, in degrees
-   * sets the shooter angle, in degrees
+   * sets the shooter angle, in degrees. Subtracted 18.3, because zero is 18.3 degrees above horizontal
    */
   public void setAutoAngle(double angle) {
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle - 18.3);//offset of 18.3 degrees, is subtracted
-    shooterAngleMotor.setVoltage(voltage);
+    double voltage = shooterAnglePID.calculate(angleEncoder.getPosition(), angle - 18.3); //offset of 18.3 degrees, is subtracted
+    angleMotor.setVoltage(voltage);
 
   }
 
@@ -54,36 +55,52 @@ public class ShooterAngle extends SubsystemBase {
    * auto moves the shooter up, increases angle relative to horizontal axis
    */
   public void angleUp() {
-    shooterAngleMotor.set(0.5);
+    if(angleEncoder.getPosition() < ShooterAngleConstants.SHOOTER_MAX_ANGLE){
+      angleMotor.set(0.5);
+    } else {
+      angleMotor.set(0);
+      System.out.println("max angle reached!");
+    }
+    
   }
 
   /*
    * auto moves the shooter down, decreases angle relative to the horizontal
    */
   public void angleDown() {
-    shooterAngleMotor.set(-0.5);
+    if(angleEncoder.getPosition() > ShooterAngleConstants.SHOOTER_MIN_ANGLE){
+      angleMotor.set(-0.5);
+    } else {
+      angleMotor.set(0);
+      System.out.println("min angle reached!");
+    }
+   
   }
 
   /*
-   * @param input joystick axis, changes shooter angle
+   * @param input joystick axis
+   * changes shooter angle
+   * accounts for the max and min angle limits
    */
-  public void setAngle(double input) {
-    if (Math.abs(input) > 0.1) {
-      double speed = input * 0.7;
-      shooterAngleMotor.set(speed);
-      setpoint = shooterAngleEncoder.getPosition();
-    } else {
-      maintainAngle();
+  public void setAngle(double input) { 
+      double speed = input * 0.5;
+      if(input < -0.1 && angleEncoder.getPosition() > ShooterAngleConstants.SHOOTER_MIN_ANGLE){
+        angleMotor.set(speed);
+      } else if (input > 0.1 && angleEncoder.getPosition() < ShooterAngleConstants.SHOOTER_MAX_ANGLE){
+        angleMotor.set(speed);
+      } else {
+        maintainAngle();
+      }
+     setpoint = angleEncoder.getPosition();
     }
-
-  }
+  
 
   /*
    * maintains the angle that it was last set to with the joystick axis
    */
   public void maintainAngle() {
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), setpoint);
-    shooterAngleMotor.setVoltage(voltage);
+    double voltage = shooterAnglePID.calculate(angleEncoder.getPosition(), setpoint);
+    angleMotor.setVoltage(voltage);
   }
 
   /*
@@ -92,18 +109,19 @@ public class ShooterAngle extends SubsystemBase {
    * @return if the angle of the shooter is within the threshold of the setpoint
    */
   public boolean isAtAngle(double angle) {
-    return Math.abs(angle - 18.3 - shooterAngleEncoder.getPosition()) < 2;
+    return Math.abs(angle - 18.3 - angleEncoder.getPosition()) < 2;
   }
 
   /*
    * stops motor for shooter angle
    */
   public void stopAngle() {
-    shooterAngleMotor.setVoltage(0);
+    angleMotor.setVoltage(0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Arm angle: ", angleEncoder.getPosition() + 18.3);
   }
 }

@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Ports.*;
-import frc.robot.subsystems.Drivetrain1;
+import frc.robot.subsystems.Drivetrain;
 
 import org.littletonrobotics.urcl.URCL;
 
@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain1 drivetrain = new Drivetrain1();
+  private final Drivetrain drivetrain = new Drivetrain();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // private final CommandXboxController driveJoy =

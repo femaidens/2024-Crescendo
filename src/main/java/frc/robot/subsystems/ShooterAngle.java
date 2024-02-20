@@ -30,7 +30,7 @@ public class ShooterAngle extends SubsystemBase {
   public ShooterAngle() {
     shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE, MotorType.kBrushless);
     shooterAngleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
-    shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
+    shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.CURRENT_LIMIT);
 
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);

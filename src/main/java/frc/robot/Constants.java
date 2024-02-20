@@ -65,24 +65,14 @@ public final class Constants {
     public static final double POS_CFACTOR = 360.0; // degrees
 
     // limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 0;
 
     // auton
-    public static final double SHOOTER_ANGLE_UP = 60;
+    public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    // conversion
-    public static final double POSITION_CONVERSION_FACTOR = 360;
-    // limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
-    // autos
-    public static final double SHOOTER_ANGLE_UP = 60;
-  }
-
-  public static final class ClimberConstants {
-    public static final double climbArmSpeed = 0.3;
   }
 }

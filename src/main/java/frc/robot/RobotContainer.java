@@ -88,8 +88,8 @@ public class RobotContainer {
     Trigger RunRollerButton = operJoy.a(); // change buttons later
     RunRollerButton
         .whileTrue(new RunCommand(
-            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); // need to code for when it is
-                                                                                          // false
+            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); 
+            // need to code for when it is false
 
     /*
      * Trigger LiftIntake = operJoy.a(); //change buttons later

@@ -60,8 +60,8 @@ public class RobotContainer {
 
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(m_shooter,
-    // m_shooterAngle));
+    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
+    // shooterWheelAngle));
     // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle,
     // armLateral));
     // autonChooser.addOption("p2", new Path2(drivetrain));
@@ -69,31 +69,6 @@ public class RobotContainer {
     // armAngle, armLateral));
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   * // Configure the trigger bindings
-   * configureBindings();
-   * 
-   * /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureButtonBindings() {
     // resets robot heading (gyro)
 
@@ -137,49 +112,49 @@ public class RobotContainer {
     //         () -> shooterAngle.stopShooterAngle(), shooterAngle));
 
     // 01/23/2024 stacky is sick
-    Trigger leftQuasForward = m_operController.rightBumper();
+    Trigger leftQuasForward = operJoy.rightBumper();
     leftQuasForward
         .whileTrue(
-          m_shooter.leftQuas(SysIdRoutine.Direction.kForward)
+          shooterWheel.leftQuas(SysIdRoutine.Direction.kForward)
         );
 
-    Trigger leftQuasReverse = m_operController.leftBumper();
+    Trigger leftQuasReverse = operJoy.leftBumper();
     leftQuasReverse
         .whileTrue(
-          m_shooter.leftQuas(SysIdRoutine.Direction.kReverse)
+          shooterWheel.leftQuas(SysIdRoutine.Direction.kReverse)
         );
 
-    Trigger leftDynaForward = m_operController.rightTrigger();
+    Trigger leftDynaForward = operJoy.rightTrigger();
     leftDynaForward
         .whileTrue(
-          m_shooter.leftDyna(SysIdRoutine.Direction.kForward)
+          shooterWheel.leftDyna(SysIdRoutine.Direction.kForward)
         );
 
-    Trigger leftDynaReverse = m_operController.leftTrigger();
+    Trigger leftDynaReverse = operJoy.leftTrigger();
     leftDynaReverse
         .whileTrue(
-          m_shooter.leftDyna(SysIdRoutine.Direction.kReverse)
+          shooterWheel.leftDyna(SysIdRoutine.Direction.kReverse)
         );
 
-    Trigger rightQuasForward = m_operController.a();
+    Trigger rightQuasForward = operJoy.a();
     rightQuasForward
         .whileTrue(
-          m_shooter.rightQuas(SysIdRoutine.Direction.kForward)
+          shooterWheel.rightQuas(SysIdRoutine.Direction.kForward)
         );
-    Trigger rightQuasReverse = m_operController.b();
+    Trigger rightQuasReverse = operJoy.b();
     rightQuasReverse
         .whileTrue(
-          m_shooter.rightQuas(SysIdRoutine.Direction.kReverse)
+          shooterWheel.rightQuas(SysIdRoutine.Direction.kReverse)
         );
-    Trigger rightDynaForward = m_operController.x();
+    Trigger rightDynaForward = operJoy.x();
     rightDynaForward
         .whileTrue(
-          m_shooter.rightDyna(SysIdRoutine.Direction.kReverse)
+          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
         );
-    Trigger rightDynaReverse = m_operController.y();
+    Trigger rightDynaReverse = operJoy.y();
     rightDynaReverse
         .whileTrue(
-          m_shooter.rightDyna(SysIdRoutine.Direction.kReverse)
+          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
         );
   }
 

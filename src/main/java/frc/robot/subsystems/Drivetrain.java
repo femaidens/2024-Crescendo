@@ -86,7 +86,7 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       DriveConstants.DRIVE_KINEMATICS,
-      Rotation2d.fromDegrees(gyro.getAngle()),
+      Rotation2d.fromDegrees(getAngle()),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -102,7 +102,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // updates periodically
     odometry.update(
-        Rotation2d.fromDegrees(gyro.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -111,8 +111,8 @@ public class Drivetrain extends SubsystemBase {
         });
     SmartDashboard.putNumber("gyro angle", gyro.getAngle());
     System.out.println("yaw reading" + gyro.getYaw());
-    System.out.println("angle reading " + gyro.getAngle());
-    // SmartDashboard.putNumber("gyro x", gyroX()); <--
+    System.out.println("angle reading " + getAngle());
+    // SmartDashboard.putNumber("gyro x", gyroX()); <-
   }
 
     public void getJoystickValue(CommandXboxController joystick){
@@ -163,7 +163,7 @@ public class Drivetrain extends SubsystemBase {
     double xSpeedCommanded;
     double ySpeedCommanded;
 
-    System.out.println("yaw axis: " + getAngle());
+    //System.out.println("yaw axis: " + getAngle());
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
@@ -340,6 +340,7 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getRate() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
+  //sys id
   public Command driveQuasistatic(SysIdRoutine.Direction direction) {
     return driveRoutine.quasistatic(direction);
   }

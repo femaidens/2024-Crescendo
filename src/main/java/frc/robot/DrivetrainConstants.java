@@ -114,7 +114,7 @@ import edu.wpi.first.math.util.Units;
     public static final double MAX_SPEED = 4.8; // max speed meters per second *** LOOK INTO MAX ALLOWED SPEED
     public static final double MAX_ANGULAR_SPEED = 2 * Math.PI; // radians per second
 
-    public static final boolean GYRO_REVERSED = false;
+    public static final boolean GYRO_REVERSED = true;
 
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
         new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // fl

@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -214,5 +215,15 @@ public class MaxSwerveModule {
 
   public void setTurnVoltage(double voltage) {
     m_turningSparkMax.setVoltage(voltage);
+  }
+
+  public void periodic(){
+    double velocity = m_drivingEncoder.getVelocity();
+
+    SmartDashboard.putNumber("Current Velocity: ", velocity);
+    SmartDashboard.putNumber("Target Velocity: ", m_desiredState.speedMetersPerSecond);
+
+    SmartDashboard.putNumber("Current Angle: ", getPosition().angle.getDegrees());
+    SmartDashboard.putNumber("Target Angle; ", m_desiredState.angle.getDegrees());
   }
 }

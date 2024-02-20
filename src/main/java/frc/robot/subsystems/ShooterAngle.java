@@ -12,7 +12,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants.*;
+import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Ports.ShooterPorts;
 
 public class ShooterAngle extends SubsystemBase {
@@ -30,13 +30,13 @@ public class ShooterAngle extends SubsystemBase {
   public ShooterAngle() {
     shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE, MotorType.kBrushless);
     shooterAngleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
-    shooterAngleMotor.setSmartCurrentLimit(AngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
+    shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
 
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    shooterAngleEncoder.setPositionConversionFactor(AngleConstants.POS_CFACTOR);
+    shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
     
 
-    shooterAnglePID = new PIDController(AngleConstants.kP, AngleConstants.kI, AngleConstants.kD);
+    shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
   }
 

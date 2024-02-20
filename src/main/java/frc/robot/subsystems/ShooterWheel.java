@@ -14,10 +14,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.*;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.ShooterPorts;
 
-public class Shooter extends SubsystemBase {
+public class ShooterWheel extends SubsystemBase {
   private final CANSparkMax leftShooterMotor;
   private final CANSparkMax rightShooterMotor;
 
@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
   private final PIDController shooterPID;
 
   /** Creates a new Shooter. */
-  public Shooter() {
+  public ShooterWheel() {
     leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
     rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
 

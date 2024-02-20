@@ -67,6 +67,8 @@ public class Intake extends SubsystemBase {
     intakeMotor.burnFlash();
     hopperMotor.burnFlash();
     
+    setEmitter(true);
+    
     vSetpoint = 0;
   }
 
@@ -81,6 +83,7 @@ public class Intake extends SubsystemBase {
     vSetpoint = setpoint;
   }
 
+  // for testing; see if vel pid is absolutely necessary
   public void setIntakeSpeed(double speed) {
     intakeMotor.set(speed);
   }
@@ -121,9 +124,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake Velocity", getIntakeVelocity());
-    SmartDashboard.putNumber("Hopper Velocity", getHopperVelocity());
+    SmartDashboard.putNumber("intake vel", getIntakeVelocity());
+    SmartDashboard.putNumber("hopper vel", getHopperVelocity());
 
-    SmartDashboard.putNumber("Intake Setpoint", vSetpoint);
+    SmartDashboard.putNumber("intake sp", vSetpoint);
   }
 }

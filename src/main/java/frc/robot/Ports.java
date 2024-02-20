@@ -23,6 +23,11 @@ public class Ports {
     public static final int REAR_RIGHT_TURNING = 2;
   }
 
+  public static final class ClimbPorts {
+    public static final int RIGHT_ARM_MOTOR = 0;
+    public static final int LEFT_ARM_MOTOR = 1;
+  }
+
   public static final class IntakePorts {
     public static final int INTAKE_ROLLER = 3;
     public static final int INTAKE_ENCODER = 4;
@@ -43,11 +48,6 @@ public class Ports {
     public static final int RIGHT_SHOOTER_FLEX = 0;
 
     public static final int SHOOTER_ANGLE = 0;
-  }
-
-  public static final class ClimbPorts {
-    public static final int RIGHT_ARM_MOTOR = 0;
-    public static final int LEFT_ARM_MOTOR = 1;
   }
 
 }

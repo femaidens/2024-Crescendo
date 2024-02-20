@@ -14,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.ShooterPorts;
 
 public class ShooterAngle extends SubsystemBase {
@@ -30,12 +29,13 @@ public class ShooterAngle extends SubsystemBase {
 
   /** Creates a new ShooterAngle. */
   public ShooterAngle() {
-    angleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE_PORT, MotorType.kBrushless);
-    angleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
-    angleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
+    shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE, MotorType.kBrushless);
+    shooterAngleMotor.setIdleMode(IdleMode.kBrake); // check with engineering
+    shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.CURRENT_LIMIT);
 
-    angleEncoder = angleMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    angleEncoder.setPositionConversionFactor(ShooterAngleConstants.POSITION_CONVERSION_FACTOR);
+    shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
+    
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 

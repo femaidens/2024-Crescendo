@@ -4,109 +4,84 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
   }
 
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  public static final class ClimberConstants {
+    public static final double ARM_SPEED = 0.3;
   }
 
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
+  public static final class HopperConstants {
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final int CURRENT_LIMIT = 0;
+    public static final double TRANSITION_SPEED = 0.05;
   }
 
   public static final class IntakeConstants {
-    public static final double rotationSpeed = 0.5;
-    public static final double rollerSpeed = 0.5;
+    // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final double ROLLER_SPEED = 0.5;
+
+    public static final int CURRENT_LIMIT = 0;
+
+    // pid constants
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    // ff constants
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
   }
 
-  public static final class PIDConstants {
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-  }
+  public static final class ShooterWheelConstants {
+    // CONVERSION (RPM -> DEG/S)
+    // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
-  public static final double rotLiftSetPoint = 5;
-  public static final double rotLowerSetPoint = 0;
+    public static final double VEL_CFACTOR = 360.0 / 60.0;
 
-  public static final class HopperConstants {
-    public static final int HOPPER_CURRENT_LIMIT = 0;
-  }
+    // limits
+    public static final int CURRENT_LIMIT = 30;
 
-  public static final class ShooterConstants {
-    // feedforward
+    // auton
+    public static final double SHOOTER_METERS_SECOND = 2.0;
+    public static final double AUTON_SPEED = 720; // degrees/sec
+
+    // ff
     public static final double kS = 0;
     public static final double kV = 0;
+
     // pid
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    // conversion
-    /*
-     * to obtain vcf, use dimensional analysis to convert from rpm to m/s
-     * given rpm * 1/(gear ratio) * (2 * Pi) * 60 (for seconds)
-     */
-    public static final double VELOCITY_CONVERSION_FACTOR = 2.0 * Math.PI / 60.0;
-    // limits
-    public static final int SHOOTER_CURRENT_LIMIT = 0;
 
-    // auto constants
-    public static final double SHOOTER_RAD_SECOND = 2.0;
   }
 
   public static final class ShooterAngleConstants {
+
+    // conversion
+    public static final double POS_CFACTOR = 360.0; // degrees
+
+    // limits
+    public static final int CURRENT_LIMIT = 30;
+
+    // angles (degrees)
+    public static final double PHYSICAL_OFFSET = 18.3;
+    public static final double SHOOTER_MAX_ANGLE = 75.0;
+    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
+
+    // auton
+    public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
+
     // pid
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    // conversion
-    public static final double POSITION_CONVERSION_FACTOR = 360.0;
-    // limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 30;
-    // autos
-    public static final double SHOOTER_ANGLE_UP = 60.0;
-  }
 
-  public static final class DrivetrainConstants {
-    // swerve constants have a couple diff classes, so just put all of them at the
-    // bottom of the constants class (aka here)
-  }
-
-  public static final class ClimberConstants {
-    public static final double climbArmSpeed = 0.3;
   }
 }

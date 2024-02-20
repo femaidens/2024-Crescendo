@@ -5,9 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Ports.*;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterWheel;
 import frc.robot.subsystems.ShooterAngle;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
@@ -32,51 +31,37 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  // The driver's controller
-  CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-  CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+
+  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+
   private final Intake intake = new Intake();
-  // private final Joystick lateralJoy = new
-  // Joystick(Ports.JoystickPorts.LATERAL_JOY);
-  // private final Joystick rotationJoy = new
-  // Joystick(Ports.JoystickPorts.ROTATION_JOY);
+  private final ShooterWheel shooterWheel = new ShooterWheel();
+  private final ShooterAngle shooterAngle = new ShooterAngle();
+
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-  private final Shooter m_shooter = new Shooter();
-  private final ShooterAngle m_shooterAngle = new ShooterAngle();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  // private final CommandXboxController driveJoy =
-  // new CommandXboxController(JoystickPorts.OPER_JOY);
-  private CommandXboxController m_driverController = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController m_operController = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
-    // Configure the button bindings
+    // configurations
     configureButtonBindings();
-
-    // auton config
     configureAuton();
 
-    // Configure default commands
-    m_shooterAngle.setDefaultCommand(
+    // configure default commands
+    shooterAngle.setDefaultCommand(
         new RunCommand(
-            () -> m_shooterAngle.setShooterAngle(
-                MathUtil.applyDeadband(m_operController.getLeftY(), 0.1)),
-            m_shooterAngle));
+            () -> shooterAngle.setAngle(
+                MathUtil.applyDeadband(operJoy.getLeftY(), 0.1)),
+            shooterAngle));
 
-    m_shooter.setDefaultCommand(
+    shooterWheel.setDefaultCommand(
         new RunCommand(
-            () -> m_shooter.stopShooter(), m_shooter));
+            () -> shooterWheel.stopShooter(), shooterWheel));
   }
 
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(m_shooter,
-    // m_shooterAngle));
+    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
+    // shooterWheelAngle));
     // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle,
     // armLateral));
     // autonChooser.addOption("p2", new Path2(drivetrain));
@@ -84,31 +69,6 @@ public class RobotContainer {
     // armAngle, armLateral));
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   * // Configure the trigger bindings
-   * configureBindings();
-   * 
-   * /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureButtonBindings() {
     // resets robot heading (gyro)
 
@@ -128,7 +88,7 @@ public class RobotContainer {
     Trigger RunRollerButton = operJoy.a(); // change buttons later
     RunRollerButton
         .whileTrue(new RunCommand(
-            () -> intake.setRollerSpeed(Constants.IntakeConstants.rollerSpeed), intake)); // need to code for when it is
+            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); // need to code for when it is
                                                                                           // false
 
     /*
@@ -137,43 +97,64 @@ public class RobotContainer {
      * .whileTrue(new RunCommand(
      * () -> intake.liftIntake(), intake));
      */
-    Trigger shooterSpin = m_operController.a();
-    shooterSpin
-        .onTrue(new RunCommand(
-            () -> m_shooter.setDesiredVelocity(ShooterConstants.SHOOTER_RAD_SECOND), m_shooter));
-        // .onFalse(new RunCommand(
-        //     () -> m_shooter.stopShooter(), m_shooter));
+    // Trigger shooterSpin = operJoy.a();
+    // shooterSpin
+    //     .onTrue(new RunCommand(
+    //         () -> shooterWheel.setDesiredVelocity(ShooterWheelConstants.SHOOTER_RAD_SECOND), shooterWheel));
+    //     // .onFalse(new RunCommand(
+    //     //     () -> shooterWheel.stopShooter(), shooterWheel));
 
-    // Trigger shooterUp = m_operController.b();
+    // Trigger shooterUp = operJoy.b();
     // shooterUp
     //     .onTrue(new RunCommand(
-    //         () -> m_shooterAngle.shooterAngleUp(), m_shooterAngle))
+    //         () -> shooterAngle.shooterAngleUp(), shooterAngle))
     //     .onFalse(new RunCommand(
-    //         () -> m_shooterAngle.stopShooterAngle(), m_shooterAngle));
+    //         () -> shooterAngle.stopShooterAngle(), shooterAngle));
 
     // 01/23/2024 stacky is sick
-    Trigger leftQuasForward = m_operController.rightBumper();
+    Trigger leftQuasForward = operJoy.rightBumper();
     leftQuasForward
         .whileTrue(
-          m_shooter.leftQuas(SysIdRoutine.Direction.kForward)
+          shooterWheel.leftQuas(SysIdRoutine.Direction.kForward)
         );
 
-    Trigger leftQuasReverse = m_operController.leftBumper();
+    Trigger leftQuasReverse = operJoy.leftBumper();
     leftQuasReverse
         .whileTrue(
-          m_shooter.leftQuas(SysIdRoutine.Direction.kReverse)
+          shooterWheel.leftQuas(SysIdRoutine.Direction.kReverse)
         );
 
-    Trigger leftDynaForward = m_operController.rightTrigger();
+    Trigger leftDynaForward = operJoy.rightTrigger();
     leftDynaForward
         .whileTrue(
-          m_shooter.leftDyna(SysIdRoutine.Direction.kForward)
+          shooterWheel.leftDyna(SysIdRoutine.Direction.kForward)
         );
 
-    Trigger leftDynaReverse = m_operController.leftTrigger();
+    Trigger leftDynaReverse = operJoy.leftTrigger();
     leftDynaReverse
         .whileTrue(
-          m_shooter.leftDyna(SysIdRoutine.Direction.kReverse)
+          shooterWheel.leftDyna(SysIdRoutine.Direction.kReverse)
+        );
+
+    Trigger rightQuasForward = operJoy.a();
+    rightQuasForward
+        .whileTrue(
+          shooterWheel.rightQuas(SysIdRoutine.Direction.kForward)
+        );
+    Trigger rightQuasReverse = operJoy.b();
+    rightQuasReverse
+        .whileTrue(
+          shooterWheel.rightQuas(SysIdRoutine.Direction.kReverse)
+        );
+    Trigger rightDynaForward = operJoy.x();
+    rightDynaForward
+        .whileTrue(
+          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
+        );
+    Trigger rightDynaReverse = operJoy.y();
+    rightDynaReverse
+        .whileTrue(
+          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
         );
   }
 

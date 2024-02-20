@@ -6,15 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterWheel;
 
 public class ShooterVelocity extends Command {
-  private final Shooter shooter;
+  private final ShooterWheel shooter;
   private final double speed; // in meters per second
   private final Timer timer;
 
   /** Creates a new ShooterVelocity. */
-  public ShooterVelocity(Shooter m_shooter, double m_speed) {
+  public ShooterVelocity(ShooterWheel m_shooter, double m_speed) {
     shooter = m_shooter;
     speed = m_speed;
     timer = new Timer();

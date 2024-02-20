@@ -1,12 +1,26 @@
 // // Copyright (c) FIRST and other WPILib contributors.
 // // Open Source Software; you can modify and/or share it under the terms of
 // // the WPILib BSD license file in the root directory of this project.
+// // Copyright (c) FIRST and other WPILib contributors.
+// // Open Source Software; you can modify and/or share it under the terms of
+// // the WPILib BSD license file in the root directory of this project.
 
+// package frc.robot.subsystems;
 // package frc.robot.subsystems;
 
 // import java.util.List;
 // import java.util.Optional;
+// import java.util.List;
+// import java.util.Optional;
 
+// import org.photonvision.EstimatedRobotPose;
+// import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonPoseEstimator;
+// import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+// import org.photonvision.PhotonUtils;
+// import org.photonvision.targeting.PhotonPipelineResult;
+// import org.photonvision.targeting.PhotonTrackedTarget;
+// import org.photonvision.targeting.TargetCorner;
 // import org.photonvision.EstimatedRobotPose;
 // import org.photonvision.PhotonCamera;
 // import org.photonvision.PhotonPoseEstimator;
@@ -47,13 +61,27 @@
 
 //   // Angle between horizontal and the camera.
 //   public final double cameraPitchRadians;
+//   // Angle between horizontal and the camera.
+//   public final double cameraPitchRadians;
 
 //   // How far from the target we want to be
 //   public final double goalRange;
 //   PhotonCamera camera = new PhotonCamera("photonvision");
 //   private PhotonPipelineResult result;
 //   PhotonTrackedTarget target = result.getBestTarget();
+//   // How far from the target we want to be
+//   public final double goalRange;
+//   PhotonCamera camera = new PhotonCamera("photonvision");
+//   private PhotonPipelineResult result;
+//   PhotonTrackedTarget target = result.getBestTarget();
 
+//   // Get information from target.
+//   double yaw = target.getYaw();
+//   double pitch = target.getPitch();
+//   double area = target.getArea();
+//   double skew = target.getSkew();
+//   Transform3d pose = target.getBestCameraToTarget();
+//   List<TargetCorner> corners = target.getDetectedCorners();
 //   // Get information from target.
 //   double yaw = target.getYaw();
 //   double pitch = target.getPitch();
@@ -90,6 +118,13 @@
 //     goalRange = Units.feetToMeters(3);
 //     result = camera.getLatestResult();
 //   }
+//   public Limelight() {
+//     cameraHeight = Units.inchesToMeters(24);
+//     targetHeight = Units.feetToMeters(5);
+//     cameraPitchRadians = Units.degreesToRadians(0);
+//     goalRange = Units.feetToMeters(3);
+//     result = camera.getLatestResult();
+//   }
 
 //   public void estimateTranslationToTarget() {
 //     Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(
@@ -99,7 +134,13 @@
 //   public void capturePreProcessImage() {
 //     camera.takeInputSnapshot();
 //   }
+//   public void capturePreProcessImage() {
+//     camera.takeInputSnapshot();
+//   }
 
+//   public void capturePostProcessImage() {
+//     camera.takeOutputSnapshot();
+//   }
 //   public void capturePostProcessImage() {
 //     camera.takeOutputSnapshot();
 //   }

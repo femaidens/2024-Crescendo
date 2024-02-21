@@ -78,6 +78,9 @@ public final class Constants {
     public static final double SHOOTER_MAX_ANGLE = 75.0;
     public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
 
+    // speeds
+    public static final double CONSTANT_SPEED = 0.5;
+
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 

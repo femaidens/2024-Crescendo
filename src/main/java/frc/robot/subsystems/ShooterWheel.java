@@ -44,7 +44,6 @@ public class ShooterWheel extends SubsystemBase {
       new SysIdRoutine.Mechanism(
           volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
 
-  /** Creates a new Shooter. */
   public ShooterWheel() {
     leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
     rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
@@ -56,10 +55,10 @@ public class ShooterWheel extends SubsystemBase {
     shooterFF = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
     shooterPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
+    rightShooterMotor.follow(leftShooterMotor, true);
+
     rightShooterMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
     leftShooterMotor.setIdleMode(IdleMode.kCoast);
-
-    rightShooterMotor.follow(leftShooterMotor, true);
 
     rightShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
     leftShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
@@ -69,8 +68,6 @@ public class ShooterWheel extends SubsystemBase {
 
     leftShooterMotor.burnFlash();
     rightShooterMotor.burnFlash();
-
-    // rightShooterMotor.setInverted(true); //double check if it's left or right
 
     /* FLEX VARIATIONS */
     // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT,
@@ -93,12 +90,8 @@ public class ShooterWheel extends SubsystemBase {
     // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
   }
 
-  /*
-   * @param the setpoint velocity of the wheels, in meters/second
-   * sets the velocity of shooter wheels in meters per second
-   * 
-   * the inversion of the motors might need to be switched
-   */
+  // sets the velocity of shooter wheels in degrees per second
+
   public void setDesiredVelocity(double speed) {
     // getRate() in WPI might be better than getVelocity if conversion in Constants
     // doesn't work
@@ -125,7 +118,7 @@ public class ShooterWheel extends SubsystemBase {
     // leftShooterFlex.setVoltage(0);
   }
 
-  /* SYSID */ 
+  /* SYSID */
   public void setLeftVoltage(double voltage) {
     leftShooterMotor.setVoltage(voltage);
   }

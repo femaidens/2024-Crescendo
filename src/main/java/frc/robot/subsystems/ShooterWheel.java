@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.ShooterPorts;
-import static edu.wpi.first.units.Units.Volts;
+import edu.wpi.first.units.Units;
 
 public class ShooterWheel extends SubsystemBase {
   private final CANSparkMax leftShooterMotor;
@@ -37,12 +37,12 @@ public class ShooterWheel extends SubsystemBase {
   private final SysIdRoutine leftRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
-          volts -> setLeftVoltage(volts.in(Volts)), null, this));
+          volts -> setLeftVoltage(volts.in(Units.Volts)), null, this));
 
   private final SysIdRoutine rightRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
-          volts -> setRightVoltage(volts.in(Volts)), null, this));
+          volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
 
   /** Creates a new Shooter. */
   public ShooterWheel() {

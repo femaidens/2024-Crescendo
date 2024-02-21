@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
-import static edu.wpi.first.units.Units.Volts;
+import edu.wpi.first.units.Units;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;

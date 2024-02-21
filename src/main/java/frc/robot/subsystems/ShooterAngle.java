@@ -40,51 +40,15 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   // sets shooter angle (degress)
-  public void setShooterAutoAngle(double angle) {
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle);
-  /*
-   * @param the angle setpoint - angle is relative to the horizontal, in degrees
-   * sets the shooter angle, in degrees. Subtracted 18.3, because zero is 18.3
-   * degrees above horizontal
-   */
-  public void setAutoAngle(double angle) {
-    // add physical angle offset
-    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle - 18.3);
-                                                                                               
+  public void setAngle(double angle) {
+    double voltage = shooterAnglePID.calculate(getAngle(), angle);                                                                    
     shooterAngleMotor.setVoltage(voltage);
   }
 
-  // auto moves the shooter up, increases angle relative to horizontal axis
-  public void angleUp() {
-
-    if (shooterAngleEncoder.getPosition() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
-      shooterAngleMotor.set(0.5);
-    } else {
-      shooterAngleMotor.set(0);
-      System.out.println("max angle reached!");
-    }
-
-  }
-
-  // auto moves the shooter down, decreases angle relative to the horizontal
-  public void angleDown() {
-
-    if (shooterAngleEncoder.getPosition() > ShooterAngleConstants.SHOOTER_MIN_ANGLE) {
-      shooterAngleMotor.set(-0.5);
-    } else {
-      shooterAngleMotor.set(0);
-      System.out.println("min angle reached!");
-    }
-
-  }
-
-  /*
-   * @param input joystick axis
-   * changes shooter angle
-   * accounts for the max and min angle limits
-   */
-  public void setAngle(double input) {
-    double speed = input * 0.5;
+  // sets shooter angle based on joystick input
+  // accounts for the max and min angle limits
+  public void setManualAngle(double input) { 
+    double speed = input * 0.5; // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
 
     if (input < -0.1 && shooterAngleEncoder.getPosition() > ShooterAngleConstants.SHOOTER_MIN_ANGLE) {
       shooterAngleMotor.set(speed);
@@ -115,6 +79,7 @@ public class ShooterAngle extends SubsystemBase {
     return Math.abs(angle - 18.3 - shooterAngleEncoder.getPosition()) < 2;
   }
 
+  // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
     return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
   }

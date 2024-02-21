@@ -5,18 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
-import frc.robot.subsystems.Drivetrain;
-
 import org.littletonrobotics.urcl.URCL;
 
-import edu.wpi.first.math.MathUtil;
-import frc.robot.Ports.*;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterWheel;
 import frc.robot.subsystems.ShooterAngle;
-import frc.robot.subsystems.Drivetrain;
-
-import org.littletonrobotics.urcl.URCL;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -27,49 +23,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-/*
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
 
+  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+
   private final Drivetrain drivetrain = new Drivetrain();
-
-  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-
-
-  public RobotContainer() {
-
-    // configurations
-    configureButtonBindings();
-    configureAuton();
-
-    drivetrain.setDefaultCommand(
-      // The left stick controls translation of the robot.
-      // Turning is controlled by the X axis of the right stick.
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              true, true),
-          drivetrain) // change field relative to true!!
-    );
-
-  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-
   private final Intake intake = new Intake();
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
@@ -82,6 +47,16 @@ public class RobotContainer {
     configureAuton();
 
     // configure default commands
+    drivetrain.setDefaultCommand(
+     // clariy turning with right or with left
+      new RunCommand(
+          () -> drivetrain.drive( // all joy.get values were prev negative
+              MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+              true, true),
+          drivetrain)); // field rel = true
+
     shooterAngle.setDefaultCommand(
         new RunCommand(
             () -> shooterAngle.setShooterAngle(
@@ -104,33 +79,28 @@ public class RobotContainer {
     // armAngle, armLateral));
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   * // Configure the trigger bindings
-   * configureBindings();
-   * 
-   * /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureButtonBindings() {
 
+    Trigger RunRollerButton = operJoy.a(); // change buttons later
+    RunRollerButton
+        .whileTrue(new RunCommand(
+            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); // need to code for when it is
+                                                                                          // false
+
+    Trigger shooterSpin = operJoy.a();
+    shooterSpin
+        .onTrue(new RunCommand(
+            () -> shooterWheel.setDesiredVelocity(ShooterWheelConstants.SHOOTER_METERS_SECOND), shooterWheel))
+        .onFalse(new RunCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
+
+    Trigger shooterUp = operJoy.b();
+    shooterUp
+        .onTrue(new RunCommand(
+            () -> shooterAngle.shooterAngleUp(), shooterAngle))
+        .onFalse(new RunCommand(
+            () -> shooterAngle.stopShooterAngle(), shooterAngle));
+            
     /* DRIVETRAIN SYSID BUTTONS */
     // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
     // driveForwardQuasistaticButton.whileTrue(
@@ -155,46 +125,6 @@ public class RobotContainer {
     // Trigger turnDynamicButton = driveJoy.y();
     // turnDynamicButton.whileTrue(
     //   drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
-    /*
-     * // figure out better/more efficient way of creating/binding these cmds to
-     * buttons
-     * 
-     * final Trigger highConeButton = new JoystickButton(operJoy,
-     * Ports.XboxControllerMap.Button.Y);
-     * highConeButton.onTrue(Commands.sequence(
-     * new SetArmAngle(armAngle, PositionConfig.highConeAngle)));
-     * // new SetArmExtension(armLateral, PositionConfig.highConeExtend),
-     * // new SetClawAngle(intake, IntakeConstants.clawAngle)));
-     * 
-     */
-
-    Trigger RunRollerButton = operJoy.a(); // change buttons later
-    RunRollerButton
-        .whileTrue(new RunCommand(
-            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); // need to code for when it is
-                                                                                          // false
-
-    /*
-     * Trigger LiftIntake = operJoy.a(); //change buttons later
-     * LiftIntake
-     * .whileTrue(new RunCommand(
-     * () -> intake.liftIntake(), intake));
-     */
-    Trigger shooterSpin = operJoy.a();
-    shooterSpin
-        .onTrue(new RunCommand(
-            () -> shooterWheel.setDesiredVelocity(ShooterWheelConstants.SHOOTER_METERS_SECOND), shooterWheel))
-        .onFalse(new RunCommand(
-            () -> shooterWheel.stopShooter(), shooterWheel));
-
-    Trigger shooterUp = operJoy.b();
-    shooterUp
-        .onTrue(new RunCommand(
-            () -> shooterAngle.shooterAngleUp(), shooterAngle))
-        .onFalse(new RunCommand(
-            () -> shooterAngle.stopShooterAngle(), shooterAngle));
-
-    // 01/23/2024 stacky is sick
   }
 
   /**

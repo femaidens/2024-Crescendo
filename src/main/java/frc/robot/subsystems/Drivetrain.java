@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Ports.DrivetrainPorts;
+import frc.robot.subsystems.modules.MaxSwerveModule;
 import frc.robot.utils.SwerveUtils;
 import frc.robot.DrivetrainConstants.*;
 
@@ -65,7 +66,7 @@ public class Drivetrain extends SubsystemBase {
   private double prevTime = WPIUtilJNI.now() * 1e-6;
   private double speedFactor = 1.0; // was 0.3 for school
 
-  // Odometry class for tracking robot pose
+  // odometry robot pose
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       DriveConstants.DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(getAngle()),
@@ -127,9 +128,7 @@ public class Drivetrain extends SubsystemBase {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             rearLeft.getPosition(),
-            rearRight.getPosition()
-        },
-        pose);
+            rearRight.getPosition()}, pose);
   }
 
   /**

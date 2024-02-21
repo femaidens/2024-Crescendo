@@ -277,7 +277,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double setYawOffset() {
-    gyro.setAngleAdjustment(-90);
+    gyro.setAngleAdjustment(-90); // need to double check!
     return gyro.getYaw();
   }
 

@@ -29,12 +29,12 @@ public final class Constants {
 
     public static final int CURRENT_LIMIT = 0;
 
-    // pid constants
+    // pid constants -> need to populate
     public static final double kP = 0.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    // ff constants
+    // ff constants -> need to populate
     public static final double kS = 0.0;
     public static final double kV = 0.0;
     public static final double kA = 0.0;
@@ -52,11 +52,12 @@ public final class Constants {
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
 
-    // ff
+    // ff -> need to populate
     public static final double kS = 0;
     public static final double kV = 0;
+    public static final double kA = 0;
 
-    // pid
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -72,7 +73,7 @@ public final class Constants {
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
-    // pid
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;

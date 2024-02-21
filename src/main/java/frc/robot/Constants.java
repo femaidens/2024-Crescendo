@@ -4,68 +4,75 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
 
-  public static final class IntakeConstants {
+  public static final class OIConstants {
+    public static final double kDriveDeadband = 0.05;
+  }
 
+  public static final class ClimberConstants {
+    public static final double ARM_SPEED = 0.3;
   }
 
   public static final class HopperConstants {
-
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final int CURRENT_LIMIT = 0;
+    public static final double SHOOTING_SPEED = 0.05;
   }
 
-  public static final class ShooterConstants {
+  public static final class IntakeConstants {
+    // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
+    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final double ROLLER_SPEED = 0.5;
 
+    public static final int CURRENT_LIMIT = 0;
+
+    // pid constants
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    // ff constants
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
   }
 
-  public static final class ClimbConstants {
+  public static final class ShooterWheelConstants {
+    // CONVERSION (RPM -> DEG/S)
+    // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
+    public static final double VEL_CFACTOR = 0;
+
+    // limits
+    public static final int CURRENT_LIMIT = 0;
+
+    // auton
+    public static final double SHOOTER_METERS_SECOND = 2.0;
+
+    // ff
+    public static final double kS = 0;
+    public static final double kV = 0;
+
+    // pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
   }
 
-  public static final class AutoConstants {
-    // drivetrain
-    public static final double AUTON_MAX_SPEED = 3; // max meters per second
-    public static final double AUTON_MAX_ACC = 3; // max acc m/s^2
-    public static final double AUTON_MAX_ANGULAR_SPEED = Math.PI; // max angular speed rad/s
-    public static final double AUTON_MAX_ANGULAR_SPEED_SQUARED = Math.PI; // angular speed rad/s^2
-   
-    public static final double PXController = 1;
-    public static final double PYController = 1;
-    public static final double PThetaController = 1;
+  public static final class ShooterAngleConstants {
+    // conversion
+    public static final double POS_CFACTOR = 360.0; // degrees
 
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-      AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
+    // limits
+    public static final int CURRENT_LIMIT = 0;
 
-    // intake wheels
-    public static final double AUTON_OUTTAKE_TIME = 2;
+    // auton
+    public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
-    // arm angles
-    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
-    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
-
-    // taxi time
-
-    // auton drive speeds
-
+    // pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
   }
 }

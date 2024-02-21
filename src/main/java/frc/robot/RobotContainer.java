@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
@@ -50,14 +51,14 @@ public class RobotContainer {
 
     // configure default commands
     drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              true, true),
-          drivetrain)); // field rel = true
+        // clariy turning with right or with left
+        new RunCommand(
+            () -> drivetrain.drive( // all joy.get values were prev negative
+                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+                true, true),
+            drivetrain)); // field rel = true
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
@@ -85,72 +86,99 @@ public class RobotContainer {
     /* CLIMB BUTTONS */
 
     /* INTAKE BUTTONS */
+    Trigger runIntake = operJoy.rightBumper(); // change buttons later
+    runIntake
+        .onTrue(new RunCommand(
+            () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED), intake))
+        .onFalse(new RunCommand(
+            () -> intake.stopIntakeMotor(), intake));
+
+    Trigger runOuttake = operJoy.leftBumper(); // change buttons later
+    runOuttake
+        .onTrue(new RunCommand(
+            () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED), intake))
+        .onFalse(new RunCommand(
+            () -> intake.stopIntakeMotor(), intake));
+
+    Trigger runHopper = operJoy.a(); // change buttons later
+    runHopper
+        .onTrue(new RunCommand(
+            () -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
+        .onFalse(new InstantCommand(
+            () -> intake.stopHopperMotor(), intake));
+
+    // positive speed is outwards
+    Trigger runShooter = operJoy.b();
+    runShooter
+        .onTrue(new RunCommand(
+            () -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
+        .onFalse(new InstantCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
+
+    // Trigger shooterUp = operJoy.x();
+    // shooterUp
+    // .onTrue(new RunCommand(
+    //   () -> , null))
 
     /* HOPPER BUTTONS */
 
     /* SHOOTER BUTTONS */
-    Trigger RunRollerButton = operJoy.rightBumper(); // change buttons later
-    RunRollerButton
-        .whileTrue(new RunCommand(
-            () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); 
-            // need to code for when it is false
 
     // Trigger ampFlushButton = operJoy.a();
     // ampFlushButton
-    //     .onTrue(Commands.parallel(
-    //         shooterAngle.SetShooterAngle(ShooterAngleConstants.AMP_FLUSH),
-    //         shooterWheel.SetShooterSpeed(ShooterWheelConstants.AMP_FLUSH)))
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.AMP_FLUSH),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.AMP_FLUSH)))
 
-    //     .onFalse(new RunCommand(
-    //         () -> shooterAngle.setAngle(), shooterAngle));
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
 
     // Trigger speakerFlushButton = operJoy.x();
     // speakerFlushButton
-    //     .onTrue(Commands.parallel(
-    //         shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_FLUSH),
-    //         shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_FLUSH)))
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_FLUSH),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_FLUSH)))
 
-    //     .onFalse(new RunCommand(
-    //         () -> shooterAngle.setAngle(), shooterAngle));
-    
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
+
     // Trigger speakerStageButton = operJoy.y();
     // speakerStageButton
-    //     .onTrue(Commands.parallel(
-    //         shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_STAGE),
-    //         shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_STAGE)))
-        
-    //     .onFalse(new RunCommand(
-    //         () -> shooterAngle.setAngle(), shooterAngle));
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_STAGE),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_STAGE)))
 
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
 
     // Trigger speakerWingButton = operJoy.b();
     // speakerWingButton
-    //     .onTrue(shooterAngle.SetShooterAngle(Constants.ShooterAngleConstants.AMP_FLUSH));
+    // .onTrue(shooterAngle.SetShooterAngle(Constants.ShooterAngleConstants.AMP_FLUSH));
 
     /* DRIVETRAIN SYSID BUTTONS */
     // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
     // driveForwardQuasistaticButton.whileTrue(
-    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
+    // drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
     // Trigger driveReverseQuasistatic = driveJoy.rightBumper();
     // driveReverseQuasistatic.whileTrue(
-    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
+    // drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // Trigger driveForwardDynamicButton = driveJoy.leftTrigger();
     // driveForwardDynamicButton.whileTrue(
-    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+    // drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
 
     // Trigger driveReverseDynamicButton = driveJoy.rightTrigger();
     // driveReverseDynamicButton.whileTrue(
-    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
+    // drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
 
     // Trigger turnQuasistaticButton = driveJoy.a();
     // turnQuasistaticButton.whileTrue(
-    //   drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+    // drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
 
     // Trigger turnDynamicButton = driveJoy.y();
     // turnDynamicButton.whileTrue(
-    //   drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
+    // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
 
   /**
@@ -165,10 +193,10 @@ public class RobotContainer {
     // AutoConstants.AUTON_MAX_ACC)
     // // Add kinematics to ensure max speed is actually obeyed
     // .setKinematics(DriveConstants.DRIVE_KINEMATICS);
-        // AutoConstants.AUTON_MAX_SPEED,
-    //     AutoConstants.AUTON_MAX_ACC)
-    //     // Add kinematics to ensure max speed is actually obeyed
-    //     .setKinematics(DriveConstants.DRIVE_KINEMATICS);
+    // AutoConstants.AUTON_MAX_SPEED,
+    // AutoConstants.AUTON_MAX_ACC)
+    // // Add kinematics to ensure max speed is actually obeyed
+    // .setKinematics(DriveConstants.DRIVE_KINEMATICS);
 
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(

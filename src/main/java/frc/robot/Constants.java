@@ -17,14 +17,14 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
-    public static final int CURRENT_LIMIT = 0;
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 0.05;
   }
 
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
-    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
     public static final double ROLLER_SPEED = 0.5;
 
     public static final int CURRENT_LIMIT = 0;
@@ -75,7 +75,7 @@ public final class Constants {
   public static final class ShooterAngleConstants {
 
     // conversion
-    public static final double POS_CFACTOR = 360.0; // degrees
+    public static final double POS_CFACTOR = 360.0; // degrees, 25:1 gr
 
     // limits
     public static final int CURRENT_LIMIT = 30;
@@ -85,6 +85,7 @@ public final class Constants {
     public static final double SHOOTER_MAX_ANGLE = 75.0;
     public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
 
+    //check picture for distances for testing
     public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
 
     public static final double SPEAKER_FLUSH = 70.0; // placeholder

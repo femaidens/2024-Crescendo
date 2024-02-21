@@ -116,6 +116,9 @@ public class ShooterWheel extends SubsystemBase {
     return followerEncoder.getVelocity();
   }
 
+  public void setShooterSpeed(double speed) {
+    leaderMotor.set(speed);
+  }
   // stops the motors for the shooter wheels
   public void stopShooter() {
     leaderMotor.setVoltage(0);

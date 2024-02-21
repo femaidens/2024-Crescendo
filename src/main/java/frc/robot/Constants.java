@@ -48,6 +48,13 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
+    
+    public static final double AMP_FLUSH = 0.0; // placeholder
+
+    public static final double SPEAKER_FLUSH = 0.0; // placeholder
+    public static final double SPEAKER_STAGE = 0.0; // placeholder
+    public static final double SPEAKER_WING = 0.0; // placeholder
+    // speeds (degrees/sec)
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
@@ -74,9 +81,15 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 30;
 
     // angles (degrees)
-    public static final double PHYSICAL_OFFSET = 18.3;
+    public static final double PHYSICAL_OFFSET = 19; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 75.0;
     public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
+
+    public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
+
+    public static final double SPEAKER_FLUSH = 70.0; // placeholder
+    public static final double SPEAKER_STAGE = 40.0; // placeholder
+    public static final double SPEAKER_WING = 20.0; // placeholder
 
     // speeds
     public static final double CONSTANT_SPEED = 0.5;

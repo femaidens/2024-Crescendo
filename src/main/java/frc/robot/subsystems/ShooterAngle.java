@@ -15,6 +15,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterAngle extends SubsystemBase {
@@ -44,8 +45,6 @@ public class ShooterAngle extends SubsystemBase {
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
   public void setManualAngle(double input) { 
-    // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
@@ -79,13 +78,18 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   public void stopMotor() {
-    shooterAngleMotor.stopMotor();;
+    shooterAngleMotor.stopMotor();
   }
 
   // @param the angle to compare the encoder reading with
   // @return if the angle of the shooter is within the threshold of the setpoint
   public boolean isAtAngle(double angle) {
     return Math.abs(angle - getAngle()) < 2;
+  }
+
+  /* COMMANDS */
+  public Command SetShooterAngle(double angle) {
+    return this.runOnce(() -> setAngleSetpoint(angle));
   }
 
   @Override

@@ -29,7 +29,7 @@ public class ShooterAngle extends SubsystemBase {
 
   /** Creates a new ShooterAngle. */
   public ShooterAngle() {
-    shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE_PORT, MotorType.kBrushless);
+    shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE, MotorType.kBrushless);
     shooterAngleMotor.setIdleMode(IdleMode.kBrake); //check with engineering
     shooterAngleMotor.setSmartCurrentLimit(ShooterAngleConstants.SHOOTER_ANGLE_CURRENT_LIMIT);
 

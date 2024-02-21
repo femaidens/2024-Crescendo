@@ -32,8 +32,8 @@ public class Shooter extends SubsystemBase {
   private final PIDController shooterPID;
   /** Creates a new Shooter. */
   public Shooter() {
-    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
-    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER_MOTOR_PORT, MotorType.kBrushless);
+    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
+    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
 
     rightShooterMotor.setIdleMode(IdleMode.kCoast); //double check w/ engineering later
     leftShooterMotor.setIdleMode(IdleMode.kCoast);

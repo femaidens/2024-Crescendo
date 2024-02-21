@@ -129,14 +129,14 @@ public class RobotContainer {
 
     Trigger extendClimbButton = operJoy.b();
     extendClimbButton
-      .onTrue(new InstantCommand(
+      .onTrue(new RunCommand(
         () -> climb.extendClimbArm(), climb))
       .onFalse(new InstantCommand(
         () -> climb.stopClimb(), climb));
 
-    Trigger retractClimbButton = operJoy.b();
+    Trigger retractClimbButton = operJoy.a();
     retractClimbButton
-      .onTrue(new InstantCommand(
+      .onTrue(new RunCommand(
         () -> climb.retractClimbArm(), climb))
       .onFalse(new InstantCommand(
         () -> climb.stopClimb(), climb));

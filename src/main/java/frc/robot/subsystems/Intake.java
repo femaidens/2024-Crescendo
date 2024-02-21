@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     //rotationNEO = new CANSparkMax(Ports.IntakePorts.rotationNEOPort, MotorType.kBrushless);
-    rollerNEO = new CANSparkMax(Ports.IntakePorts.rollerNEOPort, MotorType.kBrushless);
+    rollerNEO = new CANSparkMax(Ports.IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
     //encoder = rotationNEO.getAbsoluteEncoder(Type.kDutyCycle); 
     //intakePIDController = new PIDController(Constants.IntakeConstants.PIDConstants.kP, Constants.IntakeConstants.PIDConstants.kI, Constants.IntakeConstants.PIDConstants.kD);
     //setpoint = encoder.getPosition();

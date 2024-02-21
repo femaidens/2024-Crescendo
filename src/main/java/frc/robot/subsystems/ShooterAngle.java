@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.Ports.ShooterPorts;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -13,8 +16,6 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Ports.ShooterPorts;
 
 public class ShooterAngle extends SubsystemBase {
   private final CANSparkMax shooterAngleMotor;
@@ -38,6 +39,9 @@ public class ShooterAngle extends SubsystemBase {
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
   }
 
+  // sets shooter angle (degress)
+  public void setShooterAutoAngle(double angle) {
+    double voltage = shooterAnglePID.calculate(shooterAngleEncoder.getPosition(), angle);
   /*
    * @param the angle setpoint - angle is relative to the horizontal, in degrees
    * sets the shooter angle, in degrees. Subtracted 18.3, because zero is 18.3
@@ -101,6 +105,8 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngleMotor.setVoltage(voltage);
   }
 
+  // @param the angle to compare the encoder reading with
+  // @return if the angle of the shooter is within the threshold of the setpoint
   /*
    * @param the angle to compare the encoder reading with
    * @return if the angle of the shooter is within the threshold of the setpoint

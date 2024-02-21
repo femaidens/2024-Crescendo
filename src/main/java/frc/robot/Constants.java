@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public final class Constants {
 
   public static final class OIConstants {
@@ -27,12 +29,12 @@ public final class Constants {
 
     public static final int CURRENT_LIMIT = 0;
 
-    // pid constants
+    // pid constants -> need to populate
     public static final double kP = 0.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    // ff constants
+    // ff constants -> need to populate
     public static final double kS = 0.0;
     public static final double kV = 0.0;
     public static final double kA = 0.0;
@@ -51,11 +53,12 @@ public final class Constants {
     public static final double SHOOTER_METERS_SECOND = 2.0;
     public static final double AUTON_SPEED = 720; // degrees/sec
 
-    // ff
+    // ff -> need to populate
     public static final double kS = 0;
     public static final double kV = 0;
+    public static final double kA = 0;
 
-    // pid
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -78,10 +81,38 @@ public final class Constants {
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
-    // pid
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+
+  }
+
+  public static final class AutoConstants {
+    // drivetrain
+    public static final double AUTON_MAX_SPEED = 3; // max meters per second
+    public static final double AUTON_MAX_ACC = 3; // max acc m/s^2
+    public static final double AUTON_MAX_ANGULAR_SPEED = Math.PI; // max angular speed rad/s
+    public static final double AUTON_MAX_ANGULAR_SPEED_SQUARED = Math.PI; // angular speed rad/s^2
+   
+    public static final double PXController = 1;
+    public static final double PYController = 1;
+    public static final double PThetaController = 1;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+      AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
+
+    // intake wheels
+    public static final double AUTON_OUTTAKE_TIME = 2;
+
+    // arm angles
+    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
+    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
+
+    // taxi time
+
+    // auton drive speeds
 
   }
 }

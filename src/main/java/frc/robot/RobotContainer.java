@@ -4,37 +4,37 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
+import org.littletonrobotics.urcl.URCL;
+
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterWheel;
 import frc.robot.subsystems.ShooterAngle;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.Intake;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-/*
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
 
   private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
   private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
 
+  private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
@@ -47,6 +47,16 @@ public class RobotContainer {
     configureAuton();
 
     // configure default commands
+    drivetrain.setDefaultCommand(
+     // clariy turning with right or with left
+      new RunCommand(
+          () -> drivetrain.drive( // all joy.get values were prev negative
+              MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+              true, true),
+          drivetrain)); // field rel = true
+
     shooterAngle.setDefaultCommand(
         new RunCommand(
             () -> shooterAngle.setAngle(
@@ -70,20 +80,6 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    // resets robot heading (gyro)
-
-    /*
-     * // figure out better/more efficient way of creating/binding these cmds to
-     * buttons
-     * 
-     * final Trigger highConeButton = new JoystickButton(operJoy,
-     * Ports.XboxControllerMap.Button.Y);
-     * highConeButton.onTrue(Commands.sequence(
-     * new SetArmAngle(armAngle, PositionConfig.highConeAngle)));
-     * // new SetArmExtension(armLateral, PositionConfig.highConeExtend),
-     * // new SetClawAngle(intake, IntakeConstants.clawAngle)));
-     * 
-     */
 
     Trigger RunRollerButton = operJoy.a(); // change buttons later
     RunRollerButton
@@ -91,71 +87,44 @@ public class RobotContainer {
             () -> intake.setIntakeSpeed(Constants.IntakeConstants.ROLLER_SPEED), intake)); 
             // need to code for when it is false
 
-    /*
-     * Trigger LiftIntake = operJoy.a(); //change buttons later
-     * LiftIntake
-     * .whileTrue(new RunCommand(
-     * () -> intake.liftIntake(), intake));
-     */
-    // Trigger shooterSpin = operJoy.a();
-    // shooterSpin
-    //     .onTrue(new RunCommand(
-    //         () -> shooterWheel.setDesiredVelocity(ShooterWheelConstants.SHOOTER_RAD_SECOND), shooterWheel));
-    //     // .onFalse(new RunCommand(
-    //     //     () -> shooterWheel.stopShooter(), shooterWheel));
+    Trigger shooterSpin = operJoy.a();
+    shooterSpin
+        .onTrue(new RunCommand(
+            () -> shooterWheel.setDesiredVelocity(ShooterWheelConstants.SHOOTER_METERS_SECOND), shooterWheel))
+        .onFalse(new RunCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
 
-    // Trigger shooterUp = operJoy.b();
-    // shooterUp
-    //     .onTrue(new RunCommand(
-    //         () -> shooterAngle.shooterAngleUp(), shooterAngle))
-    //     .onFalse(new RunCommand(
-    //         () -> shooterAngle.stopShooterAngle(), shooterAngle));
+    Trigger shooterUp = operJoy.b();
+    shooterUp
+        .onTrue(new RunCommand(
+            () -> shooterAngle.shooterAngleUp(), shooterAngle))
+        .onFalse(new RunCommand(
+            () -> shooterAngle.stopShooterAngle(), shooterAngle));
+            
+    /* DRIVETRAIN SYSID BUTTONS */
+    // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
+    // driveForwardQuasistaticButton.whileTrue(
+    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
-    // 01/23/2024 stacky is sick
-    Trigger leftQuasForward = operJoy.rightBumper();
-    leftQuasForward
-        .whileTrue(
-          shooterWheel.leftQuas(SysIdRoutine.Direction.kForward)
-        );
+    // Trigger driveReverseQuasistatic = driveJoy.rightBumper();
+    // driveReverseQuasistatic.whileTrue(
+    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    Trigger leftQuasReverse = operJoy.leftBumper();
-    leftQuasReverse
-        .whileTrue(
-          shooterWheel.leftQuas(SysIdRoutine.Direction.kReverse)
-        );
+    // Trigger driveForwardDynamicButton = driveJoy.leftTrigger();
+    // driveForwardDynamicButton.whileTrue(
+    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
 
-    Trigger leftDynaForward = operJoy.rightTrigger();
-    leftDynaForward
-        .whileTrue(
-          shooterWheel.leftDyna(SysIdRoutine.Direction.kForward)
-        );
+    // Trigger driveReverseDynamicButton = driveJoy.rightTrigger();
+    // driveReverseDynamicButton.whileTrue(
+    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
 
-    Trigger leftDynaReverse = operJoy.leftTrigger();
-    leftDynaReverse
-        .whileTrue(
-          shooterWheel.leftDyna(SysIdRoutine.Direction.kReverse)
-        );
+    // Trigger turnQuasistaticButton = driveJoy.a();
+    // turnQuasistaticButton.whileTrue(
+    //   drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger rightQuasForward = operJoy.a();
-    rightQuasForward
-        .whileTrue(
-          shooterWheel.rightQuas(SysIdRoutine.Direction.kForward)
-        );
-    Trigger rightQuasReverse = operJoy.b();
-    rightQuasReverse
-        .whileTrue(
-          shooterWheel.rightQuas(SysIdRoutine.Direction.kReverse)
-        );
-    Trigger rightDynaForward = operJoy.x();
-    rightDynaForward
-        .whileTrue(
-          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
-        );
-    Trigger rightDynaReverse = operJoy.y();
-    rightDynaReverse
-        .whileTrue(
-          shooterWheel.rightDyna(SysIdRoutine.Direction.kReverse)
-        );
+    // Trigger turnDynamicButton = driveJoy.y();
+    // turnDynamicButton.whileTrue(
+    //   drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
 
   /**
@@ -170,6 +139,10 @@ public class RobotContainer {
     // AutoConstants.AUTON_MAX_ACC)
     // // Add kinematics to ensure max speed is actually obeyed
     // .setKinematics(DriveConstants.DRIVE_KINEMATICS);
+        // AutoConstants.AUTON_MAX_SPEED,
+    //     AutoConstants.AUTON_MAX_ACC)
+    //     // Add kinematics to ensure max speed is actually obeyed
+    //     .setKinematics(DriveConstants.DRIVE_KINEMATICS);
 
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(

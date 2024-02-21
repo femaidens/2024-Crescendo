@@ -15,7 +15,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Limelight extends SubsystemBase {
+public class Limelight3 extends SubsystemBase {
   /** Creates a new Limelight. */
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("Limelight");
@@ -35,7 +35,7 @@ public class Limelight extends SubsystemBase {
 
   PhotonCamera camera = new PhotonCamera("photonvision");
   
-  public Limelight() {
+  public Limelight3() {
     cameraHeight = Units.inchesToMeters(24);
     targetHeight = Units.feetToMeters(5);
     cameraPitchRadians = Units.degreesToRadians(0);

@@ -40,4 +40,32 @@ public final class Constants {
   public static final class ClimbConstants {
 
   }
+
+  public static final class AutoConstants {
+    // drivetrain
+    public static final double AUTON_MAX_SPEED = 3; // max meters per second
+    public static final double AUTON_MAX_ACC = 3; // max acc m/s^2
+    public static final double AUTON_MAX_ANGULAR_SPEED = Math.PI; // max angular speed rad/s
+    public static final double AUTON_MAX_ANGULAR_SPEED_SQUARED = Math.PI; // angular speed rad/s^2
+   
+    public static final double PXController = 1;
+    public static final double PYController = 1;
+    public static final double PThetaController = 1;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+      AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
+
+    // intake wheels
+    public static final double AUTON_OUTTAKE_TIME = 2;
+
+    // arm angles
+    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
+    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
+
+    // taxi time
+
+    // auton drive speeds
+
+  }
 }

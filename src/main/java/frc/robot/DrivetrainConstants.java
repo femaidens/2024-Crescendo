@@ -11,18 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class DrivetrainConstants {
 
   public static final class DriveConstants {
@@ -35,11 +23,12 @@ public final class DrivetrainConstants {
     public static final double MAG_SLEW_RATE = 1.8; // percent per second (1 = 100%)
     public static final double ROT_SLEW_RATE = 2.0; // percent per second (1 = 100%)
 
-    // Chassis configuration
+    /* CHASSIS CONFIG */
+    // distance between centers of right and left wheels on robot
     public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
-    // Distance between centers of right and left wheels on robot
+
+    // distance between front and back wheels on robot -> replace with known values
     public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
-    // Distance between front and back wheels on robot -> replace with known values
     
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
         new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // fl
@@ -61,7 +50,7 @@ public final class DrivetrainConstants {
     // 14T pinion gears
     public static final int DRIVE_MOTOR_PINION_TEETH = 14;
 
-    // Calculations required for driving motor conversion factors and feed forward
+    // calcs required for driving motor conversion factors and feed forward
     public static final double DRIVE_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
     public static final double WHEEL_DIAMETER = 0.0762; // meters
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -81,6 +70,7 @@ public final class DrivetrainConstants {
       // drive encoder position factor
       public static final double DRIVE_ENCODER_PFACTOR = (WHEEL_DIAMETER * Math.PI)
           / DRIVE_MOTOR_REDUCTION; // meters
+
       // velocity factor
       public static final double DRIVE_ENCODER_VFACTOR = ((WHEEL_DIAMETER * Math.PI)
           / DRIVE_MOTOR_REDUCTION) / 60.0; // meters per second
@@ -115,43 +105,15 @@ public final class DrivetrainConstants {
       public static final double kP = 0.2; // initally 1
       public static final double kI = 0;
       public static final double kD = 0.05;
-      public static final double kFF = 0;
+      public static final double kFF = 0; // need to test?
 
-      public static final double kS = 0;
-      public static final double kA = 0;
-      public static final double kV = 0;
+      public static final double kS = 0; // placeholder
+      public static final double kA = 0; // placeholder
+      public static final double kV = 0; // placeholder
 
       public static final double kMinOutput = -1;
       public static final double kMaxOutput = 1;
     }
-  }
-
-  public static final class AutoConstants {
-    // drivetrain
-    public static final double AUTON_MAX_SPEED = 3; // max meters per second
-    public static final double AUTON_MAX_ACC = 3; // max acc m/s^2
-    public static final double AUTON_MAX_ANGULAR_SPEED = Math.PI; // max angular speed rad/s
-    public static final double AUTON_MAX_ANGULAR_SPEED_SQUARED = Math.PI; // angular speed rad/s^2
-   
-    public static final double PXController = 1;
-    public static final double PYController = 1;
-    public static final double PThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-      AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
-
-    // intake wheels
-    public static final double AUTON_OUTTAKE_TIME = 2;
-
-    // arm angles
-    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
-    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
-
-    // taxi time
-
-    // auton drive speeds
-
   }
 
   public static final class NeoMotorConstants {

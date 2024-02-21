@@ -9,24 +9,16 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-
-import static edu.wpi.first.units.Units.RPM;
-
-import java.util.function.Consumer;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.Constants;
 import frc.robot.DrivetrainConstants.*;
 import frc.robot.DrivetrainConstants.ModuleConstants.*;
 
@@ -48,12 +40,6 @@ public class MaxSwerveModule {
   private double chassisAngularOffset = 0;
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
-  /**
-   * Constructs a MAXSwerveModule and configures the driving and turning motor,
-   * encoder, and PID controller. This configuration is specific to the REV
-   * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
-   * Encoder.
-   */
   public MaxSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
     driveMotor = new CANSparkMax(drivingCANId, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningCANId, MotorType.kBrushless);

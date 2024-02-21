@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Ports.*;
 import frc.robot.subsystems.Drivetrain;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,24 +33,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+
   private final Drivetrain drivetrain = new Drivetrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  // private final CommandXboxController driveJoy =
-  //     new CommandXboxController(JoystickPorts.OPER_JOY);
   private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
   private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
 
-    // auton config
+    configureButtonBindings();
     configureAuton();
 
     drivetrain.setDefaultCommand(
@@ -94,29 +89,30 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
-    driveForwardQuasistaticButton.whileTrue(
-      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
+    /* DRIVETRAIN SYSID BUTTONS */
+    // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
+    // driveForwardQuasistaticButton.whileTrue(
+    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger driveReverseQuasistatic = driveJoy.rightBumper();
-    driveReverseQuasistatic.whileTrue(
-      drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
+    // Trigger driveReverseQuasistatic = driveJoy.rightBumper();
+    // driveReverseQuasistatic.whileTrue(
+    //   drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    Trigger driveForwardDynamicButton = driveJoy.leftTrigger();
-    driveForwardDynamicButton.whileTrue(
-      drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+    // Trigger driveForwardDynamicButton = driveJoy.leftTrigger();
+    // driveForwardDynamicButton.whileTrue(
+    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
 
-    Trigger driveReverseDynamicButton = driveJoy.rightTrigger();
-    driveReverseDynamicButton.whileTrue(
-      drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
+    // Trigger driveReverseDynamicButton = driveJoy.rightTrigger();
+    // driveReverseDynamicButton.whileTrue(
+    //   drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
 
-    Trigger turnQuasistaticButton = driveJoy.a();
-    turnQuasistaticButton.whileTrue(
-      drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+    // Trigger turnQuasistaticButton = driveJoy.a();
+    // turnQuasistaticButton.whileTrue(
+    //   drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
 
-    Trigger turnDynamicButton = driveJoy.y();
-    turnDynamicButton.whileTrue(
-      drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
+    // Trigger turnDynamicButton = driveJoy.y();
+    // turnDynamicButton.whileTrue(
+    //   drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
 
 
@@ -128,7 +124,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Create config for trajectory
     // TrajectoryConfig config = new TrajectoryConfig(
-    //     AutoConstants.AUTON_MAX_SPEED,
+        // AutoConstants.AUTON_MAX_SPEED,
     //     AutoConstants.AUTON_MAX_ACC)
     //     // Add kinematics to ensure max speed is actually obeyed
     //     .setKinematics(DriveConstants.DRIVE_KINEMATICS);

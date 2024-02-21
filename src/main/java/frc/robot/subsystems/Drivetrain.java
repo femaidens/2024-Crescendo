@@ -4,32 +4,28 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Ports.DrivetrainPorts;
+import frc.robot.utils.SwerveUtils;
+import frc.robot.DrivetrainConstants.*;
+
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
-import edu.wpi.first.units.Units.*;
-import edu.wpi.first.util.WPIUtilJNI;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.*;
-import frc.robot.Ports.DrivetrainPorts;
-import frc.robot.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.DrivetrainConstants.*;
-
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.List;
 
@@ -37,24 +33,24 @@ public class Drivetrain extends SubsystemBase {
   // Create MaxSwerveModules
 
   private final MaxSwerveModule frontLeft = new MaxSwerveModule(
-    DrivetrainPorts.FRONT_LEFT_DRIVE,
-    DrivetrainPorts.FRONT_LEFT_TURNING,
-    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+      DrivetrainPorts.FRONT_LEFT_DRIVE,
+      DrivetrainPorts.FRONT_LEFT_TURNING,
+      DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule frontRight = new MaxSwerveModule(
-    DrivetrainPorts.FRONT_RIGHT_DRIVE,
-    DrivetrainPorts.FRONT_RIGHT_TURNING,
-    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+      DrivetrainPorts.FRONT_RIGHT_DRIVE,
+      DrivetrainPorts.FRONT_RIGHT_TURNING,
+      DriveConstants.FR_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule rearLeft = new MaxSwerveModule(
-    DrivetrainPorts.REAR_LEFT_DRIVE,
-    DrivetrainPorts.REAR_LEFT_TURNING,
-    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+      DrivetrainPorts.REAR_LEFT_DRIVE,
+      DrivetrainPorts.REAR_LEFT_TURNING,
+      DriveConstants.RL_CHASSIS_ANGULAR_OFFSET);
 
   private final MaxSwerveModule rearRight = new MaxSwerveModule(
-    DrivetrainPorts.REAR_RIGHT_DRIVE,
-    DrivetrainPorts.REAR_RIGHT_TURNING,
-    DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+      DrivetrainPorts.REAR_RIGHT_DRIVE,
+      DrivetrainPorts.REAR_RIGHT_TURNING,
+      DriveConstants.RR_CHASSIS_ANGULAR_OFFSET);
 
   private final AHRS gyro = new AHRS();
 
@@ -65,8 +61,9 @@ public class Drivetrain extends SubsystemBase {
 
   private SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.MAG_SLEW_RATE);
   private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.ROT_SLEW_RATE);
+
   private double prevTime = WPIUtilJNI.now() * 1e-6;
-  private double speedFactor = 0.3; // change back to 1.0
+  private double speedFactor = 1.0; // was 0.3 for school
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -79,21 +76,22 @@ public class Drivetrain extends SubsystemBase {
           rearRight.getPosition()
       });
 
-  private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
+  // private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
-  private final SysIdRoutine driveRoutine = new SysIdRoutine(
-    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-      volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Volts))), 
-      null, this));
+  /* SYSID INSTANTIATIONS */
+  // private final SysIdRoutine driveRoutine = new SysIdRoutine(
+  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  //         volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+  //         null, this));
 
-  private final SysIdRoutine turnRoutine = new SysIdRoutine(
-    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-      volts -> rearLeft.setTurnVoltage(volts.in(Volts)), null, this));
+  // private final SysIdRoutine turnRoutine = new SysIdRoutine(
+  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  //         volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
 
-  private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
-    new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-      volts -> modules.forEach(m -> m.setTurnVoltage(volts.in(Volts))),
-      null, this));
+  // private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
+  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  //         volts -> modules.forEach(m -> m.setTurnVoltage(volts.in(Units.Volts))),
+  //         null, this));
 
   public Drivetrain() {
   }
@@ -116,26 +114,11 @@ public class Drivetrain extends SubsystemBase {
     // SmartDashboard.putNumber("gyro x", gyroX()); <-
   }
 
-    public void getJoystickValue(CommandXboxController joystick){
-    System.out.println("current value: " + joystick.getRightY());
-  }
-
-  /**
-   * Returns the currently-estimated pose of the robot.
-   *
-   * @return The pose.
-   */
-
-  //returns currently-estimated pose of robot
+  // returns currently-estimated pose of robot
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
-  /**
-   * Resets the odometry to the specified pose.
-   *
-   * @param pose The pose to which to set the odometry.
-   */
   // resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
@@ -164,34 +147,35 @@ public class Drivetrain extends SubsystemBase {
     double xSpeedCommanded;
     double ySpeedCommanded;
 
-    //System.out.println("yaw axis: " + getAngle());
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
       double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-      // Calculate the direction slew rate based on an estimate of the lateral acceleration
+      // Calculate the direction slew rate based on an estimate of the lateral
+      // acceleration
       double directionSlewRate;
 
       if (currentTranslationMag != 0.0) {
         directionSlewRate = Math.abs(DriveConstants.DIR_SLEW_RATE / currentTranslationMag);
-      } 
-      
-      else {
-        directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
       }
-      
+
+      else {
+        directionSlewRate = 500.0; // some high number that means the slew rate is effectively instantaneous
+      }
+
       double currentTime = WPIUtilJNI.now() * 1e-6;
       double elapsedTime = currentTime - prevTime;
       double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, currentTranslationDir);
 
-      if (angleDif < 0.45*Math.PI) {
-        currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+      if (angleDif < 0.45 * Math.PI) {
+        currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir,
+            directionSlewRate * elapsedTime);
         currentTranslationMag = magLimiter.calculate(inputTranslationMag);
       }
 
-      else if (angleDif > 0.85*Math.PI) {
-        if (currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
+      else if (angleDif > 0.85 * Math.PI) {
+        if (currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality checking
           // keep currentTranslationDir unchanged
           currentTranslationMag = magLimiter.calculate(0.0);
         }
@@ -203,17 +187,18 @@ public class Drivetrain extends SubsystemBase {
       }
 
       else {
-        currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+        currentTranslationDir = SwerveUtils.StepTowardsCircular(currentTranslationDir, inputTranslationDir,
+            directionSlewRate * elapsedTime);
         currentTranslationMag = magLimiter.calculate(0.0);
       }
 
       prevTime = currentTime;
-      
+
       xSpeedCommanded = currentTranslationMag * Math.cos(currentTranslationDir);
       ySpeedCommanded = currentTranslationMag * Math.sin(currentTranslationDir);
       currentRotation = rotLimiter.calculate(rot);
-    } 
-    
+    }
+
     else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
@@ -221,20 +206,19 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    // double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED;
-    // double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED;
-      double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
-      double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
+    double xSpeedDelivered = xSpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
+    double ySpeedDelivered = ySpeedCommanded * DriveConstants.MAX_SPEED * speedFactor;
 
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
     // SmartDashboard.putNumber("xspeed drive", xSpeedDelivered);
-    //System.out.println("xspeed drive: " + xSpeedDelivered);
-    //System.out.println("yspeed drive: " + ySpeedDelivered);
+    // System.out.println("xspeed drive: " + xSpeedDelivered);
+    // System.out.println("yspeed drive: " + ySpeedDelivered);
 
-    double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED * 0.75; // get rid of 0.75
+    double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
     var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle()))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+                Rotation2d.fromDegrees(getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
@@ -246,9 +230,6 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  /**
-   * Sets the wheels into an X formation to prevent movement.
-   */
   // x formation with wheels -> prevent movement
   public void setX() {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -257,11 +238,7 @@ public class Drivetrain extends SubsystemBase {
     rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
-  /**
-   * Sets the swerve ModuleStates.
-   *
-   * @param desiredStates The desired SwerveModule states.
-   */
+  // sets the swerve ModuleStates.
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, DriveConstants.MAX_SPEED);
@@ -277,34 +254,26 @@ public class Drivetrain extends SubsystemBase {
     rearLeft.resetEncoders();
     frontRight.resetEncoders();
     rearRight.resetEncoders();
-    //Arrays.stream(swerveModules).forEach(RevSwerveModule::resetEncoders);
+    // Arrays.stream(swerveModules).forEach(RevSwerveModule::resetEncoders);
   }
 
-  /** Zeroes the heading of the robot. */
+  // zeros heading/resets/calibrates gyro
   public void zeroHeading() {
     gyro.reset();
   }
 
-  //@return the robot's heading in degrees, from -180 to 180
+  // @return the robot's heading in degrees, from -180 to 180
   // returns heading in degrees (-180 to 180)
   public double getHeading() {
     return Rotation2d.fromDegrees(getAngle()).getDegrees();
   }
 
-  // @return The turn rate of the robot, in degrees per second
-  // returns turn rate (deg/s)
+  // @return The turn rate of the robot (deg/s)
   public double getTurnRate() {
     return gyro.getRate() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
-  
-  public void resetGyro() {
-    gyro.reset();
-  }
-  public void calibrateGyro(){
-    gyro.reset();
-  }
 
-  public double getYawAxis(){
+  public double getYawAxis() {
     return gyro.getYaw();
   }
 
@@ -313,37 +282,36 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getYaw();
   }
 
-  public double getAngle(){
-    //return gyro.getYaw();
+  public double getAngle() {
     return -1 * gyro.getAngle();
   }
 
-  public double getPitch(){
+  public double getPitch() {
     return gyro.getPitch();
   }
 
-  public void slowSpeed(){
+  public void slowSpeed() {
     speedFactor = 0.5;
   }
 
-  public void regSpeed(){
+  public void regSpeed() {
     speedFactor = 1;
   }
 
-/* SYSID */  
-  public Command driveQuasistatic(SysIdRoutine.Direction direction) {
-    return driveRoutine.quasistatic(direction);
-  }
+  /* SYSID CMDS */
+  // public Command driveQuasistatic(SysIdRoutine.Direction direction) {
+  //   return driveRoutine.quasistatic(direction);
+  // }
 
-  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
-    return turnRoutine.quasistatic(direction);
-  }
+  // public Command turnQuasistatic(SysIdRoutine.Direction direction) {
+  //   return turnRoutine.quasistatic(direction);
+  // }
 
-  public Command driveDynamic(SysIdRoutine.Direction direction) {
-    return driveRoutine.dynamic(direction);
-  }
+  // public Command driveDynamic(SysIdRoutine.Direction direction) {
+  //   return driveRoutine.dynamic(direction);
+  // }
 
-  public Command turnDynamic(SysIdRoutine.Direction direction) {
-    return turnRoutine.dynamic(direction);
-  }
+  // public Command turnDynamic(SysIdRoutine.Direction direction) {
+  //   return turnRoutine.dynamic(direction);
+  // }
 }

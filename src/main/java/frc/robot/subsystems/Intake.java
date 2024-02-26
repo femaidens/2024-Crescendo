@@ -128,6 +128,6 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("hopper vel", getHopperVelocity());
 
     SmartDashboard.putNumber("intake sp", vSetpoint);
-    System.out.println("hopper velocity: " + getHopperVelocity());
+    // System.out.println("hopper velocity: " + getHopperVelocity());
   }
 }

@@ -45,12 +45,26 @@ public class ShooterAngle extends SubsystemBase {
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
   public void setManualAngle(double input) { 
+    /*
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
     }
     // move down if above min angle
     else if (input < 0 && getAngle() > ShooterAngleConstants.SHOOTER_MIN_ANGLE) {
+      shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+    }
+    // run PID
+    else {
+      // setAngle();
+      stopMotor();
+    }
+*/
+    if (input > 0) {
+      shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+    }
+    // move down if above min angle
+    else if (input < 0) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
     }
     // run PID

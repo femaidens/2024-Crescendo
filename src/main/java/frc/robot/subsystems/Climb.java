@@ -29,7 +29,7 @@ public class Climb extends SubsystemBase {
   }
 
   public void extendClimbArm() {
-    if(isTopActivated()){ // hits limit switch
+    if(isBotActivated()){ // stop extending if bottom hits top
       rightArm.set(0);
       leftArm.set(0);
       System.out.println("top limit switch hit!");
@@ -43,7 +43,7 @@ public class Climb extends SubsystemBase {
   }
 
   public void retractClimbArm() {
-    if(isBotActivated()){
+    if(isTopActivated()){ // stop retracting if top hits bottom
       rightArm.set(0);
       leftArm.set(0);
       System.out.println("bottom switch activated!");
@@ -59,11 +59,11 @@ public class Climb extends SubsystemBase {
   }
 
   public boolean isTopActivated() {
-    return !topSwitch.get();
+    return !topSwitch.get(); // check to see if it needs to be negated
   }
 
   public boolean isBotActivated() {
-    return !botSwitch.get();
+    return !botSwitch.get(); // check to see if it needs to be negated
   }
 
   public void stopClimb() {

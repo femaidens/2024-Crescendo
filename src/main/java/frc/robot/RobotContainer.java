@@ -4,12 +4,20 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
-import frc.robot.subsystems.Shooter;
+import org.littletonrobotics.urcl.URCL;
+
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShooterWheel;
 import frc.robot.subsystems.ShooterAngle;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,28 +25,27 @@ import frc.robot.Constants.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-
-/*
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  // The driver's controller
-  private final CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
-  private final CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
 
+  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+
+  private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
+  private final ShooterWheel shooterWheel = new ShooterWheel();
+  private final ShooterAngle shooterAngle = new ShooterAngle();
+
   private final Climb climb = new Climb();
   private final Shooter shooter = new Shooter();
   private final ShooterAngle shooterAngle = new ShooterAngle();
@@ -48,79 +55,143 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
 
-    // auton config
+  public RobotContainer() {
+    // configurations
+    configureButtonBindings();
     configureAuton();
 
-    // Configure default commands
+    // configure default commands
+    drivetrain.setDefaultCommand(
+        // clariy turning with right or with left
+        new RunCommand(
+            () -> drivetrain.drive( // all joy.get values were prev negative
+                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+                true, true),
+            drivetrain)); // field rel = true
+
     shooterAngle.setDefaultCommand(
-      new RunCommand(
-        () -> shooterAngle.setShooterAngle(
-          MathUtil.applyDeadband(operJoy.getLeftY(), 0.1)),
-          shooterAngle)
-    );
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(operJoy.getLeftY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+            shooterAngle));
 
-    shooter.setDefaultCommand(
-      new RunCommand(
-        () -> shooter.stopShooter(), shooter)
-    );
+    shooterWheel.setDefaultCommand(
+        new RunCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
   }
-    public void configureAuton() {
-      SmartDashboard.putData("Choose Auto: ", autonChooser);
-      //autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(m_shooter, m_shooterAngle));
-    // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle, armLateral));
+
+  public void configureAuton() {
+    SmartDashboard.putData("Choose Auto: ", autonChooser);
+    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
+    // shooterWheelAngle));
+    // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle,
+    // armLateral));
     // autonChooser.addOption("p2", new Path2(drivetrain));
-    // autonChooser.addOption("test auton", new TestAuton1(drivetrain, intake, armAngle, armLateral));
+    // autonChooser.addOption("test auton", new TestAuton1(drivetrain, intake,
+    // armAngle, armLateral));
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureButtonBindings() {
+    /* CLIMB BUTTONS */
 
-    Trigger RunRollerButton = operJoy.a(); //change buttons later
-    RunRollerButton
-      .whileTrue(new RunCommand(
-        () -> intake.setRollerSpeed(Constants.IntakeConstants.rollerSpeed), intake)); //need to code for when it is false
-
-   /*Trigger LiftIntake = operJoy.a(); //change buttons later
-    LiftIntake
-      .whileTrue(new RunCommand(
-        () -> intake.liftIntake(), intake));*/
-  Trigger shooterSpin = operJoy.a();
-      shooterSpin
+    /* INTAKE BUTTONS */
+    Trigger runIntake = operJoy.rightBumper(); // change buttons later
+    runIntake
         .onTrue(new RunCommand(
-          () -> shooter.setDesiredVelocity(ShooterConstants.SHOOTER_METERS_SECOND), shooter))
+            () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED), intake))
         .onFalse(new RunCommand(
-          () -> shooter.stopShooter(), shooter));
+            () -> intake.stopIntakeMotor(), intake));
 
-    Trigger shooterUp = operJoy.b();
-      shooterUp
+    Trigger runOuttake = operJoy.leftBumper(); // change buttons later
+    runOuttake
         .onTrue(new RunCommand(
-          () -> shooterAngle.shooterAngleUp(), shooterAngle
-        ))
+            () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED), intake))
         .onFalse(new RunCommand(
-          () -> shooterAngle.stopShooterAngle(), shooterAngle));
+            () -> intake.stopIntakeMotor(), intake));
 
+    Trigger runHopper = operJoy.a(); // change buttons later
+    runHopper
+        .onTrue(new RunCommand(
+            () -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
+        .onFalse(new InstantCommand(
+            () -> intake.stopHopperMotor(), intake));
+
+    // positive speed is outwards
+    Trigger runShooter = operJoy.b();
+    runShooter
+        .onTrue(new RunCommand(
+            () -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
+        .onFalse(new InstantCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
+
+    // Trigger shooterUp = operJoy.x();
+    // shooterUp
+    // .onTrue(new RunCommand(
+    //   () -> , null))
+
+    /* HOPPER BUTTONS */
+
+    /* SHOOTER BUTTONS */
+
+    // Trigger ampFlushButton = operJoy.a();
+    // ampFlushButton
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.AMP_FLUSH),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.AMP_FLUSH)))
+
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
+
+    // Trigger speakerFlushButton = operJoy.x();
+    // speakerFlushButton
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_FLUSH),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_FLUSH)))
+
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
+
+    // Trigger speakerStageButton = operJoy.y();
+    // speakerStageButton
+    // .onTrue(Commands.parallel(
+    // shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_STAGE),
+    // shooterWheel.SetShooterSpeed(ShooterWheelConstants.SPEAKER_STAGE)))
+
+    // .onFalse(new RunCommand(
+    // () -> shooterAngle.setAngle(), shooterAngle));
+
+    // Trigger speakerWingButton = operJoy.b();
+    // speakerWingButton
+    // .onTrue(shooterAngle.SetShooterAngle(Constants.ShooterAngleConstants.AMP_FLUSH));
+
+    /* DRIVETRAIN SYSID BUTTONS */
+    // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();
+    // driveForwardQuasistaticButton.whileTrue(
+    // drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward));
+
+    // Trigger driveReverseQuasistatic = driveJoy.rightBumper();
+    // driveReverseQuasistatic.whileTrue(
+    // drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    // Trigger driveForwardDynamicButton = driveJoy.leftTrigger();
+    // driveForwardDynamicButton.whileTrue(
+    // drivetrain.driveDynamic(SysIdRoutine.Direction.kForward));
+
+    // Trigger driveReverseDynamicButton = driveJoy.rightTrigger();
+    // driveReverseDynamicButton.whileTrue(
+    // drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse));
+
+    // Trigger turnQuasistaticButton = driveJoy.a();
+    // turnQuasistaticButton.whileTrue(
+    // drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward));
+
+    // Trigger turnDynamicButton = driveJoy.y();
+    // turnDynamicButton.whileTrue(
+    // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
+  }
     //01/23/2024 stacky is sick 
   }
 
@@ -156,42 +227,49 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Create config for trajectory
     // TrajectoryConfig config = new TrajectoryConfig(
-    //     AutoConstants.AUTON_MAX_SPEED,
-    //     AutoConstants.AUTON_MAX_ACC)
-    //     // Add kinematics to ensure max speed is actually obeyed
-    //     .setKinematics(DriveConstants.DRIVE_KINEMATICS);
+    // AutoConstants.AUTON_MAX_SPEED,
+    // AutoConstants.AUTON_MAX_ACC)
+    // // Add kinematics to ensure max speed is actually obeyed
+    // .setKinematics(DriveConstants.DRIVE_KINEMATICS);
+    // AutoConstants.AUTON_MAX_SPEED,
+    // AutoConstants.AUTON_MAX_ACC)
+    // // Add kinematics to ensure max speed is actually obeyed
+    // .setKinematics(DriveConstants.DRIVE_KINEMATICS);
 
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //     // Start at the origin facing the +X direction
-    //     new Pose2d(0, 0, new Rotation2d(0)),
-    //     // Pass through these two interior waypoints, making an 's' curve path
-    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //     // End 3 meters straight ahead of where we started, facing forward
-    //     new Pose2d(3, 0, new Rotation2d(0)),
-    //     config);
+    // // Start at the origin facing the +X direction
+    // new Pose2d(0, 0, new Rotation2d(0)),
+    // // Pass through these two interior waypoints, making an 's' curve path
+    // List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    // // End 3 meters straight ahead of where we started, facing forward
+    // new Pose2d(3, 0, new Rotation2d(0)),
+    // config);
 
     // var thetaController = new ProfiledPIDController(
-    //     AutoConstants.PThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    // AutoConstants.PThetaController, 0, 0,
+    // AutoConstants.kThetaControllerConstraints);
     // thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-    //     exampleTrajectory,
-    //     drivetrain::getPose, // Functional interface to feed supplier
-    //     DriveConstants.DRIVE_KINEMATICS,
+    // SwerveControllerCommand swerveControllerCommand = new
+    // SwerveControllerCommand(
+    // exampleTrajectory,
+    // drivetrain::getPose, // Functional interface to feed supplier
+    // DriveConstants.DRIVE_KINEMATICS,
 
-    //     // Position controllers
-    //     new PIDController(AutoConstants.PXController, 0, 0),
-    //     new PIDController(AutoConstants.PYController, 0, 0),
-    //     thetaController,
-    //     drivetrain::setModuleStates,
-    //     drivetrain);
+    // // Position controllers
+    // new PIDController(AutoConstants.PXController, 0, 0),
+    // new PIDController(AutoConstants.PYController, 0, 0),
+    // thetaController,
+    // drivetrain::setModuleStates,
+    // drivetrain);
 
     // // Reset odometry to the starting pose of the trajectory.
     // drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
 
     // // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0, false));
+    // return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0,
+    // false));
     return autonChooser.getSelected();
   }
 }

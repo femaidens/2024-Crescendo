@@ -4,108 +4,132 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
   }
 
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  public static final class ClimberConstants {
+    public static final double ARM_SPEED = 0.3;
   }
 
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
-  }
-
-
-  public static final class IntakeConstants{
-    public static final double rotationSpeed = 0.5;
-    public static final double rollerSpeed = 0.5;
-  }
-    public static final class PIDConstants{
-      public static final double kP = 0;
-      public static final double kI = 0;
-      public static final double kD = 0;
-    }
-
-    public static final double rotLiftSetPoint = 5;
-    public static final double rotLowerSetPoint = 0;
   public static final class HopperConstants {
-    public static final int HOPPER_CURRENT_LIMIT = 0;
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final int CURRENT_LIMIT = 35;
+    public static final double TRANSITION_SPEED = 0.05;
   }
 
-  public static final class ShooterConstants {
-    //feedforward
+  public static final class IntakeConstants {
+    // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
+    public static final double ROLLER_SPEED = 0.5;
+
+    public static final int CURRENT_LIMIT = 0;
+
+    // pid constants -> need to populate
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    // ff constants -> need to populate
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+  }
+
+  public static final class ShooterWheelConstants {
+    // CONVERSION (RPM -> DEG/S)
+    // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
+
+    public static final double VEL_CFACTOR = 360.0 / 60.0;
+
+    // limits
+    public static final int CURRENT_LIMIT = 30;
+    
+    public static final double AMP_FLUSH = 0.0; // placeholder
+
+    public static final double SPEAKER_FLUSH = 0.0; // placeholder
+    public static final double SPEAKER_STAGE = 0.0; // placeholder
+    public static final double SPEAKER_WING = 0.0; // placeholder
+    // speeds (degrees/sec)
+
+    // auton
+    public static final double SHOOTER_METERS_SECOND = 2.0;
+    public static final double AUTON_SPEED = 720; // degrees/sec
+
+    // ff -> need to populate
     public static final double kS = 0;
     public static final double kV = 0;
-    //pid
+    public static final double kA = 0;
+
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    //conversion
-    /*
-     * to obtain vcf, use dimensional analysis to convert from rpm to m/s
-     * given rpm * 1/(gear ratio) * (2 * Pi * radius) * 60 (for seconds)
-     */
-    public static final double VELOCITY_CONVERSION_FACTOR = 0;
-    //limits
-    public static final int SHOOTER_CURRENT_LIMIT = 0;
 
-    //auto constants
-    public static final double SHOOTER_METERS_SECOND = 2.0;
   }
 
   public static final class ShooterAngleConstants {
-    //pid
+
+    // conversion
+    public static final double POS_CFACTOR = 360.0; // degrees, 25:1 gr
+
+    // limits
+    public static final int CURRENT_LIMIT = 30;
+
+    // angles (degrees)
+    public static final double PHYSICAL_OFFSET = 19; // 18.3
+    public static final double SHOOTER_MAX_ANGLE = 75.0;
+    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
+
+    //check picture for distances for testing
+    public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
+
+    public static final double SPEAKER_FLUSH = 70.0; // placeholder
+    public static final double SPEAKER_STAGE = 40.0; // placeholder
+    public static final double SPEAKER_WING = 20.0; // placeholder
+
+    // speeds
+    public static final double CONSTANT_SPEED = 0.5;
+
+    // auton
+    public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
+
+    // pid -> need to populate
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    //conversion
-    public static final double POSITION_CONVERSION_FACTOR = 360;
-    //limits
-    public static final int SHOOTER_ANGLE_CURRENT_LIMIT = 0;
-    //autos
-    public static final double SHOOTER_ANGLE_UP = 60;
+
   }
 
-  public static final class DrivetrainConstants {
-    // swerve constants have a couple diff classes, so just put all of them at the bottom of the constants class (aka here)
-  }
+  public static final class AutoConstants {
+    // drivetrain
+    public static final double AUTON_MAX_SPEED = 3; // max meters per second
+    public static final double AUTON_MAX_ACC = 3; // max acc m/s^2
+    public static final double AUTON_MAX_ANGULAR_SPEED = Math.PI; // max angular speed rad/s
+    public static final double AUTON_MAX_ANGULAR_SPEED_SQUARED = Math.PI; // angular speed rad/s^2
+   
+    public static final double PXController = 1;
+    public static final double PYController = 1;
+    public static final double PThetaController = 1;
 
-  public static final class ClimberConstants 
-  {
-    public static final double climbArmSpeed = 0.3;
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+      AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
+
+    // intake wheels
+    public static final double AUTON_OUTTAKE_TIME = 2;
+
+    // arm angles
+    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
+    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
+
+    // taxi time
+
+    // auton drive speeds
+
   }
 }

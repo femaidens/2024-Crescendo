@@ -73,7 +73,7 @@ public class RobotContainer {
     shooterAngle.setDefaultCommand(
         new RunCommand(
             () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(operJoy.getLeftY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+                MathUtil.applyDeadband(operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
             shooterAngle));
 
     shooterWheel.setDefaultCommand(
@@ -110,7 +110,7 @@ public class RobotContainer {
         .onFalse(new RunCommand(
             () -> intake.stopIntakeMotor(), intake));
 
-    Trigger runHopper = operJoy.a(); // change buttons later
+    Trigger runHopper = operJoy.start(); // change buttons later
     runHopper
         .onTrue(new RunCommand(
             () -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
@@ -118,7 +118,7 @@ public class RobotContainer {
             () -> intake.stopHopperMotor(), intake));
 
     // positive speed is outwards
-    Trigger runShooter = operJoy.b();
+    Trigger runShooter = operJoy.rightTrigger();
     runShooter
         .onTrue(new RunCommand(
             () -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
@@ -127,14 +127,14 @@ public class RobotContainer {
 
      // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    Trigger extendClimbButton = operJoy.b();
+    Trigger extendClimbButton = operJoy.povUp();
     extendClimbButton
       .onTrue(new RunCommand(
         () -> climb.extendClimbArm(), climb))
       .onFalse(new InstantCommand(
         () -> climb.stopClimb(), climb));
 
-    Trigger retractClimbButton = operJoy.a();
+    Trigger retractClimbButton = operJoy.povDown();
     retractClimbButton
       .onTrue(new RunCommand(
         () -> climb.retractClimbArm(), climb))

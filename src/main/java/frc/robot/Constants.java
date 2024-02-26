@@ -17,14 +17,14 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
-    public static final int CURRENT_LIMIT = 0;
-    public static final double SHOOTING_SPEED = 0.05;
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final int CURRENT_LIMIT = 35;
+    public static final double TRANSITION_SPEED = 0.05;
   }
 
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
-    public static final double VEL_CFACTOR = 360.0 / 60.0; // 360 degrees/sec
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
     public static final double ROLLER_SPEED = 0.5;
 
     public static final int CURRENT_LIMIT = 0;
@@ -44,13 +44,21 @@ public final class Constants {
     // CONVERSION (RPM -> DEG/S)
     // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
-    public static final double VEL_CFACTOR = 0;
+    public static final double VEL_CFACTOR = 360.0 / 60.0;
 
     // limits
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 30;
+    
+    public static final double AMP_FLUSH = 0.0; // placeholder
+
+    public static final double SPEAKER_FLUSH = 0.0; // placeholder
+    public static final double SPEAKER_STAGE = 0.0; // placeholder
+    public static final double SPEAKER_WING = 0.0; // placeholder
+    // speeds (degrees/sec)
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
+    public static final double AUTON_SPEED = 720; // degrees/sec
 
     // ff -> need to populate
     public static final double kS = 0;
@@ -61,14 +69,31 @@ public final class Constants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+
   }
 
   public static final class ShooterAngleConstants {
+
     // conversion
-    public static final double POS_CFACTOR = 360.0; // degrees
+    public static final double POS_CFACTOR = 360.0; // degrees, 25:1 gr
 
     // limits
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 30;
+
+    // angles (degrees)
+    public static final double PHYSICAL_OFFSET = 19; // 18.3
+    public static final double SHOOTER_MAX_ANGLE = 75.0;
+    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
+
+    //check picture for distances for testing
+    public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
+
+    public static final double SPEAKER_FLUSH = 70.0; // placeholder
+    public static final double SPEAKER_STAGE = 40.0; // placeholder
+    public static final double SPEAKER_WING = 20.0; // placeholder
+
+    // speeds
+    public static final double CONSTANT_SPEED = 0.5;
 
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
@@ -77,6 +102,7 @@ public final class Constants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+
   }
 
   public static final class AutoConstants {

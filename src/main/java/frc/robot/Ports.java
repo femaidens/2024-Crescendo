@@ -18,36 +18,38 @@ public class Ports {
     public static final int REAR_RIGHT_DRIVE = 6;
 
     public static final int FRONT_LEFT_TURNING = 7;
-    public static final int REAR_LEFT_TURNING = 1;
-    public static final int FRONT_RIGHT_TURNING = 8;
+    public static final int REAR_LEFT_TURNING = 14;
+    public static final int FRONT_RIGHT_TURNING = 8;    
     public static final int REAR_RIGHT_TURNING = 2;
   }
 
   public static final class ClimbPorts {
-    public static final int RIGHT_ARM_MOTOR = 0;
-    public static final int LEFT_ARM_MOTOR = 1;
+    public static final int RIGHT_ARM_MOTOR = 11;
+    public static final int LEFT_ARM_MOTOR = 10;
+
+    public static final int TOP_SWITCH = 9;
+    public static final int BOTTOM_SWITCH = 3;
   }
 
   public static final class IntakePorts {
-    public static final int INTAKE_ROLLER = 3;
-    public static final int INTAKE_ENCODER = 4;
+    public static final int INTAKE_ROLLER = 9;
   }
 
   public static final class HopperPorts {
-    public static final int RECEIVER = 0;
-    public static final int EMITTER = 0;
+    public static final int RECEIVER = 1;
+    public static final int EMITTER = 2;
 
-    public static final int HOPPER_MOTOR = 0;
+    public static final int HOPPER_MOTOR = 13;
   }
 
   public static final class ShooterPorts {
-    public static final int LEFT_SHOOTER = 0;
-    public static final int RIGHT_SHOOTER = 0;
+    public static final int LEFT_SHOOTER = 12;
+    public static final int RIGHT_SHOOTER = 16;
 
-    public static final int LEFT_SHOOTER_FLEX = 0;
-    public static final int RIGHT_SHOOTER_FLEX = 0;
+    // public static final int LEFT_SHOOTER_FLEX = 0;
+    // public static final int RIGHT_SHOOTER_FLEX = 0;
 
-    public static final int SHOOTER_ANGLE = 0;
+    public static final int SHOOTER_ANGLE = 15;
   }
 
 }

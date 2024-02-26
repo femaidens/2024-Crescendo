@@ -14,7 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.ShooterPorts;
 
 public class Shooter extends SubsystemBase {
@@ -40,19 +40,19 @@ public class Shooter extends SubsystemBase {
 
     rightShooterMotor.follow(leftShooterMotor, true);
 
-    rightShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    leftShooterMotor.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    rightShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
+    leftShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
 
     leftShooterEncoder = leftShooterMotor.getEncoder();
     rightShooterEncoder = rightShooterMotor.getEncoder();
 
-    leftShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    rightShooterEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    leftShooterEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    rightShooterEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
 
 
-    shooterFF = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV);
+    shooterFF = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
 
-    shooterPID = new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD);
+    shooterPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
     // //rightShooterMotor.setInverted(true); //double check if it's left or right
 
@@ -64,14 +64,14 @@ public class Shooter extends SubsystemBase {
     // leftShooterFlex.setIdleMode(IdleMode.kCoast);
     // rightShooterFlex.setIdleMode(IdleMode.kCoast);
 
-    // leftShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    // rightShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    // leftShooterFlex.setSmartCurrentLimit(ShooterWheelConstants.SHOOTER_CURRENT_LIMIT);
+    // rightShooterFlex.setSmartCurrentLimit(ShooterWheelConstants.SHOOTER_CURRENT_LIMIT);
 
     // leftShooterEncoder = leftShooterFlex.getEncoder();
     // rightShooterEncoder = rightShooterFlex.getEncoder();
 
-    // leftShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    // leftShooterFlex.setVelocityConversionFactor(ShooterWheelConstants.VELOCITY_CONVERSION_FACTOR);
+    // rightShooterFlex.setVelocityConversionFactor(ShooterWheelConstants.VELOCITY_CONVERSION_FACTOR);
   }
 
   /*

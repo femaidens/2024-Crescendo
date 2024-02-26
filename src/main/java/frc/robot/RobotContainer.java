@@ -47,8 +47,6 @@ public class RobotContainer {
   private final ShooterAngle shooterAngle = new ShooterAngle();
 
   private final Climb climb = new Climb();
-  private final Shooter shooter = new Shooter();
-  private final ShooterAngle shooterAngle = new ShooterAngle();
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -127,10 +125,32 @@ public class RobotContainer {
         .onFalse(new InstantCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
 
+     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+
+    Trigger extendClimbButton = operJoy.b();
+    extendClimbButton
+      .onTrue(new RunCommand(
+        () -> climb.extendClimbArm(), climb))
+      .onFalse(new InstantCommand(
+        () -> climb.stopClimb(), climb));
+
+    Trigger retractClimbButton = operJoy.a();
+    retractClimbButton
+      .onTrue(new RunCommand(
+        () -> climb.retractClimbArm(), climb))
+      .onFalse(new InstantCommand(
+        () -> climb.stopClimb(), climb));
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    //driveJoy.a().whileTrue(climber.extendClimbArm());
+
     // Trigger shooterUp = operJoy.x();
     // shooterUp
     // .onTrue(new RunCommand(
-    //   () -> , null))
+    //   () ->, null))
 
     /* HOPPER BUTTONS */
 
@@ -193,31 +213,10 @@ public class RobotContainer {
     // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
     //01/23/2024 stacky is sick 
-  }
 
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    Trigger extendClimbButton = operJoy.b();
-    extendClimbButton
-      .onTrue(new RunCommand(
-        () -> climb.extendClimbArm(), climb))
-      .onFalse(new InstantCommand(
-        () -> climb.stopClimb(), climb));
-
-    Trigger retractClimbButton = operJoy.a();
-    retractClimbButton
-      .onTrue(new RunCommand(
-        () -> climb.retractClimbArm(), climb))
-      .onFalse(new InstantCommand(
-        () -> climb.stopClimb(), climb));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    //driveJoy.a().whileTrue(climber.extendClimbArm());
-  }
+ 
+   
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

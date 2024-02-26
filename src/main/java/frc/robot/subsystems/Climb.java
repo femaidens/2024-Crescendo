@@ -24,8 +24,8 @@ public class Climb extends SubsystemBase {
     rightArm = new CANSparkMax(ClimbPorts.RIGHT_ARM_MOTOR, MotorType.kBrushless);
     leftArm = new CANSparkMax(ClimbPorts.LEFT_ARM_MOTOR, MotorType.kBrushless);
   
-    topSwitch = new DigitalInput(ClimbPorts.TOP_SWITCH_PORT);
-    botSwitch = new DigitalInput(ClimbPorts.BOTTOM_SWITCH_PORT);
+    topSwitch = new DigitalInput(ClimbPorts.TOP_SWITCH);
+    botSwitch = new DigitalInput(ClimbPorts.BOTTOM_SWITCH);
   }
 
   public void extendClimbArm() {
@@ -36,8 +36,8 @@ public class Climb extends SubsystemBase {
     }
 
     else {
-      rightArm.set(ClimberConstants.climbArmSpeed);
-      leftArm.set(-ClimberConstants.climbArmSpeed);
+      rightArm.set(ClimberConstants.ARM_SPEED);
+      leftArm.set(-ClimberConstants.ARM_SPEED);
       System.out.println("extending arm");
     }
   }
@@ -51,8 +51,8 @@ public class Climb extends SubsystemBase {
 
     else {
       // check inversion of motors
-      rightArm.set(-ClimberConstants.climbArmSpeed);
-      leftArm.set(ClimberConstants.climbArmSpeed);
+      rightArm.set(-ClimberConstants.ARM_SPEED);
+      leftArm.set(ClimberConstants.ARM_SPEED);
       System.out.println("retracting arm");
     }
     

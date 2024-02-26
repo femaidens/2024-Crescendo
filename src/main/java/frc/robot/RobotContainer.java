@@ -125,6 +125,12 @@ public class RobotContainer {
         .onFalse(new InstantCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
 
+    Trigger runShooterIntake = operJoy.leftTrigger();
+    runShooterIntake
+        .onTrue(new RunCommand(
+            () -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
+        .onFalse(new InstantCommand(
+            () -> shooterWheel.stopShooter(), shooterWheel));
      // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     Trigger extendClimbButton = operJoy.povUp();

@@ -5,6 +5,7 @@
 package frc.robot;
 
 public class Ports {
+  
   public static final class JoystickPorts {
     public static final int DRIVE_JOY = 0;
     public static final int OPER_JOY = 1;
@@ -19,7 +20,7 @@ public class Ports {
 
     public static final int FRONT_LEFT_TURNING = 7;
     public static final int REAR_LEFT_TURNING = 14;
-    public static final int FRONT_RIGHT_TURNING = 8;    
+    public static final int FRONT_RIGHT_TURNING = 8;
     public static final int REAR_RIGHT_TURNING = 2;
   }
 
@@ -35,13 +36,7 @@ public class Ports {
     public static final int INTAKE_ROLLER = 9;
   }
 
-  public static final class BeamBreakPorts {
-    public static final int RECEIVER = 1;
-    public static final int EMITTER = 2;
-  }
   public static final class HopperPorts {
-
-
     public static final int HOPPER_MOTOR = 13;
   }
 
@@ -53,6 +48,11 @@ public class Ports {
     // public static final int RIGHT_SHOOTER_FLEX = 0;
 
     public static final int SHOOTER_ANGLE = 15;
+  }
+
+  public static final class BeamBreakPorts {
+    public static final int RECEIVER = 5;
+    public static final int EMITTER = 2;
   }
 
 }

@@ -6,14 +6,15 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports.BeamBreakPorts;
-import frc.robot.Ports.HopperPorts;
 
 public class BeamBreak extends SubsystemBase {
   /** Creates a new BeamBreak. */
   private final DigitalInput receiver;
   private final DigitalOutput emitter;
+  
   public BeamBreak() {
     receiver = new DigitalInput(BeamBreakPorts.RECEIVER);
     emitter = new DigitalOutput(BeamBreakPorts.EMITTER);
@@ -22,6 +23,8 @@ public class BeamBreak extends SubsystemBase {
 
   public boolean getReceiverStatus() {
     return receiver.get();
+    // true -> not broken
+    // false -> broken
   }
 
   public boolean getEmitterStatus() {
@@ -35,5 +38,10 @@ public class BeamBreak extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // System.out.println("receiver status: " + getReceiverStatus());
+    // System.out.println("emitter status: " + getEmitterStatus());
+
+    SmartDashboard.putBoolean("receiver status", getReceiverStatus());
+    SmartDashboard.putBoolean("emitter status", getEmitterStatus());
   }
 }

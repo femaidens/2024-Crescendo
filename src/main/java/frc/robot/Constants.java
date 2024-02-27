@@ -93,7 +93,7 @@ public final class Constants {
     public static final double SPEAKER_WING = 20.0; // placeholder
 
     // speeds
-    public static final double CONSTANT_SPEED = 0.5;
+    public static final double CONSTANT_SPEED = 0.3;
 
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later

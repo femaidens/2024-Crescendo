@@ -74,16 +74,16 @@ public class RobotContainer {
     shooterAngle.setDefaultCommand(
         new RunCommand(
             () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
             shooterAngle));
 
     shooterWheel.setDefaultCommand(
         new RunCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
 
-    beambreak.setDefaultCommand(
-        new RunCommand(
-            () -> beambreak.setEmitter(true), beambreak));
+    // beambreak.setDefaultCommand(
+    //     new InstantCommand(
+    //         () -> beambreak.setEmitter(true), beambreak));
   }
 
   public void configureAuton() {
@@ -98,6 +98,14 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    /* BEAM BREAK */
+    Trigger breaks = operJoy.back();
+    breaks
+      .onTrue(new InstantCommand(
+        () -> beambreak.setEmitter(true), beambreak))
+      .onFalse(new InstantCommand(
+        () -> beambreak.setEmitter(false), beambreak));
+
     /* CLIMB BUTTONS */
 
     /* INTAKE BUTTONS */

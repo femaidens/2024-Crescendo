@@ -35,8 +35,8 @@ public class Intake extends SubsystemBase {
   private final PIDController intakePID;
   private final SimpleMotorFeedforward ff;
 
-  private final DigitalInput receiver;
-  private final DigitalOutput emitter;
+  // private final DigitalInput receiver;
+  // private final DigitalOutput emitter;
 
   // private final SysIdRoutine intakeRoutine;
 
@@ -55,8 +55,8 @@ public class Intake extends SubsystemBase {
     intakePID = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
     ff = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
     
-    receiver = new DigitalInput(HopperPorts.RECEIVER);
-    emitter = new DigitalOutput(HopperPorts.EMITTER);
+    // receiver = new DigitalInput(HopperPorts.RECEIVER);
+    // emitter = new DigitalOutput(HopperPorts.EMITTER);
 
     hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
     intakeMotor.setIdleMode(IdleMode.kCoast); // should freely spin?
@@ -67,7 +67,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.burnFlash();
     hopperMotor.burnFlash();
     
-    setEmitter(true);
+    // setEmitter(true);
     
     vSetpoint = 0;
   }
@@ -110,17 +110,17 @@ public class Intake extends SubsystemBase {
   }
 
   // beam breaker code
-  public boolean getReceiverStatus() {
-    return receiver.get();
-  }
+  // public boolean getReceiverStatus() {
+  //   return receiver.get();
+  // }
 
-  public boolean getEmitterStatus() {
-    return emitter.get();
-  }
+  // public boolean getEmitterStatus() {
+  //   return emitter.get();
+  // }
 
-  public void setEmitter(boolean status) {
-    emitter.set(status);
-  }
+  // public void setEmitter(boolean status) {
+  //   emitter.set(status);
+  // }
 
   @Override
   public void periodic() {

@@ -35,9 +35,12 @@ public class Ports {
     public static final int INTAKE_ROLLER = 9;
   }
 
-  public static final class HopperPorts {
+  public static final class BeamBreakPorts {
     public static final int RECEIVER = 1;
     public static final int EMITTER = 2;
+  }
+  public static final class HopperPorts {
+
 
     public static final int HOPPER_MOTOR = 13;
   }

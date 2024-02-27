@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
+import frc.robot.subsystems.BeamBreak;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 
@@ -45,8 +46,8 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
-
   private final Climb climb = new Climb();
+  private final BeamBreak beambreak = new BeamBreak();
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -79,6 +80,10 @@ public class RobotContainer {
     shooterWheel.setDefaultCommand(
         new RunCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
+
+    beambreak.setDefaultCommand(
+        new RunCommand(
+            () -> beambreak.setEmitter(true), beambreak));
   }
 
   public void configureAuton() {
@@ -131,32 +136,33 @@ public class RobotContainer {
             () -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
         .onFalse(new InstantCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
-     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     Trigger extendClimbButton = operJoy.povUp();
     extendClimbButton
-      .onTrue(new RunCommand(
-        () -> climb.extendClimbArm(), climb))
-      .onFalse(new InstantCommand(
-        () -> climb.stopClimb(), climb));
+        .onTrue(new RunCommand(
+            () -> climb.extendClimbArm(), climb))
+        .onFalse(new InstantCommand(
+            () -> climb.stopClimb(), climb));
 
     Trigger retractClimbButton = operJoy.povDown();
     retractClimbButton
-      .onTrue(new RunCommand(
-        () -> climb.retractClimbArm(), climb))
-      .onFalse(new InstantCommand(
-        () -> climb.stopClimb(), climb));
+        .onTrue(new RunCommand(
+            () -> climb.retractClimbArm(), climb))
+        .onFalse(new InstantCommand(
+            () -> climb.stopClimb(), climb));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed,
     // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    //driveJoy.a().whileTrue(climber.extendClimbArm());
+    // driveJoy.a().whileTrue(climber.extendClimbArm());
 
     // Trigger shooterUp = operJoy.x();
     // shooterUp
     // .onTrue(new RunCommand(
-    //   () ->, null))
+    // () ->, null))
 
     /* HOPPER BUTTONS */
 
@@ -218,11 +224,7 @@ public class RobotContainer {
     // turnDynamicButton.whileTrue(
     // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
-    //01/23/2024 stacky is sick 
-
- 
-   
-  
+  // 01/23/2024 stacky is sick
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

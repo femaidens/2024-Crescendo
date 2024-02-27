@@ -79,6 +79,8 @@ public class RobotContainer {
     shooterWheel.setDefaultCommand(
         new RunCommand(
             () -> shooterWheel.stopShooter(), shooterWheel));
+
+    intake.setEmitter(true);
   }
 
   public void configureAuton() {
@@ -146,6 +148,8 @@ public class RobotContainer {
         () -> climb.retractClimbArm(), climb))
       .onFalse(new InstantCommand(
         () -> climb.stopClimb(), climb));
+
+    
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

@@ -52,4 +52,9 @@ public class Ports {
     public static final int SHOOTER_ANGLE = 15;
   }
 
+  public static final class LEDPorts{ 
+    public static final int LED_PORT = 0; 
+  }
 }
+
+

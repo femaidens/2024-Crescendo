@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Ports.*;
 import org.littletonrobotics.urcl.URCL;
 
@@ -15,6 +16,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterWheel;
 import frc.robot.subsystems.ShooterAngle;
+import frc.robot.subsystems.LED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -47,6 +49,8 @@ public class RobotContainer {
   private final ShooterAngle shooterAngle = new ShooterAngle();
 
   private final Climb climb = new Climb();
+
+  private final LED led = new LED(); 
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -147,6 +151,35 @@ public class RobotContainer {
       .onFalse(new InstantCommand(
         () -> climb.stopClimb(), climb));
 
+    //LED Buttons 
+    Trigger ledGruple = operJoy.a(); 
+    ledGruple 
+    .onTrue(new InstantCommand(
+      () -> led.setGrupleFlicker(), led))
+    .onFalse(new RunCommand(
+      ()-> led.setDefault(), led)); 
+
+    Trigger ledSolid = operJoy.b(); 
+    ledSolid 
+    .onTrue( new InstantCommand(
+    () -> led.setSolid(LEDConstants.PURPLE), led))
+    .onFalse(new RunCommand(
+      () -> led.setDefault(), led));
+    
+    Trigger ledRainbow = operJoy.x(); 
+    ledRainbow 
+    .onTrue(new InstantCommand(
+      () -> led.setRainbow(), led))
+    .onFalse(new RunCommand(
+      () -> led.setDefault())); 
+
+    Trigger ledRedFlicker = operJoy.y(); 
+    ledRedFlicker
+    .onTrue(new InstantCommand(
+    () -> led.setRedFlicker(), led))
+    .onFalse(new RunCommand(
+      () -> led.setDefault())); 
+      
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

@@ -50,11 +50,11 @@ public class Ports {
 
   public static final class ShooterPorts {
 
-    public static final int LEFT_SHOOTER = 12;
-    public static final int RIGHT_SHOOTER = 16;
+    public static final int LEADER_MOTOR = 12; // left
+    public static final int FOLLOWER_MOTOR = 16; // right
 
-    // public static final int LEFT_SHOOTER_FLEX = 0;
-    // public static final int RIGHT_SHOOTER_FLEX = 0;
+    public static final int LEADER_FLEX = 0;
+    public static final int FOLLOWER_FLEX = 0;
 
     public static final int SHOOTER_ANGLE = 15;
   }

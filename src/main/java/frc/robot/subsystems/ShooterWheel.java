@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-// import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -24,8 +24,8 @@ public class ShooterWheel extends SubsystemBase {
   private final CANSparkMax leaderMotor; // left motor
   private final CANSparkMax followerMotor; // right motor
 
-  // private final CANSparkFlex leftShooterFlex;
-  // private final CANSparkFlex rightShooterFlex;
+  // private final CANSparkFlex leaderFlex;
+  // private final CANSparkFlex followerFlex;
 
   private final RelativeEncoder leaderEncoder;
   private final RelativeEncoder followerEncoder;
@@ -47,8 +47,8 @@ public class ShooterWheel extends SubsystemBase {
           volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
 
   public ShooterWheel() {
-    leaderMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
-    followerMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
+    leaderMotor = new CANSparkMax(ShooterPorts.LEADER_MOTOR, MotorType.kBrushless);
+    followerMotor = new CANSparkMax(ShooterPorts.FOLLOWER_MOTOR, MotorType.kBrushless);
 
     leaderEncoder = leaderMotor.getEncoder();
     followerEncoder = followerMotor.getEncoder();
@@ -72,24 +72,22 @@ public class ShooterWheel extends SubsystemBase {
     followerMotor.burnFlash();
 
     /* FLEX VARIATIONS */
-    // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT,
-    // MotorType.kBrushless);
-    // rightShooterFlex = new CANSparkFlex(ShooterPorts.RIGHT_SHOOTER_FLEX_PORT,
-    // MotorType.kBrushless);
+    // leaderFlex = new CANSparkFlex(ShooterPorts.LEADER_FLEX, MotorType.kBrushless);
+    // followerFlex = new CANSparkFlex(ShooterPorts.FOLLOWER_FLEX, MotorType.kBrushless);
 
-    // rightShooterFlex.follow(leftShooterFlex, true);
+    // followerFlex.follow(leaderFlex, true);
 
-    // leftShooterFlex.setIdleMode(IdleMode.kCoast);
-    // rightShooterFlex.setIdleMode(IdleMode.kCoast);
+    // leaderFlex.setIdleMode(IdleMode.kCoast);
+    // followerFlex.setIdleMode(IdleMode.kCoast);
 
-    // leftShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    // rightShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    // leaderFlex.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
+    // followerFlex.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
 
-    // leftShooterEncoder = leftShooterFlex.getEncoder();
-    // rightShooterEncoder = rightShooterFlex.getEncoder();
+    // leaderEncoder = leaderFlex.getEncoder();
+    // followerEncoder = followerFlex.getEncoder();
 
-    // leftShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    // leaderEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    // followerEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
   }
 
   // sets the velocity of shooter wheels in degrees per second
@@ -122,7 +120,7 @@ public class ShooterWheel extends SubsystemBase {
   // stops the motors for the shooter wheels
   public void stopShooter() {
     leaderMotor.setVoltage(0);
-    // leftShooterFlex.setVoltage(0);
+    // leaderFlex.setVoltage(0);
   }
   /* COMMANDS */
   public Command SetShooterSpeed(double speed) {

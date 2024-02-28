@@ -81,7 +81,7 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 30;
 
     // angles (degrees)
-    public static final double PHYSICAL_OFFSET = 19; // 18.3
+    public static final double PHYSICAL_OFFSET = 18.5; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 75.0;
     public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
 

@@ -4,43 +4,43 @@
 
 package frc.robot;
 
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Constants.ShooterWheelConstants;
-import frc.robot.Ports.*;
-import org.littletonrobotics.urcl.URCL;
-
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.ShooterWheel;
-import frc.robot.subsystems.ShooterAngle;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.BeamBreak;
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Intake;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.*;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.Constants.ShooterWheelConstants;
+import frc.robot.Ports.*;
+import frc.robot.commands.*;
+import frc.robot.subsystems.BeamBreak;
+import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShooterAngle;
+import frc.robot.subsystems.ShooterWheel;
+import org.littletonrobotics.urcl.URCL;
 
 public class RobotContainer {
 
-  private CommandXboxController driveJoy = new CommandXboxController(Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController operJoy = new CommandXboxController(Ports.JoystickPorts.OPER_JOY);
+  private CommandXboxController driveJoy = new CommandXboxController(
+    Ports.JoystickPorts.DRIVE_JOY
+  );
+  private CommandXboxController operJoy = new CommandXboxController(
+    Ports.JoystickPorts.OPER_JOY
+  );
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
@@ -62,25 +62,33 @@ public class RobotContainer {
 
     // configure default commands
     drivetrain.setDefaultCommand(
-        // clariy turning with right or with left
-        new RunCommand(
-            () -> drivetrain.drive( // all joy.get values were prev negative
-                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
-                MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-                true, true),
-            drivetrain)); // field rel = true
+      // clariy turning with right or with left
+      new RunCommand(
+        () ->
+          drivetrain.drive( // all joy.get values were prev negative
+            MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+            MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+            MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+            true,
+            true
+          ),
+        drivetrain
+      )
+    ); // field rel = true
 
     shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-            shooterAngle));
+      new RunCommand(
+        () ->
+          shooterAngle.setManualAngle(
+            MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)
+          ), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+        shooterAngle
+      )
+    );
 
     shooterWheel.setDefaultCommand(
-        new RunCommand(
-            () -> shooterWheel.stopShooter(), shooterWheel));
-
+      new RunCommand(() -> shooterWheel.stopShooter(), shooterWheel)
+    );
     // beambreak.setDefaultCommand(
     //     new InstantCommand(
     //         () -> beambreak.setEmitter(true), beambreak));
@@ -99,79 +107,70 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     /* BEAM BREAK */
-    Trigger breaks = operJoy.back();
-    breaks
-      .onTrue(new InstantCommand(
-        () -> beambreak.setEmitter(true), beambreak))
-      .onFalse(new InstantCommand(
-        () -> beambreak.setEmitter(false), beambreak));
+    //     Trigger breaks = operJoy.back();
+    //     breaks
+    //       .onTrue(new InstantCommand(() -> beambreak.setEmitter(true), beambreak))
+    //       .onFalse(
+    //         new InstantCommand(() -> beambreak.setEmitter(false), beambreak)
+    //       );
 
     /* CLIMB BUTTONS */
 
     /* INTAKE BUTTONS */
     Trigger runIntake = operJoy.rightBumper(); // change buttons later
     runIntake
-        .onTrue(new RunCommand(
-            () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED), intake))
-        .onFalse(new RunCommand(
-            () -> intake.stopIntakeMotor(), intake));
+      .onTrue(
+        new RunCommand(
+          () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
+          intake
+        )
+      )
+      .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
     Trigger runOuttake = operJoy.leftBumper(); // change buttons later
     runOuttake
-        .onTrue(new RunCommand(
-            () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED), intake))
-        .onFalse(new RunCommand(
-            () -> intake.stopIntakeMotor(), intake));
+      .onTrue(
+        new RunCommand(
+          () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED),
+          intake
+        )
+      )
+      .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
     Trigger runHopper = operJoy.start(); // change buttons later
     runHopper
-        .onTrue(new RunCommand(
-            () -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
-        .onFalse(new InstantCommand(
-            () -> intake.stopHopperMotor(), intake));
+      .onTrue(new RunCommand(() -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
+      .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
 
     // positive speed is outwards
     Trigger runShooter = operJoy.rightTrigger();
     runShooter
-        .onTrue(new RunCommand(
-            () -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
-        .onFalse(new InstantCommand(
-            () -> shooterWheel.stopShooter(), shooterWheel));
+      .onTrue(
+        new RunCommand(() -> shooterWheel.setShooterSpeed(0.5), shooterWheel)
+      )
+      .onFalse(
+        new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel)
+      );
 
     Trigger runShooterIntake = operJoy.leftTrigger();
     runShooterIntake
-        .onTrue(new RunCommand(
-            () -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
-        .onFalse(new InstantCommand(
-            () -> shooterWheel.stopShooter(), shooterWheel));
+      .onTrue(
+        new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel)
+      )
+      .onFalse(
+        new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel)
+      );
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     Trigger extendClimbButton = operJoy.povUp();
     extendClimbButton
-        .onTrue(new RunCommand(
-            () -> climb.extendClimbArm(), climb))
-        .onFalse(new InstantCommand(
-            () -> climb.stopClimb(), climb));
+      .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
+      .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
 
     Trigger retractClimbButton = operJoy.povDown();
     retractClimbButton
-        .onTrue(new RunCommand(
-            () -> climb.retractClimbArm(), climb))
-        .onFalse(new InstantCommand(
-            () -> climb.stopClimb(), climb));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    // driveJoy.a().whileTrue(climber.extendClimbArm());
-
-    // Trigger shooterUp = operJoy.x();
-    // shooterUp
-    // .onTrue(new RunCommand(
-    // () ->, null))
-
+      .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
+      .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
     /* HOPPER BUTTONS */
 
     /* SHOOTER BUTTONS */
@@ -232,7 +231,6 @@ public class RobotContainer {
     // turnDynamicButton.whileTrue(
     // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
   }
-  // 01/23/2024 stacky is sick
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

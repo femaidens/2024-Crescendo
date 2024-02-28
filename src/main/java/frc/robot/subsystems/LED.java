@@ -49,6 +49,7 @@ public class LED extends SubsystemBase {
       ledBuffer.setRGB(i, 0, 0, 0);
     }
     led.setData(ledBuffer);
+    System.out.println("Default Working ");
   }
 
 
@@ -67,6 +68,7 @@ public class LED extends SubsystemBase {
   else {
     timer.stop(); 
     }
+    System.out.println("Rainbow Running ");
   }
 
   public void setGrupleFlicker(){
@@ -81,6 +83,7 @@ public class LED extends SubsystemBase {
           led.setData(ledBuffer);
       } 
     }
+    System.out.println("Gruple Running"); 
   }
 
   public void setRedFlicker(){
@@ -102,6 +105,7 @@ public class LED extends SubsystemBase {
     else {
       timer.stop(); 
     }
+    System.out.println("Red Flicker Running ");
   }
 
   public void setSolid(int[] solid){ 
@@ -133,6 +137,7 @@ public class LED extends SubsystemBase {
     else{
       timer.stop(); 
     }
+    System.out.println("Solids running"); 
   }
 
   @Override

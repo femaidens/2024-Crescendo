@@ -193,7 +193,7 @@ public class RobotContainer {
 
     /* HOPPER BUTTONS */
 
-    /* SHOOTER BUTTONS */
+    /* SHOOTER BUTTONS *0
 
     // Trigger ampFlushButton = operJoy.a();
     // ampFlushButton

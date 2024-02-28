@@ -27,7 +27,7 @@ public class Ports {
     public static final int RIGHT_ARM_MOTOR = 11;
     public static final int LEFT_ARM_MOTOR = 10;
 
-    public static final int TOP_SWITCH = 9;
+    public static final int TOP_SWITCH = 0;
     public static final int BOTTOM_SWITCH = 3;
   }
 
@@ -53,7 +53,7 @@ public class Ports {
   }
 
   public static final class LEDPorts{ 
-    public static final int LED_PORT = 0; 
+    public static final int LED_PORT = 9; 
   }
 }
 

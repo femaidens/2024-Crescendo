@@ -143,7 +143,7 @@ public class ShooterWheel extends SubsystemBase {
   public Command leftDyna(SysIdRoutine.Direction direction) {
     return leftRoutine.dynamic(direction);
   }
-
+  
   public Command rightQuas(SysIdRoutine.Direction direction) {
     return rightRoutine.quasistatic(direction);
   }

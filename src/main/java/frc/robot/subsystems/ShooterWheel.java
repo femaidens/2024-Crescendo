@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkFlex;
+// import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -12,66 +12,64 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.ShooterPorts;
-import static edu.wpi.first.units.Units.Volts;
+import edu.wpi.first.units.Units;
 
 public class ShooterWheel extends SubsystemBase {
-  private final CANSparkMax leftShooterMotor;
-  private final CANSparkMax rightShooterMotor;
+  private final CANSparkMax leaderMotor; // left motor
+  private final CANSparkMax followerMotor; // right motor
 
   // private final CANSparkFlex leftShooterFlex;
   // private final CANSparkFlex rightShooterFlex;
 
-  private final RelativeEncoder leftShooterEncoder;
-  private final RelativeEncoder rightShooterEncoder;
+  private final RelativeEncoder leaderEncoder;
+  private final RelativeEncoder followerEncoder;
 
   private final SimpleMotorFeedforward shooterFF;
 
   private final PIDController shooterPID;
 
+  private double vSetpoint;
+
   private final SysIdRoutine leftRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
-          volts -> setLeftVoltage(volts.in(Volts)), null, this));
+          volts -> setLeftVoltage(volts.in(Units.Volts)), null, this));
 
   private final SysIdRoutine rightRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
-          volts -> setRightVoltage(volts.in(Volts)), null, this));
+          volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
 
-  /** Creates a new Shooter. */
   public ShooterWheel() {
-    leftShooterMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
-    rightShooterMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
+    leaderMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
+    followerMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
 
-    leftShooterEncoder = leftShooterMotor.getEncoder();
-    rightShooterEncoder = rightShooterMotor.getEncoder();
+    leaderEncoder = leaderMotor.getEncoder();
+    followerEncoder = followerMotor.getEncoder();
 
     // controls
     shooterFF = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
     shooterPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
-    rightShooterMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
-    leftShooterMotor.setIdleMode(IdleMode.kCoast);
+    followerMotor.follow(leaderMotor, true);
 
-    rightShooterMotor.follow(leftShooterMotor, true);
+    followerMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
+    leaderMotor.setIdleMode(IdleMode.kCoast);
 
-    rightShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
-    leftShooterMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
+    followerMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
+    leaderMotor.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
 
-    leftShooterEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
-    rightShooterEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    leaderEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    followerEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
 
-    leftShooterMotor.burnFlash();
-    rightShooterMotor.burnFlash();
-
-    // rightShooterMotor.setInverted(true); //double check if it's left or right
+    leaderMotor.burnFlash();
+    followerMotor.burnFlash();
 
     /* FLEX VARIATIONS */
     // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT,
@@ -94,45 +92,50 @@ public class ShooterWheel extends SubsystemBase {
     // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
   }
 
-  /*
-   * @param the setpoint velocity of the wheels, in meters/second
-   * sets the velocity of shooter wheels in meters per second
-   * 
-   * the inversion of the motors might need to be switched
-   */
-  public void setDesiredVelocity(double speed) {
+  // sets the velocity of shooter wheels in degrees per second
+  public void setVelocity() {
     // getRate() in WPI might be better than getVelocity if conversion in Constants
     // doesn't work
-    double voltage = shooterFF.calculate(speed);
-    double error = shooterPID.calculate(getLeftVelocity(), speed);
+    double ff = shooterFF.calculate(vSetpoint);
+    double error = shooterPID.calculate(getLeaderVelocity(), vSetpoint);
 
-    leftShooterMotor.setVoltage(voltage + error);
-    System.out.println(voltage + error);
+    leaderMotor.setVoltage(ff + error);
+    System.out.println("wheel voltage" + (ff + error));
+  }
 
+  public void setVelocitySetpoint(double setpoint) {
+    vSetpoint = setpoint;
   }
 
   // @return the velocities of shooter motors
-  public double getLeftVelocity() {
-    return leftShooterEncoder.getVelocity();
+  public double getLeaderVelocity() {
+    return leaderEncoder.getVelocity();
   }
 
-  public double getRightVelocity() {
-    return rightShooterEncoder.getVelocity();
+  public double getFollowerVelocity() {
+    return followerEncoder.getVelocity();
   }
 
+  public void setShooterSpeed(double speed) {
+    leaderMotor.set(speed);
+  }
   // stops the motors for the shooter wheels
   public void stopShooter() {
-    leftShooterMotor.setVoltage(0);
+    leaderMotor.setVoltage(0);
     // leftShooterFlex.setVoltage(0);
   }
+  /* COMMANDS */
+  public Command SetShooterSpeed(double speed) {
+    return this.runOnce(() -> setVelocitySetpoint(speed));
+  }
 
-  /* SYSID */ 
+  /* SYSID */
   public void setLeftVoltage(double voltage) {
-    leftShooterMotor.setVoltage(voltage);
+    leaderMotor.setVoltage(voltage);
   }
 
   public void setRightVoltage(double voltage) {
-    rightShooterMotor.setVoltage(voltage);
+    followerMotor.setVoltage(voltage);
   }
 
   public Command leftQuas(SysIdRoutine.Direction direction) {
@@ -153,7 +156,7 @@ public class ShooterWheel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("left shooter vel", getLeftVelocity());
-    SmartDashboard.putNumber("right shooter vel", getRightVelocity());
+    SmartDashboard.putNumber("left shooter vel", getLeaderVelocity());
+    SmartDashboard.putNumber("right shooter vel", getFollowerVelocity());
   }
 }

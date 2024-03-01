@@ -61,9 +61,9 @@ public final class Constants {
     public static final double AUTON_SPEED = 720; // degrees/sec
 
     // ff -> need to populate
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
+    public static final double kS = 0.22083; //as of 2/28 sys id results
+    public static final double kV = 0.00034866; //as of 2/28 sys id results
+    public static final double kA = 2.9726E-05;
 
     // pid -> need to populate
     public static final double kP = 0;

@@ -13,7 +13,7 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.1;
+    public static final double ARM_SPEED = 0.3;
   }
 
   public static final class HopperConstants {
@@ -82,8 +82,8 @@ public final class Constants {
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
-    public static final double SHOOTER_MAX_ANGLE = 75.0;
-    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET; 
+    public static final double SHOOTER_MAX_ANGLE = 65.0; //75
+    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET + 1; 
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
@@ -93,13 +93,13 @@ public final class Constants {
     public static final double SPEAKER_WING = 20.0; // placeholder
 
     // speeds
-    public static final double CONSTANT_SPEED = 0.3;
+    public static final double CONSTANT_SPEED = 0.1;
 
     // auton
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid -> need to populate
-    public static final double kP = 0;
+    public static final double kP = 5.0;
     public static final double kI = 0;
     public static final double kD = 0;
 

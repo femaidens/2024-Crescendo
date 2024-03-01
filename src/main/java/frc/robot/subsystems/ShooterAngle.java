@@ -27,6 +27,8 @@ public class ShooterAngle extends SubsystemBase {
 
   private double pSetpoint;
 
+  private boolean isManual = true;
+
   // possibly add an armFF later
 
   public ShooterAngle() {
@@ -60,30 +62,38 @@ public class ShooterAngle extends SubsystemBase {
       stopMotor();
     }
 */
-    if (input > 0) {
+    isManual = true;
+
+    if (input > 0.1) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
     }
     // move down if above min angle
-    else if (input < 0) {
+    else if (input < -0.1) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
     }
     // run PID
     else {
-      // setAngle();
-      stopMotor();
+      setAngle();
+      //stopMotor();
     }
 
-    pSetpoint = getAngle();
+    setAngleSetpoint(getAngle());
   }
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
-    shooterAngleMotor.setVoltage(voltage);
+    if(getAngle() <= 20){
+      shooterAngleMotor.setVoltage(0);
+    }
+    else{
+      double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
+      shooterAngleMotor.setVoltage(voltage);
+    }
   }
 
   // changes setpoint accordingly
   public void setAngleSetpoint(double setpoint) {
+    isManual = false;
     pSetpoint = setpoint;
   }
 

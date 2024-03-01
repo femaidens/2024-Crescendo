@@ -16,6 +16,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
@@ -33,17 +34,14 @@ public class Intake extends SubsystemBase {
   private final SimpleMotorFeedforward ff;
 
   private final DigitalInput receiver;
-  // private final DigitalOutput emitter;
 
-  // private final SysIdRoutine intakeRoutine;
+  private final SysIdRoutine intakeRoutine;
 
   private double vSetpoint;
 
   public Intake() {
-    intakeMotor =
-      new CANSparkMax(IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
-    hopperMotor =
-      new CANSparkMax(HopperPorts.HOPPER_MOTOR, MotorType.kBrushless);
+    intakeMotor = new CANSparkMax(IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
+    hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR, MotorType.kBrushless);
 
     intakeEncoder = intakeMotor.getEncoder();
     hopperEncoder = hopperMotor.getEncoder();
@@ -51,16 +49,13 @@ public class Intake extends SubsystemBase {
     intakeEncoder.setVelocityConversionFactor(IntakeConstants.VEL_CFACTOR);
     hopperEncoder.setVelocityConversionFactor(HopperConstants.VEL_CFACTOR);
 
-    intakePID =
-      new PIDController(
+    intakePID = new PIDController(
         IntakeConstants.kP,
         IntakeConstants.kI,
-        IntakeConstants.kD
-      );
+        IntakeConstants.kD);
     ff = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
 
     receiver = new DigitalInput(HopperPorts.RECEIVER);
-    // emitter = new DigitalOutput(HopperPorts.EMITTER);
 
     hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
     intakeMotor.setIdleMode(IdleMode.kCoast); // should freely spin?
@@ -71,7 +66,10 @@ public class Intake extends SubsystemBase {
     intakeMotor.burnFlash();
     hopperMotor.burnFlash();
 
-    // setEmitter(true);
+    intakeRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
     vSetpoint = 0;
   }
@@ -118,13 +116,24 @@ public class Intake extends SubsystemBase {
     return receiver.get();
   }
 
-  // public boolean getEmitterStatus() {
-  //   return emitter.get();
-  // }
+  /* COMMANDS */
+  public Command SetIntakeSpeed(double speed) {
+    return this.runOnce(() -> setIntakeSpeed(speed));
+  }
 
-  // public void setEmitter(boolean status) {
-  //   emitter.set(status);
-  // }
+  /* SYSID */
+
+  public void setVoltage(double voltage) {
+    intakeMotor.setVoltage(voltage);
+  }
+
+  public Command leftQuas(SysIdRoutine.Direction direction) {
+    return intakeRoutine.quasistatic(direction);
+  }
+
+  public Command leftDyna(SysIdRoutine.Direction direction) {
+    return intakeRoutine.dynamic(direction);
+  }
 
   @Override
   public void periodic() {

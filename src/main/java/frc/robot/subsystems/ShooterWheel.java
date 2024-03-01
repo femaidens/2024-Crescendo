@@ -117,11 +117,13 @@ public class ShooterWheel extends SubsystemBase {
   public void setShooterSpeed(double speed) {
     leaderMotor.set(speed);
   }
+
   // stops the motors for the shooter wheels
   public void stopShooter() {
     leaderMotor.setVoltage(0);
     // leaderFlex.setVoltage(0);
   }
+  
   /* COMMANDS */
   public Command SetShooterSpeed(double speed) {
     return this.runOnce(() -> setVelocitySetpoint(speed));

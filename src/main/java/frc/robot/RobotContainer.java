@@ -24,10 +24,8 @@ import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
 import frc.robot.commands.*;
-import frc.robot.subsystems.BeamBreak;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
@@ -36,18 +34,15 @@ import org.littletonrobotics.urcl.URCL;
 public class RobotContainer {
 
   private CommandXboxController driveJoy = new CommandXboxController(
-    Ports.JoystickPorts.DRIVE_JOY
-  );
+      Ports.JoystickPorts.DRIVE_JOY);
   private CommandXboxController operJoy = new CommandXboxController(
-    Ports.JoystickPorts.OPER_JOY
-  );
+      Ports.JoystickPorts.OPER_JOY);
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
-  private final BeamBreak beambreak = new BeamBreak();
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -62,36 +57,25 @@ public class RobotContainer {
 
     // configure default commands
     drivetrain.setDefaultCommand(
-      // clariy turning with right or with left
-      new RunCommand(
-        () ->
-          drivetrain.drive( // all joy.get values were prev negative
-            MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
-            MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-            MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-            true,
-            true
-          ),
-        drivetrain
-      )
-    ); // field rel = true
+        // clariy turning with right or with left
+        new RunCommand(
+            () -> drivetrain.drive( // all joy.get values were prev negative
+                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+                true,
+                true),
+            drivetrain)); // field rel = true
 
     shooterAngle.setDefaultCommand(
-      new RunCommand(
-        () ->
-          shooterAngle.setManualAngle(
-            MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)
-          ), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-        shooterAngle
-      )
-    );
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+            shooterAngle));
 
     shooterWheel.setDefaultCommand(
-      new RunCommand(() -> shooterWheel.stopShooter(), shooterWheel)
-    );
-    // beambreak.setDefaultCommand(
-    //     new InstantCommand(
-    //         () -> beambreak.setEmitter(true), beambreak));
+        new RunCommand(() -> shooterWheel.stopShooter(), shooterWheel));
+
   }
 
   public void configureAuton() {
@@ -106,71 +90,56 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    /* BEAM BREAK */
-    //     Trigger breaks = operJoy.back();
-    //     breaks
-    //       .onTrue(new InstantCommand(() -> beambreak.setEmitter(true), beambreak))
-    //       .onFalse(
-    //         new InstantCommand(() -> beambreak.setEmitter(false), beambreak)
-    //       );
 
     /* CLIMB BUTTONS */
+    Trigger extendClimbButton = operJoy.povUp();
+    extendClimbButton
+        .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
+        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+
+    Trigger retractClimbButton = operJoy.povDown();
+    retractClimbButton
+        .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
+        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
 
     /* INTAKE BUTTONS */
     Trigger runIntake = operJoy.rightBumper(); // change buttons later
     runIntake
-      .onTrue(
-        new RunCommand(
-          () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
-          intake
-        )
-      )
-      .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
+        .onTrue(
+            new RunCommand(
+                () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
+                intake))
+        .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
     Trigger runOuttake = operJoy.leftBumper(); // change buttons later
     runOuttake
-      .onTrue(
-        new RunCommand(
-          () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED),
-          intake
-        )
-      )
-      .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
+        .onTrue(
+            new RunCommand(
+                () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED),
+                intake))
+        .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
+    /* HOPPER BUTTONS */
     Trigger runHopper = operJoy.start(); // change buttons later
     runHopper
-      .onTrue(new RunCommand(() -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
-      .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+        .onTrue(new RunCommand(() -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
+        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
 
     // positive speed is outwards
     Trigger runShooter = operJoy.rightTrigger();
     runShooter
-      .onTrue(
-        new RunCommand(() -> shooterWheel.setShooterSpeed(0.5), shooterWheel)
-      )
-      .onFalse(
-        new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel)
-      );
+        .onTrue(
+            new RunCommand(() -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
+        .onFalse(
+            new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
 
     Trigger runShooterIntake = operJoy.leftTrigger();
     runShooterIntake
-      .onTrue(
-        new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel)
-      )
-      .onFalse(
-        new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel)
-      );
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+        .onTrue(
+            new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
+        .onFalse(
+            new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
 
-    Trigger extendClimbButton = operJoy.povUp();
-    extendClimbButton
-      .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
-      .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
-
-    Trigger retractClimbButton = operJoy.povDown();
-    retractClimbButton
-      .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
-      .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
     /* HOPPER BUTTONS */
 
     /* SHOOTER BUTTONS */

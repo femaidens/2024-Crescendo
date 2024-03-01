@@ -31,7 +31,7 @@ public class Ports {
     public static final int RIGHT_ARM_MOTOR = 11;
     public static final int LEFT_ARM_MOTOR = 10;
 
-    public static final int TOP_SWITCH = 9;
+    public static final int TOP_SWITCH = 4;
     public static final int BOTTOM_SWITCH = 3;
   }
 

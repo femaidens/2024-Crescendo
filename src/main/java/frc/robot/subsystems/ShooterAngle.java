@@ -109,6 +109,7 @@ public class ShooterAngle extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("arm angle", getAngle());
+    SmartDashboard.putNumber("current arm angle", getAngle());
+    SmartDashboard.putNumber("desired angle", pSetpoint);
   }
 }

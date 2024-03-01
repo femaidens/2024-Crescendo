@@ -87,7 +87,7 @@ public class RobotContainer {
     );
 
     shooterWheel.setDefaultCommand(
-      new RunCommand(() -> shooterWheel.stopShooter(), shooterWheel)
+      new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel)
     );
     // beambreak.setDefaultCommand(
     //     new InstantCommand(
@@ -174,7 +174,25 @@ public class RobotContainer {
     /* HOPPER BUTTONS */
 
     /* SHOOTER BUTTONS */
+    Trigger zerorot = operJoy.a();
+    zerorot 
+      .whileTrue(new InstantCommand(
+        () -> shooterWheel.setVelocitySetpoint(0), shooterWheel));
 
+    Trigger tworot = operJoy.b();
+    tworot 
+      .whileTrue(new RunCommand(
+        () -> shooterWheel.setVelocitySetpoint(2.0 * 360.0), shooterWheel));
+
+    Trigger fiverot = operJoy.x();
+    fiverot 
+      .whileTrue(new RunCommand(
+        () -> shooterWheel.setVelocitySetpoint(5.0 * 360.0), shooterWheel));
+
+    Trigger tenrot = operJoy.y();
+    tenrot 
+      .whileTrue(new RunCommand(
+        () -> shooterWheel.setVelocitySetpoint(10.0 * 360.0), shooterWheel));
     // Trigger ampFlushButton = operJoy.a();
     // ampFlushButton
     // .onTrue(Commands.parallel(

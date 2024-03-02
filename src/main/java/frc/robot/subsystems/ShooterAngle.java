@@ -25,6 +25,7 @@ public class ShooterAngle extends SubsystemBase {
 
   private final PIDController shooterAnglePID;
 
+  private boolean isManual = true;
   private double pSetpoint;
 
   // possibly add an armFF later
@@ -40,11 +41,14 @@ public class ShooterAngle extends SubsystemBase {
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
     shooterAngleMotor.burnFlash();
+
+    pSetpoint = getAngle();
   }
 
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
-  public void setManualAngle(double input) { 
+  public void setManualAngle(double input) {
+    isManual = true;
     /*
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
@@ -62,10 +66,12 @@ public class ShooterAngle extends SubsystemBase {
 */
     if (input > 0) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // move down if above min angle
     else if (input < 0) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // run PID
     else {
@@ -73,7 +79,6 @@ public class ShooterAngle extends SubsystemBase {
       stopMotor();
     }
 
-    pSetpoint = getAngle();
   }
 
   // sets shooter angle to current setpoint
@@ -82,14 +87,25 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngleMotor.setVoltage(voltage);
   }
 
+  // for commands; overloads setAngle no params
+  public void setAngle(double setpoint) {
+    setAngleSetpoint(setpoint);
+    setAngle();
+  }
+
   // changes setpoint accordingly
   public void setAngleSetpoint(double setpoint) {
+    isManual = false;
     pSetpoint = setpoint;
   }
 
   // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
     return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
+  }
+
+  public boolean getIsManual() {
+    return isManual;
   }
 
   public void stopMotor() {

@@ -105,6 +105,10 @@ public class ShooterWheel extends SubsystemBase {
     vSetpoint = setpoint;
   }
 
+  public void setShooterSpeed(double speed) {
+    leaderMotor.set(speed);
+  }
+
   // @return the velocities of shooter motors
   public double getLeaderVelocity() {
     return leaderEncoder.getVelocity();
@@ -114,19 +118,27 @@ public class ShooterWheel extends SubsystemBase {
     return followerEncoder.getVelocity();
   }
 
-  public void setShooterSpeed(double speed) {
-    leaderMotor.set(speed);
+  public boolean isAtVelocity() {
+    return Math.abs(getLeaderVelocity() - vSetpoint) < ShooterWheelConstants.ERROR_MARGIN;
   }
 
   // stops the motors for the shooter wheels
-  public void stopShooter() {
+  public void stopMotors() {
     leaderMotor.setVoltage(0);
     // leaderFlex.setVoltage(0);
   }
   
   /* COMMANDS */
-  public Command SetShooterSpeed(double speed) {
+  public Command SetShooterSpeedCmd(double speed) {
     return this.runOnce(() -> setVelocitySetpoint(speed));
+  }
+
+  public Command StopMotorsCmd() {
+    return this.runOnce(() -> stopMotors());
+  }
+
+  public Command RampShooterCmd() {
+    return this.run(() -> setVelocity());
   }
 
   /* SYSID */

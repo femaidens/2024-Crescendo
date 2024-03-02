@@ -38,6 +38,9 @@ public class Intake extends SubsystemBase {
   private final SysIdRoutine intakeRoutine;
 
   private double vSetpoint;
+  private boolean currentState, lastState;
+  private int stateCount = 0;
+
 
   public Intake() {
     intakeMotor = new CANSparkMax(IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
@@ -72,6 +75,9 @@ public class Intake extends SubsystemBase {
             volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
     vSetpoint = 0;
+    currentState = getReceiverStatus();
+    lastState = currentState;
+
   }
 
   public void setVelocity() {
@@ -103,6 +109,37 @@ public class Intake extends SubsystemBase {
     return hopperEncoder.getVelocity();
   }
 
+  // beam breaker code
+  public boolean getReceiverStatus() {
+    return receiver.get();
+    // true = unbroken
+    // false = broken
+  }
+
+  // hopper is empty once state change count == 2;
+  public boolean isHopperEmpty() {
+    if(hasStateChanged()) {
+      stateCount++;
+      System.out.println(stateCount);
+    }
+    return stateCount == 2;
+  }
+
+  public void resetStateCount() {
+    stateCount = 0;
+  }
+
+  // checks if beam break has changed from broken to unbroken
+  public boolean hasStateChanged() {
+
+    boolean stateChange;
+    currentState = getReceiverStatus();
+    stateChange = currentState && !lastState; // currently true, was false;
+    lastState = currentState;
+
+    return stateChange;
+  }
+
   public void stopIntakeMotor() {
     intakeMotor.stopMotor();
   }
@@ -111,14 +148,21 @@ public class Intake extends SubsystemBase {
     hopperMotor.stopMotor();
   }
 
-  // beam breaker code
-  public boolean getReceiverStatus() {
-    return receiver.get();
-  }
-
   /* COMMANDS */
   public Command SetIntakeSpeed(double speed) {
     return this.runOnce(() -> setIntakeSpeed(speed));
+  }
+
+  public Command ResetStateCount() {
+    return this.runOnce(() -> resetStateCount());
+  }
+
+  public Command SetHopperVelocity() {
+    return this.run(() -> setVelocity());
+  }
+
+  public Command stopHopperMotorCommand() {
+    return this.runOnce(() -> stopHopperMotor());
   }
 
   /* SYSID */

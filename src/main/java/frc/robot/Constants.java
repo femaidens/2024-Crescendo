@@ -44,7 +44,10 @@ public final class Constants {
     // CONVERSION (RPM -> DEG/S)
     // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
-    public static final double VEL_CFACTOR = 360.0 / 60.0;
+    public static final double GEAR_RATIO = 24.0 / 18.0; // 24:18; inversed already
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO);
+
+    public static final double ERROR_MARGIN = 2; // 2 degrees/second
 
     // limits
     public static final int CURRENT_LIMIT = 30;
@@ -54,7 +57,9 @@ public final class Constants {
     public static final double SPEAKER_FLUSH = 0.0; // placeholder
     public static final double SPEAKER_STAGE = 0.0; // placeholder
     public static final double SPEAKER_WING = 0.0; // placeholder
+
     // speeds (degrees/sec)
+    public static final double SHOOTER_INTAKE_SPEED = -0.5;
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;

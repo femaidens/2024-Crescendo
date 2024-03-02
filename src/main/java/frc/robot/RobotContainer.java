@@ -171,6 +171,12 @@ public class RobotContainer {
     retractClimbButton
       .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
       .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+
+    Trigger resetGyroButton = driveJoy.rightBumper();
+    resetGyroButton
+      .onTrue(new InstantCommand(
+        () -> drivetrain.zeroHeading(), drivetrain));
+      
     /* HOPPER BUTTONS */
 
     /* SHOOTER BUTTONS */

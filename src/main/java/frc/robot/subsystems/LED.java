@@ -71,20 +71,33 @@ public class LED extends SubsystemBase {
     System.out.println("Rainbow Running ");
   }
 
-  public void setGrupleFlicker(){
-    timer.start(); 
-    if(timer.get()< 3){
-      if (timer.get()%2 == 0 ){
+  public void setGrupleFlicker(){ 
+    boolean sequence = true; 
+    if (sequence){
+      for(int i = 0; i < ledBuffer.getLength(); i++){
+        if (i % 15 !=0 ){
         setLedPurple();
-          led.setData(ledBuffer);
       }
-      else{ 
+      else {
         setLedGreen();
-          led.setData(ledBuffer);
-      } 
+      }
+      sequence = false; 
     }
-    System.out.println("Gruple Running"); 
   }
+  else{
+    for(int j = 0; j < ledBuffer.getLength(); j++){
+      if( j % 15 != 0){
+        setLedGreen();
+      }
+      else{
+        setLedPurple();
+      }
+      sequence = true; 
+    }
+  }
+  led.setData(ledBuffer);
+  System.out.println("Gruple Flicker Running!");
+} 
 
   public void setRedFlicker(){
     timer.start(); 

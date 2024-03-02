@@ -154,10 +154,8 @@ public class RobotContainer {
     //LED Buttons 
     Trigger ledGruple = operJoy.a(); 
     ledGruple 
-    .onTrue(new InstantCommand(
-      () -> led.setGrupleFlicker(), led))
-    .onFalse(new RunCommand(
-      ()-> led.setDefault(), led)); 
+    .onTrue(new RunCommand(
+      () -> led.setGrupleFlicker(), led)); 
 
     Trigger ledSolid = operJoy.b(); 
     ledSolid 

@@ -77,11 +77,14 @@ public class RobotContainer {
     //         // () -> shooterAngle.setManualAngle(
     //         //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
     //         shooterAngle));
+<<<<<<< Updated upstream
     intake.setDefaultCommand(
         new RunCommand(
             () -> intake.setIntakeVelocity(), intake));
 
     
+=======
+>>>>>>> Stashed changes
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel));
@@ -144,7 +147,36 @@ public class RobotContainer {
                 intake))
         .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
+<<<<<<< Updated upstream
    
+=======
+    Trigger runHopper = operJoy.start(); // change buttons later
+    runHopper
+        .onTrue(new RunCommand(() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
+        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+
+    Trigger runInverseHopper = operJoy.back();
+    runInverseHopper
+        .onTrue(new RunCommand(() -> intake.setHopperSpeed(-0.7), intake))
+        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+
+    Trigger hopperQuasistaticButton = driveJoy.a();
+    hopperQuasistaticButton.whileTrue(
+    intake.hopperQuas(SysIdRoutine.Direction.kForward));
+
+    Trigger hopperDynamicButton = driveJoy.b();
+    hopperDynamicButton.whileTrue(
+    intake.hopperDyna(SysIdRoutine.Direction.kForward));
+
+    Trigger hopperQuasistaticRButton = driveJoy.x();
+    hopperQuasistaticRButton.whileTrue(
+    intake.hopperQuas(SysIdRoutine.Direction.kReverse));
+
+    Trigger hopperDynamicRButton = driveJoy.y();
+    hopperDynamicRButton.whileTrue(
+    intake.hopperDyna(SysIdRoutine.Direction.kReverse));
+
+>>>>>>> Stashed changes
     // positive speed is outwards
 
     // Trigger fiveshootersetpoint = operJoy.leftTrigger();

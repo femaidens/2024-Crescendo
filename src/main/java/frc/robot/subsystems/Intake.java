@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
   private final SysIdRoutine hopperRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
-          volts -> setVoltage(volts.in(Units.Volts)), null, this));
+          volts -> setVoltageHop(volts.in(Units.Volts)), null, this));
 
   private double vIntakeSetpoint;
   private double vHopperSetpoint;
@@ -110,6 +110,10 @@ public class Intake extends SubsystemBase {
 
   public void setVoltage(double voltage){
     intakeMotor.setVoltage(voltage);
+  }
+
+  public void setVoltageHop(double voltage){
+    hopperMotor.setVoltage(voltage);
   }
 
   // for testing; see if vel pid is absolutely necessary

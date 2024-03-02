@@ -100,7 +100,7 @@ public class ShooterWheel extends SubsystemBase {
     double error = shooterPID.calculate(getLeaderVelocity(), vSetpoint);
 
     leaderMotor.setVoltage(ff + error);
-    System.out.println("wheel voltage" + (ff + error));
+    System.out.println("shooter wheel voltage: " + (ff + error));
   }
 
   public void setVelocitySetpoint(double setpoint) {
@@ -118,6 +118,7 @@ public class ShooterWheel extends SubsystemBase {
 
   public void setShooterSpeed(double speed) {
     leaderMotor.set(speed);
+    System.out.println("running shooter");
   }
   // stops the motors for the shooter wheels
   public void stopShooter() {

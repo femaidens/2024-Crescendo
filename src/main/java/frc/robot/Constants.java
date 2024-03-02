@@ -44,7 +44,8 @@ public final class Constants {
     // CONVERSION (RPM -> DEG/S)
     // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
-    public static final double VEL_CFACTOR = 360.0 / 60.0;
+    public static final double GEAR_RATIO = 24.0/18.0;
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO); //gr 1:1
 
     // limits
     public static final int CURRENT_LIMIT = 30;
@@ -99,7 +100,7 @@ public final class Constants {
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid -> need to populate
-    public static final double kP = 5.0;
+    public static final double kP = 1.0;
     public static final double kI = 0;
     public static final double kD = 0;
 

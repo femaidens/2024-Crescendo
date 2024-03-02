@@ -70,12 +70,11 @@ public class RobotContainer {
                 true),
             drivetrain)); // field rel = true
 
-    // shooterAngle.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> shooterAngle.setAngle(),
-    //         // shooterAngle.setManualAngle(
-    //         //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-    //         shooterAngle));
+    shooterAngle.setDefaultCommand(
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+            shooterAngle));
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel));
@@ -141,16 +140,23 @@ public class RobotContainer {
     Trigger runShooter = operJoy.rightTrigger();
     runShooter
         .onTrue(
-            new RunCommand(() -> shooterWheel.setShooterSpeed(1), shooterWheel))
+            new RunCommand(() -> 
+            shooterWheel.setShooterSpeed(0.9), shooterWheel))
         .onFalse(
             new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
 
-    Trigger runShooterIntake = operJoy.leftTrigger();
-    runShooterIntake
-        .onTrue(
-            new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
-        .onFalse(
-            new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
+    Trigger fiveshootersetpoint = operJoy.leftTrigger();
+    fiveshootersetpoint
+    .onTrue(new InstantCommand(
+        () -> shooterWheel.setVelocitySetpoint(5.0 * 360.0)
+    ));
+
+    // Trigger runShooterIntake = operJoy.leftTrigger();
+    // runShooterIntake
+    //     .onTrue(
+    //         new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
+    //     .onFalse(
+    //         new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     Trigger extendClimbButton = operJoy.povUp();

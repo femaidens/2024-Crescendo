@@ -42,6 +42,7 @@ public class ShooterAngle extends SubsystemBase {
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
     shooterAngleMotor.burnFlash();
+    pSetpoint = shooterAngleEncoder.getPosition();
   }
 
   // sets shooter angle based on joystick input
@@ -66,18 +67,20 @@ public class ShooterAngle extends SubsystemBase {
 
     if (input > 0.1) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+      setAngleSetpoint(getAngle());
     }
     // move down if above min angle
     else if (input < -0.1) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+      setAngleSetpoint(getAngle());
     }
     // run PID
     else {
-      setAngle();
-      //stopMotor();
+      //setAngle();
+      stopMotor();
     }
 
-    setAngleSetpoint(getAngle());
+    
   }
 
   // sets shooter angle to current setpoint

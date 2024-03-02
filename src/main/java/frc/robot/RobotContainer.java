@@ -77,14 +77,6 @@ public class RobotContainer {
     //         // () -> shooterAngle.setManualAngle(
     //         //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
     //         shooterAngle));
-<<<<<<< Updated upstream
-    intake.setDefaultCommand(
-        new RunCommand(
-            () -> intake.setIntakeVelocity(), intake));
-
-    
-=======
->>>>>>> Stashed changes
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel));
@@ -147,9 +139,6 @@ public class RobotContainer {
                 intake))
         .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
-<<<<<<< Updated upstream
-   
-=======
     Trigger runHopper = operJoy.start(); // change buttons later
     runHopper
         .onTrue(new RunCommand(() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
@@ -176,7 +165,6 @@ public class RobotContainer {
     hopperDynamicRButton.whileTrue(
     intake.hopperDyna(SysIdRoutine.Direction.kReverse));
 
->>>>>>> Stashed changes
     // positive speed is outwards
 
     // Trigger fiveshootersetpoint = operJoy.leftTrigger();

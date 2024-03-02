@@ -30,8 +30,11 @@ public class Intake extends SubsystemBase {
   private final RelativeEncoder intakeEncoder;
   private final RelativeEncoder hopperEncoder;
 
-  private final PIDController intakePID;
-  private final SimpleMotorFeedforward ff;
+  //private final PIDController intakePID;
+  private final SimpleMotorFeedforward intakeFF;
+
+ // private final PIDController hopperPID;
+  private final SimpleMotorFeedforward hopperFF;
 
   private final DigitalInput receiver;
   // private final DigitalOutput emitter;
@@ -46,7 +49,8 @@ public class Intake extends SubsystemBase {
       new SysIdRoutine.Mechanism(
           volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
-  private double vSetpoint;
+  private double vIntakeSetpoint;
+  private double vHopperSetpoint;
 
   public Intake() {
     intakeMotor =
@@ -60,14 +64,11 @@ public class Intake extends SubsystemBase {
     intakeEncoder.setVelocityConversionFactor(IntakeConstants.VEL_CFACTOR);
     hopperEncoder.setVelocityConversionFactor(HopperConstants.VEL_CFACTOR);
 
-    intakePID =
-      new PIDController(
-        IntakeConstants.kP,
-        IntakeConstants.kI,
-        IntakeConstants.kD
-      );
-    ff = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
-
+    // intakePID = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
+    // hopperPID = new PIDController(HopperConstants., vSetpoint, vSetpoint)
+    
+    intakeFF = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
+    hopperFF = new SimpleMotorFeedforward(HopperConstants.kS, HopperConstants.kV);
     receiver = new DigitalInput(HopperPorts.RECEIVER);
     // emitter = new DigitalOutput(HopperPorts.EMITTER);
 
@@ -82,18 +83,29 @@ public class Intake extends SubsystemBase {
 
     // setEmitter(true);
 
-    vSetpoint = 0;
+    vIntakeSetpoint = 0;
+    vHopperSetpoint = 0;
   }
 
-  public void setVelocity() {
-    double voltage = ff.calculate(vSetpoint);
-    double error = intakePID.calculate(intakeEncoder.getVelocity(), vSetpoint);
+  public void setIntakeVelocity() {
+    double voltage = intakeFF.calculate(vIntakeSetpoint);
+    //double error = intakePID.calculate(intakeEncoder.getVelocity(), vSetpoint);
 
-    intakeMotor.setVoltage(error + voltage);
+    intakeMotor.setVoltage(voltage);
   }
 
-  public void setVelocitySetpoint(double setpoint) {
-    vSetpoint = setpoint;
+  public void setHopperVelocity() {
+    double voltage = hopperFF.calculate(vHopperSetpoint);
+
+    hopperMotor.setVoltage(voltage);
+  }
+
+  public void setIntakeVelocitySetpoint(double setpoint) {
+    vIntakeSetpoint = setpoint;
+  }
+
+  public void setHopperVelocitySetpoint(double setpoint) {
+    vHopperSetpoint = setpoint;
   }
 
   public void setVoltage(double voltage){
@@ -163,7 +175,9 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("intake vel", getIntakeVelocity());
     SmartDashboard.putNumber("hopper vel", getHopperVelocity());
 
-    SmartDashboard.putNumber("intake sp", vSetpoint);
+    SmartDashboard.putNumber("intake sp", vIntakeSetpoint);
+    SmartDashboard.putNumber("hopper sp", vHopperSetpoint);
+    
     SmartDashboard.putBoolean("beam break", getReceiverStatus());
     // System.out.println("hopper velocity: " + getHopperVelocity());
   }

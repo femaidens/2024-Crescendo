@@ -20,6 +20,10 @@ public final class Constants {
     public static final double VEL_CFACTOR = 360.0 / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
     public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 0.05;
+
+    public static final double kS = 0.22973; //values as of 3/2
+    public static final double kV = 0.017661; //3/2
+    public static final double kA = 0.0012902; //3/2
   }
 
   public static final class IntakeConstants {
@@ -29,15 +33,15 @@ public final class Constants {
 
     public static final int CURRENT_LIMIT = 0;
 
-    // pid constants -> need to populate
+    // pid constants -> need to populate 
     public static final double kP = 0.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
     // ff constants -> need to populate
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
+    public static final double kS = 0.32982; //ff values as of 3/2 sysid
+    public static final double kV = 0.0014383; //values as of 3/2 sysid
+    public static final double kA = 0.00020542; //values as of 
   }
 
   public static final class ShooterWheelConstants {

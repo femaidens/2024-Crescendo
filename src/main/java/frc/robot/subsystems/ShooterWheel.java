@@ -157,7 +157,8 @@ public class ShooterWheel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("left shooter vel", getLeaderVelocity());
-    SmartDashboard.putNumber("right shooter vel", getFollowerVelocity());
+    SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());
+    SmartDashboard.putNumber("right shooter vel: ", getFollowerVelocity());
+    SmartDashboard.putNumber("desired shooter velocity: ", vSetpoint);
   }
 }

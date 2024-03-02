@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -70,12 +71,17 @@ public class RobotContainer {
                 true),
             drivetrain)); // field rel = true
 
-    shooterAngle.setDefaultCommand(
+    // shooterAngle.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> shooterAngle.setAngle(),
+    //         // () -> shooterAngle.setManualAngle(
+    //         //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+    //         shooterAngle));
+    intake.setDefaultCommand(
         new RunCommand(
-            () -> shooterAngle.setAngle(),
-            // () -> shooterAngle.setManualAngle(
-            //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-            shooterAngle));
+            () -> intake.setIntakeVelocity(), intake));
+
+    
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel));
@@ -110,14 +116,25 @@ public class RobotContainer {
 
     /* CLIMB BUTTONS */
 
+    Trigger extendClimbButton = operJoy.povUp();
+    extendClimbButton
+        .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
+        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+
+    Trigger retractClimbButton = operJoy.povDown();
+    retractClimbButton
+        .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
+        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+
     /* INTAKE BUTTONS */
     Trigger runIntake = operJoy.rightBumper(); // change buttons later
     runIntake
-        .onTrue(
-            new RunCommand(
-                () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
+        .onTrue(new InstantCommand(
+                () -> intake.setIntakeVelocitySetpoint(1.0 * 360.0),
+                //() -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
                 intake))
-        .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
+        .onFalse(new InstantCommand(
+            () -> intake.setIntakeVelocitySetpoint(0.0), intake));
 
     Trigger runOuttake = operJoy.leftBumper(); // change buttons later
     runOuttake
@@ -127,40 +144,8 @@ public class RobotContainer {
                 intake))
         .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
-    Trigger runHopper = operJoy.start(); // change buttons later
-    runHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
-
-    Trigger runInverseHopper = operJoy.back();
-    runInverseHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(-0.7), intake))
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
-
-    // Trigger hopperQuasistaticButton = driveJoy.a();
-    // hopperQuasistaticButton.whileTrue(
-    // intake.intakeQuas(SysIdRoutine.Direction.kForward));
-
-    // Trigger hopperDynamicButton = driveJoy.b();
-    // hopperDynamicButton.whileTrue(
-    // intake.intakeDyna(SysIdRoutine.Direction.kForward));
-
-    // Trigger hopperQuasistaticRButton = driveJoy.x();
-    // hopperQuasistaticRButton.whileTrue(
-    // intake.intakeQuas(SysIdRoutine.Direction.kReverse));
-
-    // Trigger hopperDynamicRButton = driveJoy.y();
-    // hopperDynamicRButton.whileTrue(
-    // intake.intakeDyna(SysIdRoutine.Direction.kReverse));
-
+   
     // positive speed is outwards
-    Trigger runShooter = operJoy.rightTrigger();
-    runShooter
-        .onTrue(
-            new RunCommand(() -> 
-            shooterWheel.setShooterSpeed(1), shooterWheel))
-        .onFalse(
-            new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
 
     // Trigger fiveshootersetpoint = operJoy.leftTrigger();
     // fiveshootersetpoint
@@ -176,69 +161,66 @@ public class RobotContainer {
             new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // Trigger intakeQuasistaticButton = driveJoy.a();
-    // intakeQuasistaticButton.whileTrue(
-    // intake.intakeQuas(SysIdRoutine.Direction.kForward));
-
-    // Trigger intakeDynamicButton = driveJoy.b();
-    // intakeDynamicButton.whileTrue(
-    // intake.intakeDyna(SysIdRoutine.Direction.kForward));
-
-    // Trigger intakeQuasistaticRButton = driveJoy.x();
-    // intakeQuasistaticRButton.whileTrue(
-    // intake.intakeQuas(SysIdRoutine.Direction.kReverse));
-
-    // Trigger intakeDynamicRButton = driveJoy.y();
-    // intakeDynamicRButton.whileTrue(
-    // intake.intakeDyna(SysIdRoutine.Direction.kReverse));
-
-    Trigger extendClimbButton = operJoy.povUp();
-    extendClimbButton
-        .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
-        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
-
-    Trigger retractClimbButton = operJoy.povDown();
-    retractClimbButton
-        .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
-        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
     /* HOPPER BUTTONS */
+    Trigger runHopper = operJoy.start(); // change buttons later
+    runHopper
+        .onTrue(new InstantCommand(
+            () -> intake.setHopperVelocitySetpoint(1.0 * 360), intake))
+            //() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
+        .onFalse(new InstantCommand(
+            () -> intake.setHopperVelocitySetpoint(0), intake));
+            //() -> intake.stopHopperMotor(), intake));
 
-    /* SHOOTER BUTTONS */
-    Trigger twenty = operJoy.a();
-    twenty
-        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(19.9), shooterAngle));
+    Trigger runInverseHopper = operJoy.back();
+    runInverseHopper
+        .onTrue(new RunCommand(() -> intake.setHopperSpeed(-0.7), intake))
+        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+    
+    /* SHOOTER ANGLE BUTTONS */
+    // Trigger twenty = operJoy.a();
+    // twenty
+    //     .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(19.9), shooterAngle));
 
-    Trigger thirty = operJoy.b();
-    thirty
-        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(25.0), shooterAngle));
+    // Trigger thirty = operJoy.b();
+    // thirty
+    //     .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(25.0), shooterAngle));
 
-    Trigger fourtyFive = operJoy.y();
-    fourtyFive
-        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(45.0), shooterAngle));
+    // Trigger fourtyFive = operJoy.y();
+    // fourtyFive
+    //     .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(45.0), shooterAngle));
 
-    Trigger sixty = operJoy.x();
-    sixty
-        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(60.0), shooterAngle));
+    // Trigger sixty = operJoy.x();
+    // sixty
+    //     .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(60.0), shooterAngle));
 
-    // Trigger zerorot = operJoy.a();
-    // zerorot
-    // .whileTrue(new InstantCommand(
-    // () -> shooterWheel.setVelocitySetpoint(0), shooterWheel));
+    /* SHOOTER WHEEL BUTTONS */
+        Trigger runShooter = operJoy.rightTrigger();
+    runShooter
+        .onTrue(
+            new RunCommand(() -> 
+            shooterWheel.setShooterSpeed(1), shooterWheel))
+        .onFalse(
+            new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
+    Trigger zerorot = operJoy.a();
+    zerorot
+    .onTrue(new InstantCommand(
+    () -> shooterWheel.setVelocitySetpoint(0), shooterWheel));
 
-    // Trigger tworot = operJoy.b();
-    // tworot
-    // .whileTrue(new RunCommand(
-    // () -> shooterWheel.setVelocitySetpoint(2.0 * 360.0), shooterWheel));
+    Trigger tworot = operJoy.b();
+    tworot
+    .onTrue(new InstantCommand(
+    () -> shooterWheel.setVelocitySetpoint(2.0 * 360.0), shooterWheel));
 
-    // Trigger fiverot = operJoy.x();
-    // fiverot
-    // .whileTrue(new RunCommand(
-    // () -> shooterWheel.setVelocitySetpoint(5.0 * 360.0), shooterWheel));
+    Trigger fiverot = operJoy.x();
+    fiverot
+    .onTrue(new InstantCommand(
+    () -> shooterWheel.setVelocitySetpoint(5.0 * 360.0), shooterWheel));
 
-    // Trigger tenrot = operJoy.y();
-    // tenrot
-    // .whileTrue(new RunCommand(
-    // () -> shooterWheel.setVelocitySetpoint(10.0 * 360.0), shooterWheel));
+    Trigger tenrot = operJoy.y();
+    tenrot
+    .onTrue(new InstantCommand(
+    () -> shooterWheel.setVelocitySetpoint(10.0 * 360.0), shooterWheel));
+
     // Trigger ampFlushButton = operJoy.a();
     // ampFlushButton
     // .onTrue(Commands.parallel(
@@ -294,6 +276,40 @@ public class RobotContainer {
     // Trigger turnDynamicButton = driveJoy.y();
     // turnDynamicButton.whileTrue(
     // drivetrain.turnDynamic(SysIdRoutine.Direction.kForward));
+
+    /* INTAKE SYSID */
+    // Trigger hopperQuasistaticButton = driveJoy.a();
+    // hopperQuasistaticButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kForward));
+
+    // Trigger hopperDynamicButton = driveJoy.b();
+    // hopperDynamicButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kForward));
+
+    // Trigger hopperQuasistaticRButton = driveJoy.x();
+    // hopperQuasistaticRButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kReverse));
+
+    // Trigger hopperDynamicRButton = driveJoy.y();
+    // hopperDynamicRButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kReverse));
+
+    /* INTAKE SYSID */
+    // Trigger intakeQuasistaticButton = driveJoy.a();
+    // intakeQuasistaticButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kForward));
+
+    // Trigger intakeDynamicButton = driveJoy.b();
+    // intakeDynamicButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kForward));
+
+    // Trigger intakeQuasistaticRButton = driveJoy.x();
+    // intakeQuasistaticRButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kReverse));
+
+    // Trigger intakeDynamicRButton = driveJoy.y();
+    // intakeDynamicRButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kReverse));
   }
 
   /**

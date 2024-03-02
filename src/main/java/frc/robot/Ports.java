@@ -58,9 +58,9 @@ public class Ports {
 
     public static final int SHOOTER_ANGLE = 15;
   }
-  // public static final class BeamBreakPorts {
-  // public static final int RECEIVER = 5;
-  // public static final int EMITTER = 2;
-  // }
+  public static final class BeamBreakPorts {
+  public static final int RECEIVER = 1;
+  public static final int EMITTER = 2;
+  }
 
 }

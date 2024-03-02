@@ -42,6 +42,7 @@ public class ShooterAngle extends SubsystemBase {
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
 
     shooterAngleMotor.burnFlash();
+    
     pSetpoint = shooterAngleEncoder.getPosition();
   }
 
@@ -85,19 +86,22 @@ public class ShooterAngle extends SubsystemBase {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    if(getAngle() <= 20){
-      shooterAngleMotor.setVoltage(0);
-    }
-    else{
+    // if(getAngle() <= 20){
+    //   shooterAngleMotor.setVoltage(0);
+    // }
+    // else{
       double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
       shooterAngleMotor.setVoltage(voltage);
-    }
+       System.out.println("angle voltage: " + voltage);
+    // }
+    System.out.println("setting angle");
   }
 
   // changes setpoint accordingly
   public void setAngleSetpoint(double setpoint) {
     isManual = false;
     pSetpoint = setpoint;
+    System.out.println("setpoint changed");
   }
 
   // added physical offset lowest angle is 18.3 deg above the horizontal

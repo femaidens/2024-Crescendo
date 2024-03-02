@@ -72,8 +72,9 @@ public class RobotContainer {
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
+            () -> shooterAngle.setAngle(),
+            // () -> shooterAngle.setManualAngle(
+            //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
             shooterAngle));
 
     shooterWheel.setDefaultCommand(
@@ -175,21 +176,21 @@ public class RobotContainer {
             new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    Trigger intakeQuasistaticButton = driveJoy.a();
-    intakeQuasistaticButton.whileTrue(
-    intake.intakeQuas(SysIdRoutine.Direction.kForward));
+    // Trigger intakeQuasistaticButton = driveJoy.a();
+    // intakeQuasistaticButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kForward));
 
-    Trigger intakeDynamicButton = driveJoy.b();
-    intakeDynamicButton.whileTrue(
-    intake.intakeDyna(SysIdRoutine.Direction.kForward));
+    // Trigger intakeDynamicButton = driveJoy.b();
+    // intakeDynamicButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kForward));
 
-    Trigger intakeQuasistaticRButton = driveJoy.x();
-    intakeQuasistaticRButton.whileTrue(
-    intake.intakeQuas(SysIdRoutine.Direction.kReverse));
+    // Trigger intakeQuasistaticRButton = driveJoy.x();
+    // intakeQuasistaticRButton.whileTrue(
+    // intake.intakeQuas(SysIdRoutine.Direction.kReverse));
 
-    Trigger intakeDynamicRButton = driveJoy.y();
-    intakeDynamicRButton.whileTrue(
-    intake.intakeDyna(SysIdRoutine.Direction.kReverse));
+    // Trigger intakeDynamicRButton = driveJoy.y();
+    // intakeDynamicRButton.whileTrue(
+    // intake.intakeDyna(SysIdRoutine.Direction.kReverse));
 
     Trigger extendClimbButton = operJoy.povUp();
     extendClimbButton
@@ -209,7 +210,7 @@ public class RobotContainer {
 
     Trigger thirty = operJoy.b();
     thirty
-        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(30.0), shooterAngle));
+        .onTrue(new InstantCommand(() -> shooterAngle.setAngleSetpoint(25.0), shooterAngle));
 
     Trigger fourtyFive = operJoy.y();
     fourtyFive

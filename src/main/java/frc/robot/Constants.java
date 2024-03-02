@@ -100,7 +100,7 @@ public final class Constants {
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid -> need to populate
-    public static final double kP = 0.01;
+    public static final double kP = 0.1;
     public static final double kI = 0;
     public static final double kD = 0;
 

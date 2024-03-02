@@ -16,6 +16,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
@@ -35,7 +36,15 @@ public class Intake extends SubsystemBase {
   private final DigitalInput receiver;
   // private final DigitalOutput emitter;
 
-  // private final SysIdRoutine intakeRoutine;
+  private final SysIdRoutine intakeRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+          volts -> setVoltage(volts.in(Units.Volts)), null, this));
+
+  private final SysIdRoutine hopperRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+          volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
   private double vSetpoint;
 
@@ -87,6 +96,10 @@ public class Intake extends SubsystemBase {
     vSetpoint = setpoint;
   }
 
+  public void setVoltage(double voltage){
+    intakeMotor.setVoltage(voltage);
+  }
+
   // for testing; see if vel pid is absolutely necessary
   public void setIntakeSpeed(double speed) {
     intakeMotor.set(speed);
@@ -117,6 +130,25 @@ public class Intake extends SubsystemBase {
   public boolean getReceiverStatus() {
     return receiver.get();
   }
+
+  public Command intakeQuas(SysIdRoutine.Direction direction) {
+    return intakeRoutine.quasistatic(direction);
+  }
+
+  public Command intakeDyna(SysIdRoutine.Direction direction) {
+    return intakeRoutine.dynamic(direction);
+  }
+
+  public Command hopperQuas(SysIdRoutine.Direction direction) {
+    return hopperRoutine.quasistatic(direction);
+  }
+
+  public Command hopperDyna(SysIdRoutine.Direction direction) {
+    return hopperRoutine.dynamic(direction);
+  }
+
+
+
 
   // public boolean getEmitterStatus() {
   //   return emitter.get();

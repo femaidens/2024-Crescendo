@@ -25,7 +25,7 @@ public final class Constants {
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
     public static final double VEL_CFACTOR = 360.0 / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
-    public static final double ROLLER_SPEED = 0.5;
+    public static final double ROLLER_SPEED = 0.175;
 
     public static final int CURRENT_LIMIT = 0;
 
@@ -53,7 +53,7 @@ public final class Constants {
     public static final double AMP_FLUSH = 0.0; // placeholder
 
     public static final double SPEAKER_FLUSH = 0.0; // placeholder
-    public static final double SPEAKER_STAGE = 0.0; // placeholder
+    public static final double SPEAKER_STAGE = 42.7; // 42.7 degrees 
     public static final double SPEAKER_WING = 0.0; // placeholder
     // speeds (degrees/sec)
 
@@ -100,7 +100,7 @@ public final class Constants {
     public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid -> need to populate
-    public static final double kP = 1.0;
+    public static final double kP = 0.01;
     public static final double kI = 0;
     public static final double kD = 0;
 

@@ -1,5 +1,6 @@
 {
   "download": {
+    "deleteAfter": false,
     "localDir": "C:\\Users\\thema\\Desktop",
     "serverTeam": "2265"
   }

@@ -149,19 +149,19 @@ public class Intake extends SubsystemBase {
   }
 
   /* COMMANDS */
-  public Command SetIntakeSpeed(double speed) {
+  public Command SetIntakeSpeedCmd(double speed) {
     return this.runOnce(() -> setIntakeSpeed(speed));
   }
 
-  public Command ResetStateCount() {
+  public Command ResetStateCountCmd() {
     return this.runOnce(() -> resetStateCount());
   }
 
-  public Command SetHopperVelocity() {
+  public Command SetHopperVelocityCmd() {
     return this.run(() -> setVelocity());
   }
 
-  public Command stopHopperMotorCommand() {
+  public Command StopHopperMotorCmd() {
     return this.runOnce(() -> stopHopperMotor());
   }
 

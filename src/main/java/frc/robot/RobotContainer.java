@@ -6,41 +6,30 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.*;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
-import frc.robot.commands.*;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
 
-import java.util.function.BooleanSupplier;
-
 import org.littletonrobotics.urcl.URCL;
 
 public class RobotContainer {
 
-  private CommandXboxController driveJoy = new CommandXboxController(
-      Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController operJoy = new CommandXboxController(
-      Ports.JoystickPorts.OPER_JOY);
+  private CommandXboxController driveJoy = new CommandXboxController(JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(JoystickPorts.OPER_JOY);
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
@@ -50,16 +39,15 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
+    configureDefaultCommands();
 
-    // configure default commands
+  }
+
+  public void configureDefaultCommands() {
     drivetrain.setDefaultCommand(
         // clariy turning with right or with left
         new RunCommand(
@@ -79,9 +67,8 @@ public class RobotContainer {
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.stopMotors(), shooterWheel));
-
   }
-
+  
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
     // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
@@ -130,14 +117,13 @@ public class RobotContainer {
         .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
 
     /* SHOOTER BUTTONS */
-
     // positive speed is outwards
     Trigger shoot = operJoy.rightTrigger();
     shoot
         .onTrue(new ConditionalCommand(
-            (shooterWheel.RampShooterCmd().until(shooterWheel::isAtVelocity)) // ramps shooter to desired velocity
-                .andThen(intake.SetHopperVelocity()), // moves hopper after desired vel is reached
-            (shooterWheel.StopMotorsCmd().alongWith(intake.stopHopperMotorCommand())), // stops motors first
+            (shooterWheel.SetVelocityCmd().until(shooterWheel::atVelocity)) // ramps shooter to desired velocity
+                .andThen(intake.SetHopperVelocityCmd()), // moves hopper after desired vel is reached
+            (shooterWheel.StopMotorsCmd().alongWith(intake.StopHopperMotorCmd())), // stops motors first
             intake::isHopperEmpty) // stops first command when hopper is ready
         );
 
@@ -149,40 +135,46 @@ public class RobotContainer {
     Trigger runShooterIntake = operJoy.leftTrigger();
     runShooterIntake
         .onTrue(
-            new RunCommand(() -> shooterWheel.setShooterSpeed(-0.5), shooterWheel))
+            new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
         .onFalse(
             new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
 
     Trigger ampFlushButton = operJoy.a();
     ampFlushButton
-        .onTrue(Commands.parallel(
-            shooterAngle.SetShooterAngle(ShooterAngleConstants.AMP_FLUSH),
-            shooterWheel.SetShooterSpeedCmd(ShooterWheelConstants.AMP_FLUSH)))
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH)
+            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH))
+        );
 
-        .onFalse(new RunCommand(
-            () -> shooterAngle.setAngle(), shooterAngle));
+        // .onFalse(new RunCommand(
+        //     () -> shooterAngle.setAngle(), shooterAngle));
 
     Trigger speakerFlushButton = operJoy.x();
     speakerFlushButton
-        .onTrue(Commands.parallel(
-            shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_FLUSH),
-            shooterWheel.SetShooterSpeedCmd(ShooterWheelConstants.SPEAKER_FLUSH)))
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
+        );
 
-        .onFalse(new RunCommand(
-            () -> shooterAngle.setAngle(), shooterAngle));
+        // .onFalse(new RunCommand(
+        //     () -> shooterAngle.setAngle(), shooterAngle));
 
     Trigger speakerStageButton = operJoy.y();
     speakerStageButton
-        .onTrue(Commands.parallel(
-            shooterAngle.SetShooterAngle(ShooterAngleConstants.SPEAKER_STAGE),
-            shooterWheel.SetShooterSpeedCmd(ShooterWheelConstants.SPEAKER_STAGE)))
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
+            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE))    
+        );
 
-        .onFalse(new RunCommand(
-            () -> shooterAngle.setAngle(), shooterAngle));
+        // .onFalse(new RunCommand(
+        //     () -> shooterAngle.setAngle(), shooterAngle));
 
     Trigger speakerWingButton = operJoy.b();
     speakerWingButton
-        .onTrue(shooterAngle.SetShooterAngle(Constants.ShooterAngleConstants.AMP_FLUSH));
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(Constants.ShooterAngleConstants.AMP_FLUSH)
+            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING))
+        );
 
     /* DRIVETRAIN SYSID BUTTONS */
     // Trigger driveForwardQuasistaticButton = driveJoy.leftBumper();

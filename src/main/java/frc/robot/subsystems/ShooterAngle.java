@@ -25,7 +25,7 @@ public class ShooterAngle extends SubsystemBase {
 
   private final PIDController shooterAnglePID;
 
-  private boolean isManual = true;
+  // private boolean isManual = true;
   private double pSetpoint;
 
   // possibly add an armFF later
@@ -48,7 +48,7 @@ public class ShooterAngle extends SubsystemBase {
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
   public void setManualAngle(double input) {
-    isManual = true;
+    // isManual = true;
     /*
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
@@ -66,18 +66,20 @@ public class ShooterAngle extends SubsystemBase {
 */
     if (input > 0) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
-      pSetpoint = getAngle();
+      // pSetpoint = getAngle();
     }
     // move down if above min angle
     else if (input < 0) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
-      pSetpoint = getAngle();
+      // pSetpoint = getAngle();
     }
     // run PID
-    else {
-      // setAngle();
-      stopMotor();
-    }
+    pSetpoint = getAngle();
+    setAngle();
+    // else {
+    //   // setAngle();
+    //   stopMotor();
+    // }
 
   }
 
@@ -87,7 +89,7 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngleMotor.setVoltage(voltage);
   }
 
-  // for commands; overloads setAngle no params
+  // for auton commands; overloads setAngle no params
   public void setAngle(double setpoint) {
     setAngleSetpoint(setpoint);
     setAngle();
@@ -95,7 +97,7 @@ public class ShooterAngle extends SubsystemBase {
 
   // changes setpoint accordingly
   public void setAngleSetpoint(double setpoint) {
-    isManual = false;
+    // isManual = false;
     pSetpoint = setpoint;
   }
 
@@ -104,22 +106,20 @@ public class ShooterAngle extends SubsystemBase {
     return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
   }
 
-  public boolean getIsManual() {
-    return isManual;
-  }
+  // public boolean getIsManual() {
+  //   return isManual;
+  // }
 
   public void stopMotor() {
     shooterAngleMotor.stopMotor();
   }
 
-  // @param the angle to compare the encoder reading with
-  // @return if the angle of the shooter is within the threshold of the setpoint
-  public boolean isAtAngle(double angle) {
-    return Math.abs(angle - getAngle()) < 2;
+  public boolean atAngle(double angle) {
+    return Math.abs(angle - getAngle()) < ShooterAngleConstants.ERROR_MARGIN;
   }
 
   /* COMMANDS */
-  public Command SetShooterAngle(double angle) {
+  public Command SetAngleSetpointCmd(double angle) {
     return this.runOnce(() -> setAngleSetpoint(angle));
   }
 

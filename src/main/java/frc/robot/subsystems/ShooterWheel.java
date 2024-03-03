@@ -30,9 +30,9 @@ public class ShooterWheel extends SubsystemBase {
   private final RelativeEncoder leaderEncoder;
   private final RelativeEncoder followerEncoder;
 
-  private final SimpleMotorFeedforward shooterFF;
+  private final SimpleMotorFeedforward shooterWheel;
 
-  private final PIDController shooterPID;
+  private final PIDController shooterWheelPID;
 
   private double vSetpoint;
 
@@ -54,8 +54,8 @@ public class ShooterWheel extends SubsystemBase {
     followerEncoder = followerMotor.getEncoder();
 
     // controls
-    shooterFF = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
-    shooterPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
+    shooterWheel = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
+    shooterWheelPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
     followerMotor.follow(leaderMotor, true);
 
@@ -90,12 +90,28 @@ public class ShooterWheel extends SubsystemBase {
     // followerEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
   }
 
+  /* COMMANDS */
+  public Command SetVelocitySetpointCmd(double setpoint) {
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+  }
+
+  public Command StopMotorsCmd() {
+    return this.runOnce(() -> stopMotors());
+  }
+
+  public Command SetVelocityCmd() {
+    return this.run(() -> setVelocity());
+  }
+
+  // sets fractional duty cycle
+  public void setSpeed(double speed) {
+    leaderMotor.set(speed);
+  }
+
   // sets the velocity of shooter wheels in degrees per second
   public void setVelocity() {
-    // getRate() in WPI might be better than getVelocity if conversion in Constants
-    // doesn't work
-    double ff = shooterFF.calculate(vSetpoint);
-    double error = shooterPID.calculate(getLeaderVelocity(), vSetpoint);
+    double ff = shooterWheel.calculate(vSetpoint);
+    double error = shooterWheelPID.calculate(getLeaderVelocity(), vSetpoint);
 
     leaderMotor.setVoltage(ff + error);
     System.out.println("wheel voltage" + (ff + error));
@@ -105,11 +121,12 @@ public class ShooterWheel extends SubsystemBase {
     vSetpoint = setpoint;
   }
 
-  public void setShooterSpeed(double speed) {
-    leaderMotor.set(speed);
+  // checks if current velocity is within error margin of vSetpoint
+  public boolean atVelocity() {
+    return shooterWheelPID.atSetpoint();
   }
 
-  // @return the velocities of shooter motors
+  // returns the velocities of shooter motors
   public double getLeaderVelocity() {
     return leaderEncoder.getVelocity();
   }
@@ -118,27 +135,10 @@ public class ShooterWheel extends SubsystemBase {
     return followerEncoder.getVelocity();
   }
 
-  public boolean isAtVelocity() {
-    return Math.abs(getLeaderVelocity() - vSetpoint) < ShooterWheelConstants.ERROR_MARGIN;
-  }
-
   // stops the motors for the shooter wheels
   public void stopMotors() {
     leaderMotor.setVoltage(0);
     // leaderFlex.setVoltage(0);
-  }
-  
-  /* COMMANDS */
-  public Command SetShooterSpeedCmd(double speed) {
-    return this.runOnce(() -> setVelocitySetpoint(speed));
-  }
-
-  public Command StopMotorsCmd() {
-    return this.runOnce(() -> stopMotors());
-  }
-
-  public Command RampShooterCmd() {
-    return this.run(() -> setVelocity());
   }
 
   /* SYSID */

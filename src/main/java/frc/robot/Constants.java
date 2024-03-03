@@ -84,6 +84,7 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
+    public static final double ERROR_MARGIN = 1.0;
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3

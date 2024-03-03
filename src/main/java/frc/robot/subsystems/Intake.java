@@ -25,16 +25,15 @@ import frc.robot.Ports.*;
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax intakeMotor;
-  private final CANSparkMax hopperMotor;
 
   private final RelativeEncoder intakeEncoder;
-  private final RelativeEncoder hopperEncoder;
+  
 
   //private final PIDController intakePID;
   private final SimpleMotorFeedforward intakeFF;
 
  // private final PIDController hopperPID;
-  private final SimpleMotorFeedforward hopperFF;
+
 
   private final DigitalInput receiver;
   // private final DigitalOutput emitter;
@@ -44,47 +43,39 @@ public class Intake extends SubsystemBase {
       new SysIdRoutine.Mechanism(
           volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
-  private final SysIdRoutine hopperRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-      new SysIdRoutine.Mechanism(
-          volts -> setVoltageHop(volts.in(Units.Volts)), null, this));
+ 
 
   private double vIntakeSetpoint;
-  private double vHopperSetpoint;
 
   public Intake() {
     intakeMotor =
       new CANSparkMax(IntakePorts.INTAKE_ROLLER, MotorType.kBrushless);
-    hopperMotor =
-      new CANSparkMax(HopperPorts.HOPPER_MOTOR, MotorType.kBrushless);
+    
 
     intakeEncoder = intakeMotor.getEncoder();
-    hopperEncoder = hopperMotor.getEncoder();
 
     intakeEncoder.setVelocityConversionFactor(IntakeConstants.VEL_CFACTOR);
-    hopperEncoder.setVelocityConversionFactor(HopperConstants.VEL_CFACTOR);
+   
 
     // intakePID = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
     // hopperPID = new PIDController(HopperConstants., vSetpoint, vSetpoint)
     
     intakeFF = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
-    hopperFF = new SimpleMotorFeedforward(HopperConstants.kS, HopperConstants.kV);
+    
     receiver = new DigitalInput(HopperPorts.RECEIVER);
     // emitter = new DigitalOutput(HopperPorts.EMITTER);
 
-    hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
     intakeMotor.setIdleMode(IdleMode.kCoast); // should freely spin?
 
-    hopperMotor.setSmartCurrentLimit(HopperConstants.CURRENT_LIMIT);
     intakeMotor.setSmartCurrentLimit(IntakeConstants.CURRENT_LIMIT);
 
     intakeMotor.burnFlash();
-    hopperMotor.burnFlash();
+   
 
     // setEmitter(true);
 
     vIntakeSetpoint = 0;
-    vHopperSetpoint = 0;
+ 
   }
 
   public void setIntakeVelocity() {
@@ -94,52 +85,29 @@ public class Intake extends SubsystemBase {
     intakeMotor.setVoltage(voltage);
   }
 
-  public void setHopperVelocity() {
-    double voltage = hopperFF.calculate(vHopperSetpoint);
-
-    hopperMotor.setVoltage(voltage);
-  }
-
   public void setIntakeVelocitySetpoint(double setpoint) {
     vIntakeSetpoint = setpoint;
-  }
-
-  public void setHopperVelocitySetpoint(double setpoint) {
-    vHopperSetpoint = setpoint;
   }
 
   public void setVoltage(double voltage){
     intakeMotor.setVoltage(voltage);
   }
 
-  public void setVoltageHop(double voltage){
-    hopperMotor.setVoltage(voltage);
-  }
 
   // for testing; see if vel pid is absolutely necessary
   public void setIntakeSpeed(double speed) {
     intakeMotor.set(speed);
   }
 
-  // for transition between hopper and shooter wheels
-  public void setHopperSpeed(double speed) {
-    hopperMotor.set(speed);
-  }
+ 
 
   public double getIntakeVelocity() {
     return intakeEncoder.getVelocity();
   }
 
-  public double getHopperVelocity() {
-    return hopperEncoder.getVelocity();
-  }
 
   public void stopIntakeMotor() {
     intakeMotor.stopMotor();
-  }
-
-  public void stopHopperMotor() {
-    hopperMotor.stopMotor();
   }
 
   // beam breaker code
@@ -155,13 +123,6 @@ public class Intake extends SubsystemBase {
     return intakeRoutine.dynamic(direction);
   }
 
-  public Command hopperQuas(SysIdRoutine.Direction direction) {
-    return hopperRoutine.quasistatic(direction);
-  }
-
-  public Command hopperDyna(SysIdRoutine.Direction direction) {
-    return hopperRoutine.dynamic(direction);
-  }
 
 
 
@@ -177,11 +138,9 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("intake vel", getIntakeVelocity());
-    SmartDashboard.putNumber("hopper vel", getHopperVelocity());
 
     SmartDashboard.putNumber("intake sp", vIntakeSetpoint);
-    SmartDashboard.putNumber("hopper sp", vHopperSetpoint);
-    
+
     SmartDashboard.putBoolean("beam break", getReceiverStatus());
     // System.out.println("hopper velocity: " + getHopperVelocity());
   }

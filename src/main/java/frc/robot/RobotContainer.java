@@ -28,6 +28,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.BeamBreak;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterAngle;
@@ -43,6 +44,7 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
+  private final Hopper hopper = new Hopper();
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
@@ -139,31 +141,21 @@ public class RobotContainer {
                 intake))
         .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
 
-    Trigger runHopper = operJoy.start(); // change buttons later
-    runHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
-
-    Trigger runInverseHopper = operJoy.back();
-    runInverseHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(-0.7), intake))
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
-
     Trigger hopperQuasistaticButton = driveJoy.a();
     hopperQuasistaticButton.whileTrue(
-    intake.hopperQuas(SysIdRoutine.Direction.kForward));
+    hopper.hopperQuas(SysIdRoutine.Direction.kForward));
 
     Trigger hopperDynamicButton = driveJoy.b();
     hopperDynamicButton.whileTrue(
-    intake.hopperDyna(SysIdRoutine.Direction.kForward));
+    hopper.hopperDyna(SysIdRoutine.Direction.kForward));
 
     Trigger hopperQuasistaticRButton = driveJoy.x();
     hopperQuasistaticRButton.whileTrue(
-    intake.hopperQuas(SysIdRoutine.Direction.kReverse));
+    hopper.hopperQuas(SysIdRoutine.Direction.kReverse));
 
     Trigger hopperDynamicRButton = driveJoy.y();
     hopperDynamicRButton.whileTrue(
-    intake.hopperDyna(SysIdRoutine.Direction.kReverse));
+    hopper.hopperDyna(SysIdRoutine.Direction.kReverse));
 
     // positive speed is outwards
 
@@ -185,16 +177,16 @@ public class RobotContainer {
     Trigger runHopper = operJoy.start(); // change buttons later
     runHopper
         .onTrue(new InstantCommand(
-            () -> intake.setHopperVelocitySetpoint(1.0 * 360), intake))
+            () -> hopper.setHopperVelocitySetpoint(1.0 * 360), intake))
             //() -> intake.setHopperSpeed(1), intake)) // need to code for when it is
         .onFalse(new InstantCommand(
-            () -> intake.setHopperVelocitySetpoint(0), intake));
+            () -> hopper.setHopperVelocitySetpoint(0), intake));
             //() -> intake.stopHopperMotor(), intake));
 
     Trigger runInverseHopper = operJoy.back();
     runInverseHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(-0.7), intake))
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+        .onTrue(new RunCommand(() -> hopper.setHopperSpeed(-0.7), intake))
+        .onFalse(new InstantCommand(() -> hopper.stopHopperMotor(), intake));
     
     /* SHOOTER ANGLE BUTTONS */
     // Trigger twenty = operJoy.a();

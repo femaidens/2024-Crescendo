@@ -187,6 +187,16 @@ public class RobotContainer {
     runInverseHopper
         .onTrue(new RunCommand(() -> hopper.setHopperSpeed(-0.7), intake))
         .onFalse(new InstantCommand(() -> hopper.stopHopperMotor(), intake));
+
+    /* INTAKE ROUTINE */
+    /* I AM NOT SURE IF THIS WILL WORK SOMEONE PLEASE CHECK IT*/
+    Trigger runIntakeHopper = operJoy.x();
+     runIntakeHopper
+      .onTrue(
+        new RunIntakeHopper(intake,hopper)
+      );
+      
+
     
     /* SHOOTER ANGLE BUTTONS */
     // Trigger twenty = operJoy.a();

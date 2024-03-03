@@ -18,6 +18,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
+import frc.robot.commands.Shooter;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -37,6 +38,8 @@ public class RobotContainer {
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
 
+  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, intake);
+
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   public RobotContainer() {
@@ -44,12 +47,10 @@ public class RobotContainer {
     configureButtonBindings();
     configureAuton();
     configureDefaultCommands();
-
   }
 
   public void configureDefaultCommands() {
     drivetrain.setDefaultCommand(
-        // clariy turning with right or with left
         new RunCommand(
             () -> drivetrain.drive( // all joy.get values were prev negative
                 MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
@@ -60,10 +61,12 @@ public class RobotContainer {
             drivetrain)); // field rel = true
 
     shooterAngle.setDefaultCommand(
+        // new RunCommand(
+        //     () -> shooterAngle.setManualAngle(
+        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+        //     shooterAngle));
         new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-            shooterAngle));
+            () -> shooterAngle.setAngle(), shooterAngle));
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.stopMotors(), shooterWheel));
@@ -71,109 +74,88 @@ public class RobotContainer {
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
-    // shooterWheelAngle));
-    // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle,
-    // armLateral));
-    // autonChooser.addOption("p2", new Path2(drivetrain));
-    // autonChooser.addOption("test auton", new TestAuton1(drivetrain, intake,
-    // armAngle, armLateral));
+    autonChooser.addOption("Shoot Amp", shooter.autonShoot(ShooterAngleConstants.AMP_FLUSH));
   }
 
   private void configureButtonBindings() {
 
-    /* CLIMB BUTTONS */
-    Trigger extendClimbButton = operJoy.povUp();
-    extendClimbButton
-        .onTrue(new RunCommand(() -> climb.extendClimbArm(), climb))
-        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+    /* * * CLIMB BUTTONS * * */
+    // extend climb arm
+    operJoy.povUp()
+        .onTrue(climb.extendClimbCmd())
+        .onFalse(climb.stopMotorsCmd());
 
-    Trigger retractClimbButton = operJoy.povDown();
-    retractClimbButton
-        .onTrue(new RunCommand(() -> climb.retractClimbArm(), climb))
-        .onFalse(new InstantCommand(() -> climb.stopClimb(), climb));
+    // retract climb arm
+    operJoy.povDown()
+        .onTrue(climb.retractClimbCmd())
+        .onFalse(climb.stopMotorsCmd());
 
-    /* INTAKE BUTTONS */
-    Trigger runIntake = operJoy.rightBumper(); // change buttons later
-    runIntake
-        .onTrue(
-            new RunCommand(
-                () -> intake.setIntakeSpeed(IntakeConstants.ROLLER_SPEED),
-                intake))
-        .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
+    /* * * INTAKE BUTTONS * * */
+    // runs intake
+    operJoy.rightBumper()
+        .onTrue(intake.setIntakeSpeedCmd(IntakeConstants.ROLLER_SPEED))
+        .onFalse(intake.stopIntakeMotorCmd());
 
-    Trigger runOuttake = operJoy.leftBumper(); // change buttons later
-    runOuttake
-        .onTrue(
-            new RunCommand(
-                () -> intake.setIntakeSpeed(-IntakeConstants.ROLLER_SPEED),
-                intake))
-        .onFalse(new RunCommand(() -> intake.stopIntakeMotor(), intake));
+    // runs outtake
+    operJoy.leftBumper()
+        .onTrue(intake.setIntakeSpeedCmd(-IntakeConstants.ROLLER_SPEED))
+        .onFalse(intake.stopIntakeMotorCmd());
 
-    /* HOPPER BUTTONS */
-    Trigger runHopper = operJoy.start(); // change buttons later
-    runHopper
-        .onTrue(new RunCommand(() -> intake.setHopperSpeed(0.7), intake)) // need to code for when it is
-        .onFalse(new InstantCommand(() -> intake.stopHopperMotor(), intake));
+    /* * * HOPPER BUTTONS * * */
+    // runs hopper (towards shooter)
+    operJoy.start()
+        .onTrue(intake.setHopperSpeedCmd(0.7))
+        .onFalse(intake.stopHopperMotorCmd());
 
-    /* SHOOTER BUTTONS */
-    // positive speed is outwards
-    Trigger shoot = operJoy.rightTrigger();
-    shoot
-        .onTrue(new ConditionalCommand(
-            (shooterWheel.SetVelocityCmd().until(shooterWheel::atVelocity)) // ramps shooter to desired velocity
-                .andThen(intake.SetHopperVelocityCmd()), // moves hopper after desired vel is reached
-            (shooterWheel.StopMotorsCmd().alongWith(intake.StopHopperMotorCmd())), // stops motors first
-            intake::isHopperEmpty) // stops first command when hopper is ready
-        );
+    // runs reverse hopper (towards intake)
+    operJoy.back()
+        .onTrue(intake.setHopperSpeedCmd(-0.7))
+        .onFalse(intake.stopHopperMotorCmd());
 
-        // .onTrue(
-        //     new RunCommand(() -> shooterWheel.setShooterSpeed(0.5), shooterWheel))
-        // .onFalse(
-        //     new InstantCommand(() -> shooterWheel.stopShooter(), shooterWheel));
+    /* SHOOTER ANGLE BUTTONS */
+    // toggles arm manual
+    operJoy.rightStick()
+        .toggleOnTrue(shooterAngle.setManualAngleCmd(
+            MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)));
 
-    Trigger runShooterIntake = operJoy.leftTrigger();
-    runShooterIntake
+    /* * * SHOOTER WHEEL * * */
+    // shooting -> positive
+    operJoy.rightTrigger()
+        .onTrue(shooter.shoot());
+
+    // runs shooter intake -> negative
+    operJoy.leftTrigger()
         .onTrue(
             new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
         .onFalse(
             new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
 
-    Trigger ampFlushButton = operJoy.a();
-    ampFlushButton
+    // amp flush
+    operJoy.a()
         .onTrue(
             shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH)
-            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH))
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH))
         );
 
-        // .onFalse(new RunCommand(
-        //     () -> shooterAngle.setAngle(), shooterAngle));
-
-    Trigger speakerFlushButton = operJoy.x();
-    speakerFlushButton
+    // speaker flush
+    operJoy.x()
         .onTrue(
             shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
-            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
         );
 
-        // .onFalse(new RunCommand(
-        //     () -> shooterAngle.setAngle(), shooterAngle));
-
-    Trigger speakerStageButton = operJoy.y();
-    speakerStageButton
+    // speaker stage
+    operJoy.y()
         .onTrue(
             shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
-            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE))    
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE))    
         );
 
-        // .onFalse(new RunCommand(
-        //     () -> shooterAngle.setAngle(), shooterAngle));
-
-    Trigger speakerWingButton = operJoy.b();
-    speakerWingButton
+    // speaker wing
+    operJoy.b()
         .onTrue(
             shooterAngle.SetAngleSetpointCmd(Constants.ShooterAngleConstants.AMP_FLUSH)
-            .alongWith(shooterWheel.SetVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING))
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING))
         );
 
     /* DRIVETRAIN SYSID BUTTONS */

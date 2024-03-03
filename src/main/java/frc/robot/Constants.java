@@ -47,7 +47,7 @@ public final class Constants {
     public static final double GEAR_RATIO = 24.0 / 18.0; // 24:18; inversed already
     public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO);
 
-    public static final double ERROR_MARGIN = 2; // 2 degrees/second
+    public static final double V_TOLERANCE = 2; // 2 degrees/second
 
     // limits
     public static final int CURRENT_LIMIT = 30;
@@ -84,7 +84,7 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
-    public static final double ERROR_MARGIN = 1.0;
+    public static final double P_TOLERANCE = 1.0;
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3

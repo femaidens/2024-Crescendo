@@ -80,6 +80,31 @@ public class Intake extends SubsystemBase {
 
   }
 
+  /* COMMANDS */
+  public Command setIntakeSpeedCmd(double speed) {
+    return this.runOnce(() -> setIntakeSpeed(speed));
+  }
+
+  public Command setHopperSpeedCmd(double speed) {
+    return this.runOnce(() -> setHopperSpeed(speed));
+  }
+
+  public Command resetStateCountCmd() {
+    return this.runOnce(() -> resetStateCount());
+  }
+
+  public Command setHopperVelocityCmd() {
+    return this.run(() -> setVelocity());
+  }
+
+  public Command stopIntakeMotorCmd() {
+    return this.runOnce(() -> stopIntakeMotor());
+  }
+
+  public Command stopHopperMotorCmd() {
+    return this.runOnce(() -> stopHopperMotor());
+  }
+
   public void setVelocity() {
     double voltage = ff.calculate(vSetpoint);
     double error = intakePID.calculate(intakeEncoder.getVelocity(), vSetpoint);
@@ -125,6 +150,10 @@ public class Intake extends SubsystemBase {
     return stateCount == 2;
   }
 
+  public boolean isHopperFull() {
+    return !getReceiverStatus();
+  }
+
   public void resetStateCount() {
     stateCount = 0;
   }
@@ -146,23 +175,6 @@ public class Intake extends SubsystemBase {
 
   public void stopHopperMotor() {
     hopperMotor.stopMotor();
-  }
-
-  /* COMMANDS */
-  public Command SetIntakeSpeedCmd(double speed) {
-    return this.runOnce(() -> setIntakeSpeed(speed));
-  }
-
-  public Command ResetStateCountCmd() {
-    return this.runOnce(() -> resetStateCount());
-  }
-
-  public Command SetHopperVelocityCmd() {
-    return this.run(() -> setVelocity());
-  }
-
-  public Command StopHopperMotorCmd() {
-    return this.runOnce(() -> stopHopperMotor());
   }
 
   /* SYSID */

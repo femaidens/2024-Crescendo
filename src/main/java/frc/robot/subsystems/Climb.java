@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
@@ -27,6 +28,19 @@ public class Climb extends SubsystemBase {
   
     topSwitch = new DigitalInput(ClimbPorts.TOP_SWITCH);
     botSwitch = new DigitalInput(ClimbPorts.BOTTOM_SWITCH);
+  }
+
+  /* COMMANDS */
+  public Command extendClimbCmd() {
+    return this.run(() -> extendClimbArm());
+  }
+
+  public Command retractClimbCmd() {
+    return this.run(() -> retractClimbArm());
+  }
+
+  public Command stopMotorsCmd() {
+    return this.runOnce(() -> stopMotors());
   }
 
   public void extendClimbArm() {
@@ -67,7 +81,7 @@ public class Climb extends SubsystemBase {
     return !botSwitch.get(); // check to see if it needs to be negated
   }
 
-  public void stopClimb() {
+  public void stopMotors() {
     rightArm.set(0);
     leftArm.set(0);
   }

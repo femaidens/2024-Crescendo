@@ -57,6 +57,7 @@ public class ShooterWheel extends SubsystemBase {
     shooterWheel = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
     shooterWheelPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
+    shooterWheelPID.setTolerance(ShooterWheelConstants.V_TOLERANCE);
     followerMotor.follow(leaderMotor, true);
 
     followerMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
@@ -91,15 +92,15 @@ public class ShooterWheel extends SubsystemBase {
   }
 
   /* COMMANDS */
-  public Command SetVelocitySetpointCmd(double setpoint) {
+  public Command setVelocitySetpointCmd(double setpoint) {
     return this.runOnce(() -> setVelocitySetpoint(setpoint));
   }
 
-  public Command StopMotorsCmd() {
+  public Command stopMotorsCmd() {
     return this.runOnce(() -> stopMotors());
   }
 
-  public Command SetVelocityCmd() {
+  public Command setVelocityCmd() {
     return this.run(() -> setVelocity());
   }
 

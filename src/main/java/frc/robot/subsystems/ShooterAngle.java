@@ -42,14 +42,20 @@ public class ShooterAngle extends SubsystemBase {
 
     shooterAngleMotor.burnFlash();
 
+    shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
     pSetpoint = getAngle();
+  }
+
+  /* COMMANDS */
+  public Command setManualAngleCmd(double input) {
+    return this.run(() -> setManualAngle(input));
   }
 
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
   public void setManualAngle(double input) {
     // isManual = true;
-    /*
+    
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
@@ -59,28 +65,23 @@ public class ShooterAngle extends SubsystemBase {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
     }
     // run PID
-    else {
-      // setAngle();
-      stopMotor();
-    }
-*/
-    if (input > 0) {
-      shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
-      // pSetpoint = getAngle();
-    }
-    // move down if above min angle
-    else if (input < 0) {
-      shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
-      // pSetpoint = getAngle();
-    }
-    // run PID
-    pSetpoint = getAngle();
-    setAngle();
     // else {
     //   // setAngle();
     //   stopMotor();
     // }
 
+    // if (input > 0) {
+    //   shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+    //   // pSetpoint = getAngle();
+    // }
+    // // move down if above min angle
+    // else if (input < 0) {
+    //   shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+    //   // pSetpoint = getAngle();
+    // }
+    // run PID
+    pSetpoint = getAngle();
+    setAngle();
   }
 
   // sets shooter angle to current setpoint
@@ -115,7 +116,7 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   public boolean atAngle(double angle) {
-    return Math.abs(angle - getAngle()) < ShooterAngleConstants.ERROR_MARGIN;
+    return shooterAnglePID.atSetpoint();
   }
 
   /* COMMANDS */

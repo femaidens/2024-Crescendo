@@ -83,6 +83,11 @@ public class RobotContainer {
         driveJoy.rightBumper()
             .onTrue(drivetrain.resetGyroCmd());
 
+        // speed factor
+        driveJoy.leftTrigger()
+            .onTrue(drivetrain.slowCmd())
+            .onFalse(drivetrain.regularCmd());
+
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
         operJoy.povUp()

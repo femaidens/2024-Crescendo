@@ -28,7 +28,7 @@ public class ShooterAngle extends SubsystemBase {
   // private boolean isManual = true;
   private double pSetpoint;
 
-  private boolean isManual = true;
+  // private boolean isManual = true;
 
   // possibly add an armFF later
 
@@ -51,6 +51,14 @@ public class ShooterAngle extends SubsystemBase {
   /* COMMANDS */
   public Command setManualAngleCmd(double input) {
     return this.run(() -> setManualAngle(input));
+  }
+
+  public Command setAngleSetpointCmd(double angle) {
+    return this.runOnce(() -> setAngleSetpoint(angle));
+  }
+
+  public Command setAngleCmd() {
+    return this.run(() -> setAngle());
   }
 
   // sets shooter angle based on joystick input
@@ -105,12 +113,6 @@ public class ShooterAngle extends SubsystemBase {
     setAngle();
   }
 
-  // for auton commands; overloads setAngle no params
-  public void setAngle(double setpoint) {
-    setAngleSetpoint(setpoint);
-    setAngle();
-  }
-
   // changes setpoint accordingly
   public void setAngleSetpoint(double setpoint) {
     // isManual = false;
@@ -133,11 +135,6 @@ public class ShooterAngle extends SubsystemBase {
 
   public boolean atAngle(double angle) {
     return shooterAnglePID.atSetpoint();
-  }
-
-  /* COMMANDS */
-  public Command SetAngleSetpointCmd(double angle) {
-    return this.runOnce(() -> setAngleSetpoint(angle));
   }
 
   @Override

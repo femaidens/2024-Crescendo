@@ -8,17 +8,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class Constants {
 
+  public static final double DEGREES = 360.0;
+
   public static final class OIConstants {
     public static final double kDriveDeadband = 0.05;
   }
 
   public static final class ClimberConstants {
     public static final double ARM_SPEED = 0.3;
-    public static final double ARM_SPEED = 0.3;
+  }
+
+  public static final class IntakeHopperConstants {
+    public static final double INTAKE_NOTE_SPEED = 3 * DEGREES;
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = 360.0 / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
     public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 0.05;
 
@@ -29,7 +34,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
-    public static final double VEL_CFACTOR = 360.0 / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
     public static final double ROLLER_SPEED = 0.175;
 
     public static final int CURRENT_LIMIT = 0;
@@ -50,7 +55,7 @@ public final class Constants {
     // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
     public static final double GEAR_RATIO = 24.0 / 18.0; // 24:18; inversed already
-    public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO);
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * GEAR_RATIO);
 
     public static final double V_TOLERANCE = 2; // 2 degrees/second
 
@@ -85,7 +90,7 @@ public final class Constants {
   public static final class ShooterAngleConstants {
 
     // conversion
-    public static final double POS_CFACTOR = 360.0; // degrees, 25:1 gr
+    public static final double POS_CFACTOR = DEGREES; // degrees, 25:1 gr
 
     // limits
     public static final int CURRENT_LIMIT = 30;

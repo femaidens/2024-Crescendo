@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,55 +20,128 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.Ports.HopperPorts;
 
 public class Hopper extends SubsystemBase {
-    private final CANSparkMax hopperMotor;
 
-    private final RelativeEncoder hopperEncoder;
+  private final CANSparkMax hopperMotor;
+  private final RelativeEncoder hopperEncoder;
 
-    private final SimpleMotorFeedforward hopperFF;
+  private final SimpleMotorFeedforward hopperFF;
+  // private final PIDController hopperPID;
+  private final DigitalInput receiver;
 
-    private double vHopperSetpoint;
+  private final SysIdRoutine hopperRoutine;
 
-     private final SysIdRoutine hopperRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-      new SysIdRoutine.Mechanism(
-          volts -> setVoltageHop(volts.in(Units.Volts)), null, this));  
+  private double vSetpoint;
+  private boolean currentState, lastState;
+  private int stateCount = 0;
+
   /** Creates a new Hopper. */
   public Hopper() {
     hopperMotor = new CANSparkMax(HopperPorts.HOPPER_MOTOR, MotorType.kBrushless);
     hopperEncoder = hopperMotor.getEncoder();
+
     hopperEncoder.setVelocityConversionFactor(HopperConstants.VEL_CFACTOR);
-    hopperFF = new SimpleMotorFeedforward(HopperConstants.kS, HopperConstants.kV);
+
+    hopperFF = new SimpleMotorFeedforward(
+        HopperConstants.kS,
+        HopperConstants.kV);
+
+    receiver = new DigitalInput(HopperPorts.RECEIVER);
+
     hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
     hopperMotor.setSmartCurrentLimit(HopperConstants.CURRENT_LIMIT);
     hopperMotor.burnFlash();
 
-    vHopperSetpoint = 0;
+    hopperRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            volts -> setVoltage(volts.in(Units.Volts)), null, this));
+
+    vSetpoint = 0;
+    currentState = getReceiverStatus();
+    lastState = currentState;
   }
 
-  public void setHopperVelocity() {
-    double voltage = hopperFF.calculate(vHopperSetpoint);
-    hopperMotor.setVoltage(voltage);
+  /* COMMANDS */
+  public Command setHopperSpeedCmd(double speed) {
+    return this.runOnce(() -> setSpeed(speed));
   }
 
-  public void setHopperVelocitySetpoint(double setpoint) {
-    vHopperSetpoint = setpoint;
+  public Command setVelocitySetpointCmd(double setpoint) {
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
   }
 
-  public void setVoltageHop(double voltage){
-    hopperMotor.setVoltage(voltage);
+  public Command setHopperVelocityCmd() {
+    return this.run(() -> setVelocity());
   }
 
-   // for transition between hopper and shooter wheels
-   public void setHopperSpeed(double speed) {
+  public Command stopHopperMotorCmd() {
+    return this.runOnce(() -> stopMotor());
+  }
+
+  public Command resetStateCountCmd() {
+    return this.runOnce(() -> resetStateCount());
+  }
+
+  /* * * BEAM BREAK * * */
+  public boolean getReceiverStatus() {
+    return receiver.get();
+    // true = unbroken
+    // false = broken
+  }
+
+  // hopper is empty once state change count == 2;
+  public boolean isHopperEmpty() {
+    if (hasStateChanged()) {
+      stateCount++;
+      System.out.println(stateCount);
+    }
+    return stateCount == 2;
+  }
+
+  public boolean isHopperFull() {
+    return !getReceiverStatus();
+  }
+
+  public void resetStateCount() {
+    stateCount = 0;
+  }
+
+  // checks if beam break has changed from broken to unbroken
+  public boolean hasStateChanged() {
+
+    boolean stateChange;
+    currentState = getReceiverStatus();
+    stateChange = currentState && !lastState; // currently true, was false;
+    lastState = currentState;
+
+    return stateChange;
+  }
+
+  // sets fractional duty cycle
+  public void setSpeed(double speed) {
     hopperMotor.set(speed);
   }
 
-  public double getHopperVelocity() {
+  public void setVelocity() {
+    double voltage = hopperFF.calculate(vSetpoint);
+    hopperMotor.setVoltage(voltage);
+  }
+
+  public void setVelocitySetpoint(double setpoint) {
+    vSetpoint = setpoint;
+  }
+
+  public double getVelocity() {
     return hopperEncoder.getVelocity();
   }
 
-  public void stopHopperMotor() {
+  public void stopMotor() {
     hopperMotor.stopMotor();
+  }
+
+  /* SYSID */
+  public void setVoltage(double voltage) {
+    hopperMotor.setVoltage(voltage);
   }
 
   public Command hopperQuas(SysIdRoutine.Direction direction) {
@@ -80,8 +154,9 @@ public class Hopper extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("hopper vel", getHopperVelocity());
-    SmartDashboard.putNumber("hopper sp", vHopperSetpoint);
+    SmartDashboard.putNumber("hopper vel", getVelocity());
+    SmartDashboard.putNumber("hopper sp", vSetpoint);
+
+    SmartDashboard.putBoolean("beam break", getReceiverStatus());
   }
 }

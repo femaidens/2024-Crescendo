@@ -16,6 +16,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterAngle extends SubsystemBase {
@@ -50,14 +51,17 @@ public class ShooterAngle extends SubsystemBase {
 
   /* COMMANDS */
   public Command setManualAngleCmd(double input) {
+    // return Commands.print("setting manual angle setpoint");
     return this.run(() -> setManualAngle(input));
   }
 
   public Command setAngleSetpointCmd(double angle) {
+    // return Commands.print("set regular angle setpoint");
     return this.runOnce(() -> setAngleSetpoint(angle));
   }
 
   public Command setAngleCmd() {
+    // return Commands.print("running angle pid");
     return this.run(() -> setAngle());
   }
 

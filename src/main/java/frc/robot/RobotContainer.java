@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -130,7 +131,17 @@ public class RobotContainer {
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
         operJoy.rightTrigger()
-            .onTrue(shooter.shoot());
+            // .onTrue(shooter.shoot());
+            // .onTrue(shooterWheel.setVelocitySetpointCmd(10.0*360).andThen(shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity)));
+        //     .onTrue(
+        //         new ConditionalCommand(
+        //     (shooterWheel.setVelocitySetpointCmd(10.0*360).andThen(shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity))) // ramps shooter to desired velocity
+        //         .andThen(hopper.setVelocitySetpointCmd(360).andThen(hopper.setHopperVelocityCmd())), // moves hopper after desired vel is reached
+        //     (shooterWheel.stopMotorsCmd().alongWith(hopper.stopHopperMotorCmd())), // stops motors first
+        //     hopper::isHopperEmpty // stops first command when hopper is ready
+        // )
+            // );
+        .onTrue(hopper::isHopperEmpty);
         
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE

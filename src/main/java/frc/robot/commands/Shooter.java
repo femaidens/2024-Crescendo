@@ -24,12 +24,14 @@ public class Shooter {
     }
 
     public Command shoot() {
-        return new ConditionalCommand(
-            (shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity)) // ramps shooter to desired velocity
-                .andThen(hopper.setHopperVelocityCmd()), // moves hopper after desired vel is reached
-            (shooterWheel.stopMotorsCmd().alongWith(hopper.stopHopperMotorCmd())), // stops motors first
-            hopper::isHopperEmpty // stops first command when hopper is ready
-        );
+        // return new ConditionalCommand(
+        //     (shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity)) // ramps shooter to desired velocity
+        //         .andThen(hopper.setHopperVelocityCmd()), // moves hopper after desired vel is reached
+        //     (shooterWheel.stopMotorsCmd().alongWith(hopper.stopHopperMotorCmd())), // stops motors first
+        //     hopper::isHopperEmpty // stops first command when hopper is ready
+        // );
+        shooterWheel.setVelocitySetpointCmd(5.0*360);
+        return shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity);
     }
 
     public Command setShooterSetpoints(double angle, double vel) {

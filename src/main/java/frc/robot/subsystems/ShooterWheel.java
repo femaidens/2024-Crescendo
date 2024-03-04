@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterWheelConstants;
@@ -93,14 +94,17 @@ public class ShooterWheel extends SubsystemBase {
 
   /* COMMANDS */
   public Command setVelocitySetpointCmd(double setpoint) {
+    // return Commands.print("set wheel velocity setpoint");
     return this.runOnce(() -> setVelocitySetpoint(setpoint));
   }
 
   public Command stopMotorsCmd() {
+    // return Commands.print("stopping wheel motors");
     return this.runOnce(() -> stopMotors());
   }
 
   public Command setVelocityCmd() {
+    System.out.println("setting wheel velocity");
     return this.run(() -> setVelocity());
   }
 
@@ -124,6 +128,7 @@ public class ShooterWheel extends SubsystemBase {
 
   // checks if current velocity is within error margin of vSetpoint
   public boolean atVelocity() {
+    System.out.println("shooter wheel at velocity");
     return shooterWheelPID.atSetpoint();
   }
 

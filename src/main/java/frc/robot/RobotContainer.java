@@ -86,29 +86,29 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     /* * * LEDS * * */
-        // gruple
+        // gruple default? WARNING: WILL KILL EYES 
         driveJoy.a() 
             .onTrue(new RunCommand(
                 () -> led.setGrupleFlicker(), led)); 
 
-        // solid purple
+        // solid purple = shoot, blue = climb, pink = intake 
         driveJoy.b()
             .onTrue( new InstantCommand(
                 () -> led.setSolid(LEDConstants.PURPLE), led))
             .onFalse(new RunCommand(
                 () -> led.setDefault(), led));
 
-        // rainbow
+        // rainbow = game over 
         driveJoy.x()
             .onTrue(new InstantCommand(
                 () -> led.setRainbow(), led))
             .onFalse(new RunCommand(
                 () -> led.setDefault())); 
 
-        // red flicker
+        // red flicker = any error :()
         driveJoy.y()
             .onTrue(new InstantCommand(
-                () -> led.setRedFlicker(), led))
+                () -> led.setRed(), led))
             .onFalse(new RunCommand(
                 () -> led.setDefault())); 
 

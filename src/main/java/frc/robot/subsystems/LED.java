@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.Constants.LEDConstants;
@@ -15,7 +15,7 @@ public class LED extends SubsystemBase {
   /** Creates a new leds. */
   AddressableLED led; 
   AddressableLEDBuffer ledBuffer; 
-  Timer timer; 
+  //Timer timer; 
   int rainbowFirstPixelHue;
 
 
@@ -54,20 +54,19 @@ public class LED extends SubsystemBase {
 
 
   public void setRainbow(){ 
-    timer.start(); 
-    if (timer.get() <= 3){
+    //timer.start(); 
+   // if (timer.get() <= 3){
       for(int i = 0; i < ledBuffer.getLength(); i++){ 
-        //WHAT KIND OF VARIABLE IS RAINBOW FIRST PIXEL HUE????????????? 
         final int hue = (rainbowFirstPixelHue + (i * 180/ ledBuffer.getLength())) % 180; 
         ledBuffer.setHSV(i, hue, 255, 128); 
       }
       rainbowFirstPixelHue +=3; 
       rainbowFirstPixelHue %= 180;
       led.setData(ledBuffer);
-    }
-  else {
-    timer.stop(); 
-    }
+    
+  //else {
+   // timer.stop(); 
+    
     System.out.println("Rainbow Running ");
   }
 
@@ -99,62 +98,32 @@ public class LED extends SubsystemBase {
   System.out.println("Gruple Flicker Running!");
 } 
 
-  public void setRedFlicker(){
-    timer.start(); 
-    if(timer.get()<3){
-      if(timer.get()%2 ==0){ 
-        for(var i = 0; i<ledBuffer.getLength(); i++){
-          ledBuffer.setRGB(i, 255, 0, 0);
-        }
-        led.setData(ledBuffer);
-      }
-      else { 
-        for(var j = 0; j< ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, 0, 0, 0);
-        }
-        led.setData(ledBuffer);
-      }
-    }
-    else {
-      timer.stop(); 
-    }
-    System.out.println("Red Flicker Running ");
-  }
+  public void setRed(){
 
-  public void setSolid(int[] solid){ 
-    // intake 
-    timer.start(); 
-    if(timer.get()<= 0){
-      if(solid ==  LEDConstants.PINK){
-        for(var j = 0; j < ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.PINK[0], LEDConstants.PINK[1], LEDConstants.PINK[3]);
-        }
-        led.setData(ledBuffer); 
+      for(int i = 0; i<ledBuffer.getLength(); i++){
+        ledBuffer.setRGB(i, 255, 0, 10);
+
       }
-      // Shooter
-      else if(solid == LEDConstants.BLUE){
-        for(var j = 0; j< ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.BLUE[0], LEDConstants.BLUE[1], LEDConstants.BLUE[2]);
-        }
-        led.setData(ledBuffer); 
+    led.setData(ledBuffer); 
+    System.out.println("RED!");
+}
+  
+
+
+public void setSolid(int[] solid){ 
+
+      for(int j = 0; j < ledBuffer.getLength(); j++){
+        ledBuffer.setRGB(j, solid[0], solid[1], solid[2]);
       }
-      //climb
-      else if(solid == LEDConstants.PURPLE){ 
-        for(var j = 0; j<ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.PURPLE[0], LEDConstants.PURPLE[1], LEDConstants.PURPLE[2]);
-        }
-        led.setData(ledBuffer); 
-      }
-      
-    }
-    else{
-      timer.stop(); 
-    }
-    System.out.println("Solids running"); 
-  }
+      led.setData(ledBuffer);
+      System.out.println("SOLID"); 
+
+}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 }
+
+

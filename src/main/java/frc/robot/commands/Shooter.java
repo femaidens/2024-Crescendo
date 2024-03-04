@@ -6,8 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;

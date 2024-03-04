@@ -10,16 +10,12 @@ public final class Constants {
 
   public static final double DEGREES = 360.0;
 
-  public static final class OIConstants {
-    public static final double kDriveDeadband = 0.05;
-  }
-
   public static final class ClimberConstants {
     public static final double ARM_SPEED = 0.3;
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 3 * DEGREES;
+    public static final double INTAKE_NOTE_SPEED = 3 * DEGREES; // 3 rotations
   }
 
   public static final class HopperConstants {
@@ -112,7 +108,6 @@ public final class Constants {
     public static final double CONSTANT_SPEED = 0.1;
 
     // auton
-    public static final double SHOOTER_ANGLE_UP = 60; // change in shooter later
 
     // pid -> need to populate
     public static final double kP = 0.1;
@@ -140,8 +135,6 @@ public final class Constants {
     public static final double AUTON_OUTTAKE_TIME = 2;
 
     // arm angles
-    public static final double AUTON_INC_ARM_ANGLE_TIME = 2.5; // CHANGE AFTER TESTING
-    public static final double AUTON_DEC_ARM_ANGLE_TIME = 1.4;
 
     // taxi time
 

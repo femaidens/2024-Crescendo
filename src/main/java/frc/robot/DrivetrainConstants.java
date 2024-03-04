@@ -13,6 +13,10 @@ import edu.wpi.first.math.util.Units;
 
 public final class DrivetrainConstants {
 
+  public static final class OIConstants {
+    public static final double DEADBAND = 0.05;
+  }
+
   public static final class DriveConstants {
 
     public static final double MAX_SPEED = 4.8; // max speed meters per second *** LOOK INTO MAX ALLOWED SPEED

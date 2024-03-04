@@ -65,7 +65,8 @@ public class ShooterAngle extends SubsystemBase {
   // accounts for the max and min angle limits
   public void setManualAngle(double input) {
     // isManual = true;
-    
+
+    pSetpoint = getAngle();
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
@@ -75,10 +76,10 @@ public class ShooterAngle extends SubsystemBase {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
     }
     // run PID
-    // else {
-    //   // setAngle();
-    //   stopMotor();
-    // }
+    else {
+      // setAngle();
+      stopMotor();
+    }
 
     // if (input > 0) {
     //   shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
@@ -89,21 +90,19 @@ public class ShooterAngle extends SubsystemBase {
     //   shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
     //   // pSetpoint = getAngle();
     // }
-    // run PID
-    pSetpoint = getAngle();
-    setAngle();
+    // // run PID
+    // else {
+    //   // setAngle();
+    //   stopMotor();
+    // }
   }
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    // if(getAngle() <= 20){
-    //   shooterAngleMotor.setVoltage(0);
-    // }
-    // else{
-      double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
-      shooterAngleMotor.setVoltage(voltage);
-       System.out.println("angle voltage: " + voltage);
-    // }
+    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
+    shooterAngleMotor.setVoltage(voltage);
+
+    System.out.println("angle voltage: " + voltage);
     System.out.println("setting angle");
   }
 
@@ -126,7 +125,7 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   // public boolean getIsManual() {
-  //   return isManual;
+  // return isManual;
   // }
 
   public void stopMotor() {

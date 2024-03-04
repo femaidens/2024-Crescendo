@@ -41,7 +41,7 @@ public class Controls {
             }
     }
     
-    private Command pidSwitch(String subsystem, String button) {
+    public Command pidSwitch(String subsystem, String button) {
         switch(subsystem) {
             case "shooterAngle" :
                 switch(button) {
@@ -61,7 +61,7 @@ public class Controls {
         }
     }
 
-    private Command sysidSwitch(String subsystem, String button) {
+    public Command sysidSwitch(String subsystem, String button) {
         switch(subsystem) {
             case "hopper" :
                 switch(button) {

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
+import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
 import frc.robot.commands.Controls;
 import frc.robot.commands.Intaking;
@@ -57,7 +58,7 @@ public class RobotContainer {
         // all joy.get values -> negative
         drivetrain.defaultCmd(
             -driveJoy.getRightY(), -driveJoy.getRightX(), -driveJoy.getLeftX(),
-            true, true, 0.1)); // field rel = true
+            true, true, OIConstants.DEADBAND)); // field rel = true
 
 
     shooterAngle.setDefaultCommand(
@@ -168,18 +169,18 @@ public class RobotContainer {
          * sysid subsystems: hopper, intake, drivetrain
          * buttons: a, b, x, y, rightBumper, leftBumper
         */
-        driveJoy.a()
-            .onTrue(controls.controlSwitch("pid", "shooterAngle", "a"));
-        driveJoy.b()
-            .onTrue(controls.controlSwitch("pid", "shooterAngle", "b"));
-        driveJoy.x()
-            .onTrue(controls.controlSwitch("pid", "shooterAngle", "x"));
-        driveJoy.y()
-            .onTrue(controls.controlSwitch("pid", "shooterAngle", "y"));
-        driveJoy.rightBumper()
-            .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
-        driveJoy.leftBumper()
-            .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
+        // driveJoy.a()
+        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "a"));
+        // driveJoy.b()
+        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "b"));
+        // driveJoy.x()
+        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "x"));
+        // driveJoy.y()
+        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "y"));
+        // driveJoy.rightBumper()
+        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
+        // driveJoy.leftBumper()
+        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
   }
 
   /**

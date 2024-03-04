@@ -143,8 +143,8 @@ public final class Constants {
   }
 
   public static final class LEDConstants{
-    public static final int PINK[] = {252, 3, 190}; 
-    public static final int PURPLE[] = {172, 48, 255}; 
-    public static final int BLUE[] = {96, 151, 240};
+    public static final int PINK[] = {255, 71, 221}; 
+    public static final int PURPLE[] = {189, 63, 235}; 
+    public static final int BLUE[] = {51, 116, 225};
   }
 }

@@ -325,6 +325,16 @@ public class Drivetrain extends SubsystemBase {
     speedFactor = 1;
   }
 
+  /* SPEED FACTOR CMD */
+  public Command slowCmd()
+  {
+    return this.runOnce(() -> slowSpeed());
+  }
+  public Command regularCmd()
+  {
+    return this.runOnce(() -> regSpeed());
+  }
+  
   public DriverStation.Alliance red() {
     return DriverStation.Alliance.Red;
   }

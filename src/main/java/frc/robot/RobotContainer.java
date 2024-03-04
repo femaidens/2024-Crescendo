@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +46,7 @@ public class RobotContainer {
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
   public RobotContainer() {
     // configurations
@@ -73,7 +75,10 @@ public class RobotContainer {
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
+    SmartDashboard.putData("Choose Alliance: ", allianceChooser);
     autonChooser.addOption("Shoot Amp", shooter.autonShoot(ShooterAngleConstants.AMP_FLUSH));
+    autonChooser.addOption("Red", drivetrain.redAlliance());
+    autonChooser.addOption("Blue", drivetrain.blueAlliance());
   }
 
   private void configureButtonBindings() {

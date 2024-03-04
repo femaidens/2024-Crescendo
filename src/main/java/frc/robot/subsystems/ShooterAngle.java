@@ -77,8 +77,8 @@ public class ShooterAngle extends SubsystemBase {
     }
     // run PID
     else {
-      // setAngle();
-      stopMotor();
+      setAngle();
+      // stopMotor();
     }
 
     // if (input > 0) {

@@ -24,15 +24,15 @@ public class ShooterWheel extends SubsystemBase {
   private final CANSparkMax leaderMotor; // left motor
   private final CANSparkMax followerMotor; // right motor
 
-  // private final CANSparkFlex leftShooterFlex;
-  // private final CANSparkFlex rightShooterFlex;
+  // private final CANSparkFlex leaderFlex;
+  // private final CANSparkFlex followerFlex;
 
   private final RelativeEncoder leaderEncoder;
   private final RelativeEncoder followerEncoder;
 
-  private final SimpleMotorFeedforward shooterFF;
+  private final SimpleMotorFeedforward shooterWheel;
 
-  private final PIDController shooterPID;
+  private final PIDController shooterWheelPID;
 
   private double vSetpoint;
 
@@ -47,16 +47,17 @@ public class ShooterWheel extends SubsystemBase {
           volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
 
   public ShooterWheel() {
-    leaderMotor = new CANSparkMax(ShooterPorts.LEFT_SHOOTER, MotorType.kBrushless);
-    followerMotor = new CANSparkMax(ShooterPorts.RIGHT_SHOOTER, MotorType.kBrushless);
+    leaderMotor = new CANSparkMax(ShooterPorts.LEADER_MOTOR, MotorType.kBrushless);
+    followerMotor = new CANSparkMax(ShooterPorts.FOLLOWER_MOTOR, MotorType.kBrushless);
 
     leaderEncoder = leaderMotor.getEncoder();
     followerEncoder = followerMotor.getEncoder();
 
     // controls
-    shooterFF = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
-    shooterPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
+    shooterWheel = new SimpleMotorFeedforward(ShooterWheelConstants.kS, ShooterWheelConstants.kV);
+    shooterWheelPID = new PIDController(ShooterWheelConstants.kP, ShooterWheelConstants.kI, ShooterWheelConstants.kD);
 
+    shooterWheelPID.setTolerance(ShooterWheelConstants.V_TOLERANCE);
     followerMotor.follow(leaderMotor, true);
 
     followerMotor.setIdleMode(IdleMode.kCoast); // double check w/ engineering later
@@ -72,42 +73,61 @@ public class ShooterWheel extends SubsystemBase {
     followerMotor.burnFlash();
 
     /* FLEX VARIATIONS */
-    // leftShooterFlex = new CANSparkFlex(ShooterPorts.LEFT_SHOOTER_FLEX_PORT,
-    // MotorType.kBrushless);
-    // rightShooterFlex = new CANSparkFlex(ShooterPorts.RIGHT_SHOOTER_FLEX_PORT,
-    // MotorType.kBrushless);
+    // leaderFlex = new CANSparkFlex(ShooterPorts.LEADER_FLEX, MotorType.kBrushless);
+    // followerFlex = new CANSparkFlex(ShooterPorts.FOLLOWER_FLEX, MotorType.kBrushless);
 
-    // rightShooterFlex.follow(leftShooterFlex, true);
+    // followerFlex.follow(leaderFlex, true);
 
-    // leftShooterFlex.setIdleMode(IdleMode.kCoast);
-    // rightShooterFlex.setIdleMode(IdleMode.kCoast);
+    // leaderFlex.setIdleMode(IdleMode.kCoast);
+    // followerFlex.setIdleMode(IdleMode.kCoast);
 
-    // leftShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
-    // rightShooterFlex.setSmartCurrentLimit(ShooterConstants.SHOOTER_CURRENT_LIMIT);
+    // leaderFlex.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
+    // followerFlex.setSmartCurrentLimit(ShooterWheelConstants.CURRENT_LIMIT);
 
-    // leftShooterEncoder = leftShooterFlex.getEncoder();
-    // rightShooterEncoder = rightShooterFlex.getEncoder();
+    // leaderEncoder = leaderFlex.getEncoder();
+    // followerEncoder = followerFlex.getEncoder();
 
-    // leftShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
-    // rightShooterFlex.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+    // leaderEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    // followerEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+  }
+
+  /* COMMANDS */
+  public Command setVelocitySetpointCmd(double setpoint) {
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+  }
+
+  public Command stopMotorsCmd() {
+    return this.runOnce(() -> stopMotors());
+  }
+
+  public Command setVelocityCmd() {
+    return this.run(() -> setVelocity());
+  }
+
+  // sets fractional duty cycle
+  public void setSpeed(double speed) {
+    leaderMotor.set(speed);
   }
 
   // sets the velocity of shooter wheels in degrees per second
   public void setVelocity() {
-    // getRate() in WPI might be better than getVelocity if conversion in Constants
-    // doesn't work
-    double ff = shooterFF.calculate(vSetpoint);
-    double error = shooterPID.calculate(getLeaderVelocity(), vSetpoint);
+    double ff = shooterWheel.calculate(vSetpoint);
+    double error = shooterWheelPID.calculate(getLeaderVelocity(), vSetpoint);
 
     leaderMotor.setVoltage(ff + error);
-    System.out.println("wheel voltage" + (ff + error));
+    System.out.println("shooter wheel voltage: " + (ff + error));
   }
 
   public void setVelocitySetpoint(double setpoint) {
     vSetpoint = setpoint;
   }
 
-  // @return the velocities of shooter motors
+  // checks if current velocity is within error margin of vSetpoint
+  public boolean atVelocity() {
+    return shooterWheelPID.atSetpoint();
+  }
+
+  // returns the velocities of shooter motors
   public double getLeaderVelocity() {
     return leaderEncoder.getVelocity();
   }
@@ -116,17 +136,10 @@ public class ShooterWheel extends SubsystemBase {
     return followerEncoder.getVelocity();
   }
 
-  public void setShooterSpeed(double speed) {
-    leaderMotor.set(speed);
-  }
   // stops the motors for the shooter wheels
-  public void stopShooter() {
+  public void stopMotors() {
     leaderMotor.setVoltage(0);
-    // leftShooterFlex.setVoltage(0);
-  }
-  /* COMMANDS */
-  public Command SetShooterSpeed(double speed) {
-    return this.runOnce(() -> setVelocitySetpoint(speed));
+    // leaderFlex.setVoltage(0);
   }
 
   /* SYSID */
@@ -145,7 +158,7 @@ public class ShooterWheel extends SubsystemBase {
   public Command leftDyna(SysIdRoutine.Direction direction) {
     return leftRoutine.dynamic(direction);
   }
-
+  
   public Command rightQuas(SysIdRoutine.Direction direction) {
     return rightRoutine.quasistatic(direction);
   }
@@ -156,7 +169,8 @@ public class ShooterWheel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("left shooter vel", getLeaderVelocity());
-    SmartDashboard.putNumber("right shooter vel", getFollowerVelocity());
+    SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());
+    SmartDashboard.putNumber("right shooter vel: ", getFollowerVelocity());
+    SmartDashboard.putNumber("desired shooter velocity: ", vSetpoint);
   }
 }

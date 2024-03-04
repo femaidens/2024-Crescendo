@@ -6,26 +6,20 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.*;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.BeamBreak;
+import frc.robot.commands.Shooter;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;
@@ -33,14 +27,13 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
+
 import org.littletonrobotics.urcl.URCL;
 
 public class RobotContainer {
 
-  private CommandXboxController driveJoy = new CommandXboxController(
-      Ports.JoystickPorts.DRIVE_JOY);
-  private CommandXboxController operJoy = new CommandXboxController(
-      Ports.JoystickPorts.OPER_JOY);
+  private CommandXboxController driveJoy = new CommandXboxController(JoystickPorts.DRIVE_JOY);
+  private CommandXboxController operJoy = new CommandXboxController(JoystickPorts.OPER_JOY);
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
@@ -48,37 +41,36 @@ public class RobotContainer {
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
-  private final BeamBreak beambreak = new BeamBreak();
+
+  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, intake);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
 
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
+    configureDefaultCommands();
+  }
 
-    // configure default commands
+  public void configureDefaultCommands() {
     drivetrain.setDefaultCommand(
-        // clariy turning with right or with left
         new RunCommand(
             () -> drivetrain.drive( // all joy.get values were prev negative
-                MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getRightY(), 0.1),
                 MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+                MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
                 true,
                 true),
             drivetrain)); // field rel = true
 
-    // shooterAngle.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> shooterAngle.setAngle(),
-    //         // () -> shooterAngle.setManualAngle(
-    //         //     MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)), // CHECK TO SEE IF WE NEED TO NEGATVE INPUT
-    //         shooterAngle));
+    shooterAngle.setDefaultCommand(
+        // new RunCommand(
+        //     () -> shooterAngle.setManualAngle(
+        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+        //     shooterAngle));
+        new RunCommand(
+            () -> shooterAngle.setAngle(), shooterAngle));
 
     shooterWheel.setDefaultCommand(
         new RunCommand(() -> shooterWheel.setVelocity(), shooterWheel));
@@ -86,19 +78,64 @@ public class RobotContainer {
     // new InstantCommand(
     // () -> beambreak.setEmitter(true), beambreak));
   }
-
+  
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("Angle 60 and shoot", new SpinShooterUp(shooterWheel,
-    // shooterWheelAngle));
-    // autonChooser.addOption("p1", new Path1(drivetrain, intake, armAngle,
-    // armLateral));
-    // autonChooser.addOption("p2", new Path2(drivetrain));
-    // autonChooser.addOption("test auton", new TestAuton1(drivetrain, intake,
-    // armAngle, armLateral));
+    autonChooser.addOption("Shoot Amp", shooter.autonShoot(ShooterAngleConstants.AMP_FLUSH));
   }
 
   private void configureButtonBindings() {
+
+    /* * * CLIMB BUTTONS * * */
+    // extend climb arm
+    operJoy.povUp()
+        .onTrue(climb.extendClimbCmd())
+        .onFalse(climb.stopMotorsCmd());
+
+    // retract climb arm
+    operJoy.povDown()
+        .onTrue(climb.retractClimbCmd())
+        .onFalse(climb.stopMotorsCmd());
+
+    /* * * INTAKE BUTTONS * * */
+    // runs intake
+    operJoy.rightBumper()
+        .onTrue(intake.setIntakeSpeedCmd(IntakeConstants.ROLLER_SPEED))
+        .onFalse(intake.stopIntakeMotorCmd());
+
+    // runs outtake
+    operJoy.leftBumper()
+        .onTrue(intake.setIntakeSpeedCmd(-IntakeConstants.ROLLER_SPEED))
+        .onFalse(intake.stopIntakeMotorCmd());
+
+    /* * * HOPPER BUTTONS * * */
+    // runs hopper (towards shooter)
+    operJoy.start()
+        .onTrue(intake.setHopperSpeedCmd(0.7))
+        .onFalse(intake.stopHopperMotorCmd());
+
+    // runs reverse hopper (towards intake)
+    operJoy.back()
+        .onTrue(intake.setHopperSpeedCmd(-0.7))
+        .onFalse(intake.stopHopperMotorCmd());
+
+    /* SHOOTER ANGLE BUTTONS */
+    // toggles arm manual
+    operJoy.rightStick()
+        .toggleOnTrue(shooterAngle.setManualAngleCmd(
+            MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)));
+
+    /* * * SHOOTER WHEEL * * */
+    // shooting -> positive
+    operJoy.rightTrigger()
+        .onTrue(shooter.shoot());
+
+    // runs shooter intake -> negative
+    operJoy.leftTrigger()
+        .onTrue(
+            new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
+        .onFalse(
+            new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
     /* BEAM BREAK */
     // Trigger breaks = operJoy.back();
     // breaks
@@ -133,6 +170,19 @@ public class RobotContainer {
         .onFalse(new InstantCommand(
             () -> intake.setIntakeVelocitySetpoint(0.0), intake));
 
+    // amp flush
+    operJoy.a()
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH)
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH))
+        );
+
+    // speaker flush
+    operJoy.x()
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
+        );
     Trigger runOuttake = operJoy.leftBumper(); // change buttons later
     runOuttake
         .onTrue(
@@ -157,6 +207,19 @@ public class RobotContainer {
     hopperDynamicRButton.whileTrue(
     hopper.hopperDyna(SysIdRoutine.Direction.kReverse));
 
+    // speaker stage
+    operJoy.y()
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE))    
+        );
+
+    // speaker wing
+    operJoy.b()
+        .onTrue(
+            shooterAngle.SetAngleSetpointCmd(Constants.ShooterAngleConstants.AMP_FLUSH)
+            .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING))
+        );
     // positive speed is outwards
 
     // Trigger fiveshootersetpoint = operJoy.leftTrigger();

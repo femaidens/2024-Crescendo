@@ -14,6 +14,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final double ARM_SPEED = 0.3;
+    public static final double ARM_SPEED = 0.3;
   }
 
   public static final class HopperConstants {
@@ -48,8 +49,10 @@ public final class Constants {
     // CONVERSION (RPM -> DEG/S)
     // RPM * 1/(GR) * (360 DEG/ROT) * (1 MIN/60 SEC)
 
-    public static final double GEAR_RATIO = 24.0/18.0;
-    public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO); //gr 1:1
+    public static final double GEAR_RATIO = 24.0 / 18.0; // 24:18; inversed already
+    public static final double VEL_CFACTOR = 360.0 / (60.0 * GEAR_RATIO);
+
+    public static final double V_TOLERANCE = 2; // 2 degrees/second
 
     // limits
     public static final int CURRENT_LIMIT = 30;
@@ -59,7 +62,9 @@ public final class Constants {
     public static final double SPEAKER_FLUSH = 0.0; // placeholder
     public static final double SPEAKER_STAGE = 42.7; // 42.7 degrees 
     public static final double SPEAKER_WING = 0.0; // placeholder
+
     // speeds (degrees/sec)
+    public static final double SHOOTER_INTAKE_SPEED = -0.5;
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
@@ -84,6 +89,7 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
+    public static final double P_TOLERANCE = 1.0;
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3

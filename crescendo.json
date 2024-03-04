@@ -130,6 +130,20 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "7,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_title": "isReceived",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -173,7 +187,7 @@
   "windowGeometry": {
     "x": -10.852173805236816,
     "y": 4.17391300201416,
-    "width": 1612.800048828125,
-    "height": 865.6696166992188
+    "width": 1470.0,
+    "height": 920.0
   }
 }

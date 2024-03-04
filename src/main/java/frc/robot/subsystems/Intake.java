@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
@@ -44,8 +45,12 @@ public class Intake extends SubsystemBase {
           volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
  
+  private final SysIdRoutine intakeRoutine;
 
   private double vIntakeSetpoint;
+  private boolean currentState, lastState;
+  private int stateCount = 0;
+
 
   public Intake() {
     intakeMotor =
@@ -62,8 +67,13 @@ public class Intake extends SubsystemBase {
     
     intakeFF = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
     
+    intakePID = new PIDController(
+        IntakeConstants.kP,
+        IntakeConstants.kI,
+        IntakeConstants.kD);
+    ff = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV);
+
     receiver = new DigitalInput(HopperPorts.RECEIVER);
-    // emitter = new DigitalOutput(HopperPorts.EMITTER);
 
     intakeMotor.setIdleMode(IdleMode.kCoast); // should freely spin?
 
@@ -72,21 +82,24 @@ public class Intake extends SubsystemBase {
     intakeMotor.burnFlash();
    
 
-    // setEmitter(true);
+    intakeRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
-    vIntakeSetpoint = 0;
+    vSetpoint = 0;
  
   }
 
   public void setIntakeVelocity() {
-    double voltage = intakeFF.calculate(vIntakeSetpoint);
+    double voltage = intakeFF.calculate(vSetpoint);
     //double error = intakePID.calculate(intakeEncoder.getVelocity(), vSetpoint);
 
     intakeMotor.setVoltage(voltage);
   }
 
   public void setIntakeVelocitySetpoint(double setpoint) {
-    vIntakeSetpoint = setpoint;
+    vSetpoint = setpoint;
   }
 
   public void setVoltage(double voltage){
@@ -106,13 +119,49 @@ public class Intake extends SubsystemBase {
   }
 
 
+  // beam breaker code
+  public boolean getReceiverStatus() {
+    return receiver.get();
+    // true = unbroken
+    // false = broken
+  }
+
+  // hopper is empty once state change count == 2;
+  public boolean isHopperEmpty() {
+    if(hasStateChanged()) {
+      stateCount++;
+      System.out.println(stateCount);
+    }
+    return stateCount == 2;
+  }
+
+  public boolean isHopperFull() {
+    return !getReceiverStatus();
+  }
+
+  public void resetStateCount() {
+    stateCount = 0;
+  }
+
+  // checks if beam break has changed from broken to unbroken
+  public boolean hasStateChanged() {
+
+    boolean stateChange;
+    currentState = getReceiverStatus();
+    stateChange = currentState && !lastState; // currently true, was false;
+    lastState = currentState;
+
+    return stateChange;
+  }
+
   public void stopIntakeMotor() {
     intakeMotor.stopMotor();
   }
 
-  // beam breaker code
-  public boolean getReceiverStatus() {
-    return receiver.get();
+  /* SYSID */
+
+  public void setVoltage(double voltage) {
+    intakeMotor.setVoltage(voltage);
   }
 
   public Command intakeQuas(SysIdRoutine.Direction direction) {
@@ -127,19 +176,19 @@ public class Intake extends SubsystemBase {
 
 
 
-  // public boolean getEmitterStatus() {
-  //   return emitter.get();
-  // }
+  public Command leftQuas(SysIdRoutine.Direction direction) {
+    return intakeRoutine.quasistatic(direction);
+  }
 
-  // public void setEmitter(boolean status) {
-  //   emitter.set(status);
-  // }
+  public Command leftDyna(SysIdRoutine.Direction direction) {
+    return intakeRoutine.dynamic(direction);
+  }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("intake vel", getIntakeVelocity());
 
-    SmartDashboard.putNumber("intake sp", vIntakeSetpoint);
+    SmartDashboard.putNumber("intake sp", vSetpoint);
 
     SmartDashboard.putBoolean("beam break", getReceiverStatus());
     // System.out.println("hopper velocity: " + getHopperVelocity());

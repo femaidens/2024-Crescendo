@@ -26,10 +26,7 @@ public class ShooterAngle extends SubsystemBase {
 
   private final PIDController shooterAnglePID;
 
-  // private boolean isManual = true;
   private double pSetpoint;
-
-  // private boolean isManual = true;
 
   // possibly add an armFF later
 
@@ -46,6 +43,7 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngleMotor.burnFlash();
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
+
     pSetpoint = getAngle();
   }
 
@@ -60,6 +58,10 @@ public class ShooterAngle extends SubsystemBase {
     return this.runOnce(() -> setAngleSetpoint(angle));
   }
 
+  public Command setAngleCmd(double angle) {
+    return this.run(() -> setAngle(angle));
+  }
+
   public Command setAngleCmd() {
     // return Commands.print("running angle pid");
     return this.run(() -> setAngle());
@@ -68,7 +70,6 @@ public class ShooterAngle extends SubsystemBase {
   // sets shooter angle based on joystick input
   // accounts for the max and min angle limits
   public void setManualAngle(double input) {
-    // isManual = true;
 
     pSetpoint = getAngle();
     // move up if below max angle
@@ -84,22 +85,7 @@ public class ShooterAngle extends SubsystemBase {
       setAngle();
       // stopMotor();
     }
-
-    // if (input > 0) {
-    //   shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
-    //   // pSetpoint = getAngle();
-    // }
-    // // move down if above min angle
-    // else if (input < 0) {
-    //   shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
-    //   // pSetpoint = getAngle();
-    // }
-    // // run PID
-    // else {
-    //   // setAngle();
-    //   stopMotor();
-    // }
-  }
+}    
 
   // sets shooter angle to current setpoint
   public void setAngle() {

@@ -94,17 +94,22 @@ public class ShooterWheel extends SubsystemBase {
 
   /* COMMANDS */
   public Command setVelocitySetpointCmd(double setpoint) {
-    // return Commands.print("set wheel velocity setpoint");
+    System.out.println("set wheel velocity setpoint");
     return this.runOnce(() -> setVelocitySetpoint(setpoint));
   }
 
   public Command stopMotorsCmd() {
-    // return Commands.print("stopping wheel motors");
+    System.out.println("stopping wheel motors");
     return this.runOnce(() -> stopMotors());
   }
 
+  public Command setVelocityCmd(double angle) {
+    System.out.println("setting wheel velocity with angle");
+    return this.run(() -> setVelocity(angle));
+  }
+
   public Command setVelocityCmd() {
-    System.out.println("setting wheel velocity");
+    System.out.println("setting wheel velocity w/o angle");
     return this.run(() -> setVelocity());
   }
 
@@ -113,13 +118,18 @@ public class ShooterWheel extends SubsystemBase {
     leaderMotor.set(speed);
   }
 
+  public void setVelocity(double setpoint) {
+    setVelocitySetpoint(setpoint);
+    setVelocity();
+  }
+
   // sets the velocity of shooter wheels in degrees per second
   public void setVelocity() {
     double ff = shooterWheel.calculate(vSetpoint);
     double error = shooterWheelPID.calculate(getLeaderVelocity(), vSetpoint);
 
     leaderMotor.setVoltage(ff + error);
-    System.out.println("shooter wheel voltage: " + (ff + error));
+    // System.out.println("shooter wheel voltage: " + (ff + error));
   }
 
   public void setVelocitySetpoint(double setpoint) {
@@ -130,6 +140,10 @@ public class ShooterWheel extends SubsystemBase {
   public boolean atVelocity() {
     System.out.println("shooter wheel at velocity");
     return shooterWheelPID.atSetpoint();
+  }
+
+  public double getSetpoint() {
+    return shooterWheelPID.getSetpoint();
   }
 
   // returns the velocities of shooter motors

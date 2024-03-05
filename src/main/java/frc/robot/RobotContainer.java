@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
@@ -62,19 +63,19 @@ public class RobotContainer {
             true, true, OIConstants.DEADBAND)); // field rel = true
 
 
-    shooterAngle.setDefaultCommand(
-        // new RunCommand(
-        //     () -> shooterAngle.setManualAngle(
-        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-        //     shooterAngle));
-        shooterAngle.setAngleCmd());
+    // shooterAngle.setDefaultCommand(
+    //     // new RunCommand(
+    //     //     () -> shooterAngle.setManualAngle(
+    //     //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //     //     shooterAngle));
+    //     shooterAngle.setAngleCmd());
 
-    shooterWheel.setDefaultCommand(shooterWheel.stopMotorsCmd());
+    // shooterWheel.setDefaultCommand(shooterWheel.stopMotorsCmd());
   }
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    autonChooser.addOption("Shoot Amp", shooter.autonShoot(ShooterAngleConstants.AMP_FLUSH));
+    autonChooser.addOption("Shoot Amp", shooter.autonShoot(AutoConstants.WHEEL_SPEED, ShooterAngleConstants.AMP_FLUSH));
   }
 
   private void configureButtonBindings() {
@@ -131,17 +132,8 @@ public class RobotContainer {
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
         operJoy.rightTrigger()
-            // .onTrue(shooter.shoot());
+            .onTrue(shooter.shoot(shooterWheel.getSetpoint()));
             // .onTrue(shooterWheel.setVelocitySetpointCmd(10.0*360).andThen(shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity)));
-        //     .onTrue(
-        //         new ConditionalCommand(
-        //     (shooterWheel.setVelocitySetpointCmd(10.0*360).andThen(shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity))) // ramps shooter to desired velocity
-        //         .andThen(hopper.setVelocitySetpointCmd(360).andThen(hopper.setHopperVelocityCmd())), // moves hopper after desired vel is reached
-        //     (shooterWheel.stopMotorsCmd().alongWith(hopper.stopHopperMotorCmd())), // stops motors first
-        //     hopper::isHopperEmpty // stops first command when hopper is ready
-        // )
-            // );
-        .onTrue(hopper::isHopperEmpty);
         
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE

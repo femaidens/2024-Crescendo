@@ -63,6 +63,13 @@ public class Hopper extends SubsystemBase {
   }
 
   /* COMMANDS */
+  public Command feedNote() {
+    return Commands.waitUntil(() -> isHopperFull())
+      .andThen(Commands.waitUntil(() -> isHopperEmpty())) // denotes when cmd ends
+      .deadlineWith(setVelocityCmd()) // runs hopper motors until note has been fed into shooter
+      .finallyDo(() -> resetStateCountCmd()); // reset the state count
+  }
+
   public Command setHopperSpeedCmd(double speed) {
     System.out.println("setting hopper speed");
     return this.runOnce(() -> setSpeed(speed));
@@ -73,12 +80,12 @@ public class Hopper extends SubsystemBase {
     return this.runOnce(() -> setVelocitySetpoint(setpoint));
   }
 
-  public Command setHopperVelocityCmd() {
+  public Command setVelocityCmd() {
     // return Commands.print("running hopper velocity pid");
     return this.run(() -> setVelocity());
   }
 
-  public Command stopHopperMotorCmd() {
+  public Command stopMotorCmd() {
     return this.runOnce(() -> stopMotor());
   }
 

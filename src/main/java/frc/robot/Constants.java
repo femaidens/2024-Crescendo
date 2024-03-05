@@ -131,14 +131,11 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
       AUTON_MAX_ANGULAR_SPEED, AUTON_MAX_ANGULAR_SPEED_SQUARED);
 
+    // shooter wheel speed
+    public static final double WHEEL_SPEED = 5.0 * DEGREES;
     // intake wheels
     public static final double AUTON_OUTTAKE_TIME = 2;
 
-    // arm angles
-
-    // taxi time
-
-    // auton drive speeds
 
   }
 }

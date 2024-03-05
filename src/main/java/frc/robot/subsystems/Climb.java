@@ -13,8 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
+import monologue.Logged;
 
-public class Climb extends SubsystemBase {
+public class Climb extends SubsystemBase implements Logged {
 
   /** Creates a new Climb. */
   private CANSparkMax rightArm;

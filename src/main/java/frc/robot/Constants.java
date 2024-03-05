@@ -35,6 +35,10 @@ public final class Constants {
 
     public static final int CURRENT_LIMIT = 0;
 
+    // velocities
+    public static final double INTAKE_VEL = 5*DEGREES;
+    public static final double OUTTAKE_VEL = -INTAKE_VEL;
+
     // pid constants -> need to populate 
     public static final double kP = 0.0;
     public static final double kI = 0.0;
@@ -66,6 +70,7 @@ public final class Constants {
 
     // speeds (degrees/sec)
     public static final double SHOOTER_INTAKE_SPEED = -0.5;
+    public static final double DEFAULT_VELOCITY = 2*DEGREES; // check how much voltage this is drawing
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
@@ -110,7 +115,7 @@ public final class Constants {
     // auton
 
     // pid -> need to populate
-    public static final double kP = 0.1;
+    public static final double kP = 0.11;
     public static final double kI = 0;
     public static final double kD = 0;
 

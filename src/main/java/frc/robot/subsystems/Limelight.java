@@ -5,8 +5,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import monologue.Logged;
 
-public class Limelight extends SubsystemBase {
+public class Limelight extends SubsystemBase implements Logged{
   /** Creates a new Limelight. */
   public Limelight() {}
 

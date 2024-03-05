@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Ports.ShooterPorts;
+import monologue.Annotations.Log;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
@@ -14,19 +15,28 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import monologue.Logged;
 
-public class ShooterAngle extends SubsystemBase {
+public class ShooterAngle extends SubsystemBase implements Logged {
   private final CANSparkMax shooterAngleMotor;
 
   private final AbsoluteEncoder shooterAngleEncoder;
 
+  @Log.NT
   private final PIDController shooterAnglePID;
 
   private double pSetpoint;
+
+  private final SysIdRoutine angleRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+          volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
   // possibly add an armFF later
 
@@ -48,6 +58,7 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   /* COMMANDS */
+  // default commands
   public Command setManualAngleCmd(double input) {
     // return Commands.print("setting manual angle setpoint");
     return this.run(() -> setManualAngle(input));
@@ -55,11 +66,11 @@ public class ShooterAngle extends SubsystemBase {
 
   public Command setAngleSetpointCmd(double angle) {
     // return Commands.print("set regular angle setpoint");
-    return this.runOnce(() -> setAngleSetpoint(angle));
+    return this.runOnce(() -> setAngleSetpoint(angle)).asProxy();
   }
 
   public Command setAngleCmd(double angle) {
-    return this.run(() -> setAngle(angle));
+    return this.run(() -> setAngle(angle)).asProxy();
   }
 
   public Command setAngleCmd() {
@@ -71,21 +82,22 @@ public class ShooterAngle extends SubsystemBase {
   // accounts for the max and min angle limits
   public void setManualAngle(double input) {
 
-    pSetpoint = getAngle();
     // move up if below max angle
     if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // move down if above min angle
     else if (input < 0 && getAngle() > ShooterAngleConstants.SHOOTER_MIN_ANGLE) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // run PID
     else {
       setAngle();
       // stopMotor();
     }
-}    
+  }
 
   // sets shooter angle to current setpoint
   public void setAngle() {
@@ -109,6 +121,12 @@ public class ShooterAngle extends SubsystemBase {
     System.out.println("setpoint changed");
   }
 
+  @Log.NT
+  public double getSetpoint() {
+    return shooterAnglePID.getSetpoint();
+  }
+
+  @Log.NT
   // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
     return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
@@ -124,6 +142,27 @@ public class ShooterAngle extends SubsystemBase {
 
   public boolean atAngle(double angle) {
     return shooterAnglePID.atSetpoint();
+  }
+
+  /* SYSID */
+  public void setVoltage(double voltage) {
+    shooterAngleMotor.setVoltage(voltage);
+  }
+
+  public Command leftQuas(SysIdRoutine.Direction direction) {
+    return angleRoutine.quasistatic(direction);
+  }
+
+  public Command leftDyna(SysIdRoutine.Direction direction) {
+    return angleRoutine.dynamic(direction);
+  }
+
+  public Command rightQuas(SysIdRoutine.Direction direction) {
+    return angleRoutine.quasistatic(direction);
+  }
+
+  public Command rightDyna(SysIdRoutine.Direction direction) {
+    return angleRoutine.dynamic(direction);
   }
 
   @Override

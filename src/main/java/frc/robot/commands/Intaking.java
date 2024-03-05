@@ -20,8 +20,8 @@ public class Intaking {
         this.hopper = hopper;
     }
 
-    public Command intakeNote() {
-        return intake.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED)
-                .alongWith(hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED));
+    public Command moveNote(double velocity) {
+        return intake.setVelocitySetpointCmd(velocity)
+                .alongWith(hopper.setVelocitySetpointCmd(velocity));
     }
 }

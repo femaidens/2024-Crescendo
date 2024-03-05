@@ -20,8 +20,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
+import monologue.Logged;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Logged {
 
   private final CANSparkMax intakeMotor;
   private final RelativeEncoder intakeEncoder;
@@ -62,6 +63,12 @@ public class Intake extends SubsystemBase {
   }
 
   /* COMMANDS */
+  
+  // default command DO NOT ADD AS PROXY
+  public Command setVelocityCmd() {
+    return this.run(() -> setVelocity());
+  }
+
   public Command setSpeedCmd(double speed) {
     // return Commands.print("setting intake speed");
     return this.runOnce(() -> setSpeed(speed));
@@ -69,7 +76,11 @@ public class Intake extends SubsystemBase {
 
   public Command setVelocitySetpointCmd(double setpoint) {
     // return Commands.print("setting intake vel setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+    return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
+  }
+
+  public Command setVelocityCmd(double setpoint) {
+    return this.run(() -> setVelocity(setpoint)).asProxy();
   }
 
   public Command stopMotorCmd() {
@@ -80,6 +91,11 @@ public class Intake extends SubsystemBase {
   // sets fractional duty cycle
   public void setSpeed(double speed) {
     intakeMotor.set(speed);
+  }
+
+  public void setVelocity(double setpoint) {
+    setVelocitySetpoint(setpoint);
+    setVelocity();
   }
 
   public void setVelocity() {

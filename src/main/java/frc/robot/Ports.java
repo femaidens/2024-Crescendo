@@ -42,9 +42,6 @@ public class Ports {
 
   public static final class HopperPorts {
     public static final int HOPPER_MOTOR = 13;
-
-    public static final int RECEIVER = 5;
-    public static final int EMITTER = 2;
   }
 
   public static final class ShooterPorts {

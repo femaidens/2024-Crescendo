@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.modules.MaxSwerveModule;
 import frc.robot.utils.SwerveUtils;
+import monologue.Logged;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -30,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.List;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Logged {
   // Create MaxSwerveModules
 
   private final MaxSwerveModule frontLeft = new MaxSwerveModule(

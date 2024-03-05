@@ -18,15 +18,24 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.Ports.BeamBreakPorts;
 import frc.robot.Ports.HopperPorts;
+import monologue.Logged;
+import monologue.Annotations.Log;
 
-public class Hopper extends SubsystemBase {
+public class Hopper extends SubsystemBase implements Logged {
 
+  @Log.NT
   private final CANSparkMax hopperMotor;
+
+  @Log.NT
   private final RelativeEncoder hopperEncoder;
 
+  @Log.NT
   private final SimpleMotorFeedforward hopperFF;
   // private final PIDController hopperPID;
+
+  @Log.NT
   private final DigitalInput receiver;
 
   private final SysIdRoutine hopperRoutine;
@@ -46,7 +55,7 @@ public class Hopper extends SubsystemBase {
         HopperConstants.kS,
         HopperConstants.kV);
 
-    receiver = new DigitalInput(HopperPorts.RECEIVER);
+    receiver = new DigitalInput(BeamBreakPorts.RECEIVER);
 
     hopperMotor.setIdleMode(IdleMode.kBrake); // prevent note from slipping out of hopper
     hopperMotor.setSmartCurrentLimit(HopperConstants.CURRENT_LIMIT);
@@ -70,19 +79,24 @@ public class Hopper extends SubsystemBase {
       .finallyDo(() -> resetStateCountCmd()); // reset the state count
   }
 
-  public Command setHopperSpeedCmd(double speed) {
+  public Command setSpeedCmd(double speed) {
     System.out.println("setting hopper speed");
     return this.runOnce(() -> setSpeed(speed));
   }
 
-  public Command setVelocitySetpointCmd(double setpoint) {
-    // return Commands.print("setting hopper vel setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint));
-  }
-
+  // is default command, DO NOT ADD AS PROXY
   public Command setVelocityCmd() {
     // return Commands.print("running hopper velocity pid");
     return this.run(() -> setVelocity());
+  }
+
+  public Command setVelocitySetpointCmd(double setpoint) {
+    // return Commands.print("setting hopper vel setpoint");
+    return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
+  }
+
+  public Command setVelocityCmd(double setpoint) {
+    return this.run(() -> setVelocity(setpoint)).asProxy();
   }
 
   public Command stopMotorCmd() {
@@ -101,6 +115,7 @@ public class Hopper extends SubsystemBase {
   }
 
   // hopper is empty once state change count == 2;
+  @Log.NT
   public boolean isHopperEmpty() {
     if (hasStateChanged()) {
       stateCount++;
@@ -109,6 +124,7 @@ public class Hopper extends SubsystemBase {
     return stateCount == 2;
   }
 
+  @Log.NT
   public boolean isHopperFull() {
     return !getReceiverStatus();
   }
@@ -136,6 +152,11 @@ public class Hopper extends SubsystemBase {
   public void setVelocity() {
     double voltage = hopperFF.calculate(vSetpoint);
     hopperMotor.setVoltage(voltage);
+  }
+
+  public void setVelocity(double setpoint) {
+    setVelocitySetpoint(setpoint);
+    setVelocity();
   }
 
   public void setVelocitySetpoint(double setpoint) {
@@ -168,6 +189,8 @@ public class Hopper extends SubsystemBase {
     SmartDashboard.putNumber("hopper vel", getVelocity());
     SmartDashboard.putNumber("hopper sp", vSetpoint);
 
+    SmartDashboard.putBoolean("isHopperFull", isHopperFull());
+    SmartDashboard.putBoolean("isHopperEmpty", isHopperEmpty());
     SmartDashboard.putBoolean("beam break", getReceiverStatus());
   }
 }

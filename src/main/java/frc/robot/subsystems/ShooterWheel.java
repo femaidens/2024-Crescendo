@@ -19,9 +19,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.Ports.ShooterPorts;
+import monologue.Logged;
+import monologue.Annotations.Log;
 import edu.wpi.first.units.Units;
 
-public class ShooterWheel extends SubsystemBase {
+public class ShooterWheel extends SubsystemBase implements Logged {
   private final CANSparkMax leaderMotor; // left motor
   private final CANSparkMax followerMotor; // right motor
 
@@ -95,7 +97,7 @@ public class ShooterWheel extends SubsystemBase {
   /* COMMANDS */
   public Command setVelocitySetpointCmd(double setpoint) {
     System.out.println("set wheel velocity setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+    return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
   public Command stopMotorsCmd() {
@@ -103,11 +105,13 @@ public class ShooterWheel extends SubsystemBase {
     return this.runOnce(() -> stopMotors());
   }
 
+  // default command
   public Command setVelocityCmd(double angle) {
     System.out.println("setting wheel velocity with angle");
     return this.run(() -> setVelocity(angle));
   }
 
+  // default command
   public Command setVelocityCmd() {
     System.out.println("setting wheel velocity w/o angle");
     return this.run(() -> setVelocity());
@@ -142,6 +146,7 @@ public class ShooterWheel extends SubsystemBase {
     return shooterWheelPID.atSetpoint();
   }
 
+  @Log.NT
   public double getSetpoint() {
     return shooterWheelPID.getSetpoint();
   }
@@ -191,5 +196,6 @@ public class ShooterWheel extends SubsystemBase {
     SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());
     SmartDashboard.putNumber("right shooter vel: ", getFollowerVelocity());
     SmartDashboard.putNumber("desired shooter velocity: ", vSetpoint);
+    // SmartDashboard.putNumber("current shooter wheel voltage: ", leaderMotor.getOut());
   }
 }

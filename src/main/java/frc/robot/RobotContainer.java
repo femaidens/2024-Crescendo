@@ -9,11 +9,14 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.IntakeHopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
@@ -27,10 +30,11 @@ import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
+import monologue.Logged;
 
 import org.littletonrobotics.urcl.URCL;
 
-public class RobotContainer {
+public class RobotContainer implements Logged {
 
   private CommandXboxController driveJoy = new CommandXboxController(JoystickPorts.DRIVE_JOY);
   private CommandXboxController operJoy = new CommandXboxController(JoystickPorts.OPER_JOY);
@@ -63,14 +67,18 @@ public class RobotContainer {
             true, true, OIConstants.DEADBAND)); // field rel = true
 
 
-    // shooterAngle.setDefaultCommand(
-    //     // new RunCommand(
-    //     //     () -> shooterAngle.setManualAngle(
-    //     //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-    //     //     shooterAngle));
-    //     shooterAngle.setAngleCmd());
+    shooterAngle.setDefaultCommand(
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+            shooterAngle));
+        // shooterAngle.setAngleCmd());
 
-    // shooterWheel.setDefaultCommand(shooterWheel.stopMotorsCmd());
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(5.0*360));
+
+    hopper.setDefaultCommand(hopper.setVelocityCmd());
+    intake.setDefaultCommand(intake.setVelocityCmd());
   }
   
   public void configureAuton() {
@@ -82,8 +90,8 @@ public class RobotContainer {
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
-        driveJoy.rightBumper()
-            .onTrue(drivetrain.resetGyroCmd());
+        // driveJoy.rightBumper()
+        //     .onTrue(drivetrain.resetGyroCmd());
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -99,18 +107,27 @@ public class RobotContainer {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
-            // .onTrue(intake.setIntakeSpeedCmd(IntakeConstants.ROLLER_SPEED))
+            // .onTrue(intake.setSpeedCmd(IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());
-            .onTrue(intake.setVelocitySetpointCmd(1.0 * 360.0)) // just the intake mech
-            .onFalse(intake.setVelocitySetpointCmd(0.0));
+
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL)) // just the intake mech
+            // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
             // entire intake routine
-            // .onTrue(intaking.intakeNote());
-
+            // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
+            .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL)
+                .alongWith(hopper.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
+                .until(()-> (hopper.isHopperFull()))
+            );
+            // deadline and ishopperfull is the cut conditions
         // runs outtake
         operJoy.leftBumper()
-            .onTrue(intake.setVelocitySetpointCmd(-1.0 * 360.0))
+            .onTrue(intake.setVelocitySetpointCmd(-IntakeConstants.OUTTAKE_VEL))
             .onFalse(intake.setVelocitySetpointCmd(0.0));
+            
+            // entire outtake routine
+            // .onTrue(intaking.moveNote(-IntakeHopperConstants.INTAKE_NOTE_SPEED));
+
             // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());
 
@@ -126,14 +143,23 @@ public class RobotContainer {
         operJoy.back()
             // .onTrue(hopper.setHopperSpeedCmd(-0.7))
             // .onFalse(hopper.stopHopperMotorCmd());
-            .onTrue(hopper.setVelocitySetpointCmd(-360))
-            .onFalse(hopper.setVelocitySetpointCmd(0));
+            // .onTrue(hopper.setVelocitySetpointCmd(-360))
+            // .onFalse(hopper.setVelocitySetpointCmd(0));
+            // .onTrue(hopper.feedNote());
+
+            .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+                .beforeStarting(hopper.resetStateCountCmd())
+                .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
+                .deadlineWith(hopper.setVelocityCmd(2*360.0)) // runs hopper motors until note has been fed into shooter
+                .finallyDo(() -> hopper.setVelocitySetpointCmd(0)));
 
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
         operJoy.rightTrigger()
-            .onTrue(shooter.shoot(shooterWheel.getSetpoint()));
-            // .onTrue(shooterWheel.setVelocitySetpointCmd(10.0*360).andThen(shooterWheel.setVelocityCmd().until(shooterWheel::atVelocity)));
+            // .onTrue(shooter.shoot(shooterWheel.getSetpoint()));
+            // .onTrue(shooter.shoot(25.0*360));
+            .onTrue(shooterWheel.setVelocityCmd(12.0*360));
+            // .onTrue(hopper.feedNote());
         
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
@@ -145,9 +171,9 @@ public class RobotContainer {
 
     /* * * SHOOTER ANGLE BUTTONS * * */
         // toggles arm manual
-        operJoy.rightStick()
-            .toggleOnTrue(shooterAngle.setManualAngleCmd(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)));
+        // operJoy.rightStick()
+        //     .toggleOnTrue(shooterAngle.setManualAngleCmd(
+        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)));
 
         // amp flush
         operJoy.a()
@@ -184,6 +210,10 @@ public class RobotContainer {
         //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
         // driveJoy.leftBumper()
         //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
+
+        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
+        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
+        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
   }
 
   /**

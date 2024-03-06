@@ -69,8 +69,8 @@ public final class Constants {
     public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
-    public static final double SHOOTER_INTAKE_SPEED = -0.5;
-    public static final double DEFAULT_VELOCITY = 2*DEGREES; // check how much voltage this is drawing
+    public static final double DEFAULT_VELOCITY = 5*DEGREES; // check how much voltage this is drawing
+    public static final double SHOOTER_INTAKE_SPEED = -DEFAULT_VELOCITY;
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;

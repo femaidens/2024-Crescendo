@@ -77,6 +77,10 @@ public class RobotContainer {
         shooterAngle.setAngleCmd());
 
     shooterWheel.setDefaultCommand(shooterWheel.stopMotorsCmd());
+
+        // default drive(gruple flicker) IDK if this will work :/ 
+     led.setDefaultCommand(new RunCommand(() -> led.setGrupleFlicker(true), led));
+      
   }
   
   public void configureAuton() {
@@ -86,31 +90,32 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     /* * * LEDS * * */
-        // gruple default? WARNING: WILL KILL EYES 
+        // gruple = default drive thing  
+        // driveJoy.a() 
+        //     .onTrue(new RunCommand(
+        //         () -> led.setGrupleFlicker(true), led)); 
+       //READ THIS : this "Gruple Chase" does not have the right colors in it currently.
+       // We could not figure out how to make it both green and purple, so currently it is merely green chasing green 
+       // If you have time, pls try to change the parameters of it in LED to try and get purple + green
+       // If unable, just comment the one below out, and use the one above for our default driving TY! <3 
         driveJoy.a() 
             .onTrue(new RunCommand(
-                () -> led.setGrupleFlicker(), led)); 
+                () -> led.setGrupleChase(), led)); 
 
         // solid purple = shoot, blue = climb, pink = intake 
         driveJoy.b()
-            .onTrue( new InstantCommand(
-                () -> led.setSolid(LEDConstants.PURPLE), led))
-            .onFalse(new RunCommand(
-                () -> led.setDefault(), led));
+            .onTrue( new RunCommand(
+                () -> led.setSolid(LEDConstants.PURPLE), led));
 
         // rainbow = game over 
         driveJoy.x()
-            .onTrue(new InstantCommand(
-                () -> led.setRainbow(), led))
-            .onFalse(new RunCommand(
-                () -> led.setDefault())); 
+            .onTrue(new RunCommand(
+                () -> led.setRainbow(), led));
 
         // red flicker = any error :()
         driveJoy.y()
-            .onTrue(new InstantCommand(
-                () -> led.setRed(), led))
-            .onFalse(new RunCommand(
-                () -> led.setDefault())); 
+            .onTrue(new RunCommand(
+                () -> led.setRed(), led)); 
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro

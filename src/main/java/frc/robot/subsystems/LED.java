@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Ports;
 import frc.robot.Constants.LEDConstants;
 
@@ -16,12 +20,14 @@ public class LED extends SubsystemBase {
   AddressableLED led; 
   AddressableLEDBuffer ledBuffer; 
   //Timer timer; 
-  int rainbowFirstPixelHue;
+  int rainbowFirstPixelHue;    
+  
+
 
 
   public LED() {
     led = new AddressableLED(Ports.LEDPorts.LED_PORT); 
-    ledBuffer = new AddressableLEDBuffer(60); 
+    ledBuffer = new AddressableLEDBuffer(250); 
     led.setLength(ledBuffer.getLength());
 
     led.setData(ledBuffer); 
@@ -70,33 +76,44 @@ public class LED extends SubsystemBase {
     System.out.println("Rainbow Running ");
   }
 
-  public void setGrupleFlicker(){ 
-    boolean sequence = true; 
-    if (sequence){
-      for(int i = 0; i < ledBuffer.getLength(); i++){
-        if (i % 15 !=0 ){
-        setLedPurple();
+  public void setGrupleFlicker(boolean isGreen){ 
+   // timer.start();
+  
+    boolean green = isGreen;
+    for (int i = 0; i < (ledBuffer.getLength()); i++) {
+      if (green) {
+        ledBuffer.setLED(i, Color.kGreen);
+        // ledBuffer.setRGB(i, 0, 255, 0); // GREEN
+        System.out.println("green");
+      } else {
+        ledBuffer.setLED(i, Color.kPurple);
+        // ledBuffer.setRGB(i, 255, 0, 255); // PURPLE
+        System.out.println("purple");
+
       }
-      else {
-        setLedGreen();
-      }
-      sequence = false; 
+      green = !green;
     }
-  }
-  else{
-    for(int j = 0; j < ledBuffer.getLength(); j++){
-      if( j % 15 != 0){
-        setLedGreen();
-      }
-      else{
-        setLedPurple();
-      }
-      sequence = true; 
+    led.setData(ledBuffer);
+    System.out.println("green purple led test");
+
+    // if (timer.get() == 3) {
+    //   led.close();
     }
-  }
-  led.setData(ledBuffer);
-  System.out.println("Gruple Flicker Running!");
-} 
+
+     public void setGrupleChase(){ 
+     for(int i = 0; i < ledBuffer.getLength(); i++){ 
+        final int hue = (rainbowFirstPixelHue + (i * 180/ ledBuffer.getLength())) % 180; 
+        ledBuffer.setRGB(i, 300, 255, hue );
+        
+      }
+      rainbowFirstPixelHue +=3; 
+      rainbowFirstPixelHue %= 180;
+      led.setData(ledBuffer);
+    }
+
+  
+    
+
 
   public void setRed(){
 

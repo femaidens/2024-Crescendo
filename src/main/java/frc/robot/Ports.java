@@ -58,7 +58,7 @@ public class Ports {
   }
   
   public static final class LEDPorts{ 
-    public static final int LED_PORT = 9; 
+    public static final int LED_PORT = 0; 
   }
 
 }

@@ -40,7 +40,9 @@ public class Hopper extends SubsystemBase implements Logged {
 
   private final SysIdRoutine hopperRoutine;
 
+  @Log.NT
   private double vSetpoint;
+  
   private boolean currentState, lastState;
   private int stateCount = 0;
 
@@ -96,7 +98,7 @@ public class Hopper extends SubsystemBase implements Logged {
   }
 
   public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocity(setpoint)).asProxy();
+    return this.run(() -> setVelocity(setpoint));
   }
 
   public Command stopMotorCmd() {

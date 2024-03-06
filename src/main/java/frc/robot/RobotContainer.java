@@ -74,7 +74,8 @@ public class RobotContainer implements Logged {
             shooterAngle));
         // shooterAngle.setAngleCmd());
 
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
@@ -123,23 +124,30 @@ public class RobotContainer implements Logged {
             //     .alongWith(hopper.setVelocitySetpoint(0))
             // );
             
-            .onTrue(Commands.waitUntil(hopper::isHopperEmpty)
-                .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .deadlineWith(intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED))
-                .finallyDo(() -> intaking.setIntakeHopperSetpoints(0))
-                );
+            // to test, just stick hand in; the motors should stop running
+            // .onTrue(Commands.waitUntil(hopper::isHopperEmpty)
+            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
+            //     .deadlineWith(intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            //     .finallyDo(() -> intaking.setIntakeHopperSetpoints(0))
+            // );
 
+            .onTrue(
+                intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED)
+                .until(hopper::isHopperFull)
+                .andThen(intaking.setIntakeHopperSetpoints(0))
+            );
+            
             // deadline and ishopperfull is the cut conditions
         // runs outtake
         operJoy.leftBumper()
-            .onTrue(intake.setVelocitySetpointCmd(-IntakeConstants.OUTTAKE_VEL))
-            .onFalse(intake.setVelocitySetpointCmd(0.0));
+            // .onTrue(intake.setVelocitySetpointCmd(-IntakeConstants.OUTTAKE_VEL))
+            // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
             // entire outtake routine
             // .onTrue(intaking.moveNote(-IntakeHopperConstants.INTAKE_NOTE_SPEED));
 
-            // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
-            // .onFalse(intake.stopMotorCmd());
+            .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
+            .onFalse(intake.stopMotorCmd());
 
     /* * * HOPPER BUTTONS * * */
         // runs hopper (towards shooter)
@@ -157,11 +165,13 @@ public class RobotContainer implements Logged {
             // .onFalse(hopper.setVelocitySetpointCmd(0));
             // .onTrue(hopper.feedNote());
 
+            // feeds shooter; to test, stick note in first
             .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
                 .beforeStarting(hopper.resetStateCountCmd())
                 .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
-                .deadlineWith(hopper.setVelocityCmd(1*360.0)) // runs hopper motors until note has been fed into shooter
-                .finallyDo(() -> hopper.setVelocitySetpointCmd(0)));
+                .deadlineWith(hopper.setVelocitySetpointCmd(1*360.0))// runs hopper motors until note has been fed into shooter
+                .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
+            );
 
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive

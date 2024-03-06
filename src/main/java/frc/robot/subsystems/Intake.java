@@ -21,10 +21,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
 import monologue.Logged;
+import monologue.Annotations.Log;
 
 public class Intake extends SubsystemBase implements Logged {
 
+  @Log.NT
   private final CANSparkMax intakeMotor;
+
+  @Log.NT
   private final RelativeEncoder intakeEncoder;
 
   // private final PIDController intakePID;
@@ -32,6 +36,7 @@ public class Intake extends SubsystemBase implements Logged {
 
   private final SysIdRoutine intakeRoutine;
 
+  @Log.NT
   private double vSetpoint;
 
   public Intake() {
@@ -80,7 +85,7 @@ public class Intake extends SubsystemBase implements Logged {
   }
 
   public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocity(setpoint)).asProxy();
+    return this.run(() -> setVelocity(setpoint));
   }
 
   public Command stopMotorCmd() {

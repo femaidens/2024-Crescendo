@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Ports;
 import frc.robot.Constants.LEDConstants;
 
@@ -15,13 +19,15 @@ public class LED extends SubsystemBase {
   /** Creates a new leds. */
   AddressableLED led; 
   AddressableLEDBuffer ledBuffer; 
-  Timer timer; 
-  int rainbowFirstPixelHue;
+  //Timer timer; 
+  int rainbowFirstPixelHue;    
+  
+
 
 
   public LED() {
     led = new AddressableLED(Ports.LEDPorts.LED_PORT); 
-    ledBuffer = new AddressableLEDBuffer(60); 
+    ledBuffer = new AddressableLEDBuffer(250); 
     led.setLength(ledBuffer.getLength());
 
     led.setData(ledBuffer); 
@@ -54,94 +60,87 @@ public class LED extends SubsystemBase {
 
 
   public void setRainbow(){ 
-    timer.start(); 
-    if (timer.get() <= 3){
+    //timer.start(); 
+   // if (timer.get() <= 3){
       for(int i = 0; i < ledBuffer.getLength(); i++){ 
-        //WHAT KIND OF VARIABLE IS RAINBOW FIRST PIXEL HUE????????????? 
         final int hue = (rainbowFirstPixelHue + (i * 180/ ledBuffer.getLength())) % 180; 
         ledBuffer.setHSV(i, hue, 255, 128); 
       }
       rainbowFirstPixelHue +=3; 
       rainbowFirstPixelHue %= 180;
       led.setData(ledBuffer);
-    }
-  else {
-    timer.stop(); 
-    }
+    
+  //else {
+   // timer.stop(); 
+    
     System.out.println("Rainbow Running ");
   }
 
-  public void setGrupleFlicker(){
-    timer.start(); 
-    if(timer.get()< 3){
-      if (timer.get()%2 == 0 ){
-        setLedPurple();
-          led.setData(ledBuffer);
-      }
-      else{ 
-        setLedGreen();
-          led.setData(ledBuffer);
-      } 
-    }
-    System.out.println("Gruple Running"); 
-  }
+  public void setGrupleFlicker(boolean isGreen){ 
+   // timer.start();
+  
+    boolean green = isGreen;
+    for (int i = 0; i < (ledBuffer.getLength()); i++) {
+      if (green) {
+        ledBuffer.setLED(i, Color.kGreen);
+        // ledBuffer.setRGB(i, 0, 255, 0); // GREEN
+        System.out.println("green");
+      } else {
+        ledBuffer.setLED(i, Color.kPurple);
+        // ledBuffer.setRGB(i, 255, 0, 255); // PURPLE
+        System.out.println("purple");
 
-  public void setRedFlicker(){
-    timer.start(); 
-    if(timer.get()<3){
-      if(timer.get()%2 ==0){ 
-        for(var i = 0; i<ledBuffer.getLength(); i++){
-          ledBuffer.setRGB(i, 255, 0, 0);
-        }
-        led.setData(ledBuffer);
       }
-      else { 
-        for(var j = 0; j< ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, 0, 0, 0);
-        }
-        led.setData(ledBuffer);
-      }
+      green = !green;
     }
-    else {
-      timer.stop(); 
-    }
-    System.out.println("Red Flicker Running ");
-  }
+    led.setData(ledBuffer);
+    System.out.println("green purple led test");
 
-  public void setSolid(int[] solid){ 
-    // intake 
-    timer.start(); 
-    if(timer.get()<= 0){
-      if(solid ==  LEDConstants.PINK){
-        for(var j = 0; j < ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.PINK[0], LEDConstants.PINK[1], LEDConstants.PINK[3]);
-        }
-        led.setData(ledBuffer); 
-      }
-      // Shooter
-      else if(solid == LEDConstants.BLUE){
-        for(var j = 0; j< ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.BLUE[0], LEDConstants.BLUE[1], LEDConstants.BLUE[2]);
-        }
-        led.setData(ledBuffer); 
-      }
-      //climb
-      else if(solid == LEDConstants.PURPLE){ 
-        for(var j = 0; j<ledBuffer.getLength(); j++){
-          ledBuffer.setRGB(j, LEDConstants.PURPLE[0], LEDConstants.PURPLE[1], LEDConstants.PURPLE[2]);
-        }
-        led.setData(ledBuffer); 
-      }
-      
+    // if (timer.get() == 3) {
+    //   led.close();
     }
-    else{
-      timer.stop(); 
+
+     public void setGrupleChase(){ 
+     for(int i = 0; i < ledBuffer.getLength(); i++){ 
+        final int hue = (rainbowFirstPixelHue + (i * 180/ ledBuffer.getLength())) % 180; 
+        ledBuffer.setRGB(i, 300, 255, hue );
+        
+      }
+      rainbowFirstPixelHue +=3; 
+      rainbowFirstPixelHue %= 180;
+      led.setData(ledBuffer);
     }
-    System.out.println("Solids running"); 
-  }
+
+  
+    
+
+
+  public void setRed(){
+
+      for(int i = 0; i<ledBuffer.getLength(); i++){
+        ledBuffer.setRGB(i, 255, 0, 0);
+
+      }
+    led.setData(ledBuffer); 
+    System.out.println("RED!");
+}
+  
+
+
+public void setSolid(int[] solid){ 
+
+      for(int j = 0; j < ledBuffer.getLength(); j++){
+        ledBuffer.setRGB(j, solid[0], solid[1], solid[2]);
+      }
+      led.setData(ledBuffer);
+      System.out.println("SOLID"); 
+
+}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 }
+
+

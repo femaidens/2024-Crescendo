@@ -13,7 +13,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -77,24 +77,51 @@ public class Drivetrain extends SubsystemBase {
           rearRight.getPosition()
       });
 
-  // private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
+  private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
   /* SYSID INSTANTIATIONS */
-  // private final SysIdRoutine driveRoutine = new SysIdRoutine(
-  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-  //         volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
-  //         null, this));
+  private final SysIdRoutine driveRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+          null, this));
 
-  // private final SysIdRoutine turnRoutine = new SysIdRoutine(
-  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-  //         volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
+  private final SysIdRoutine turnRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+          volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
 
-  // private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
-  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-  //         volts -> modules.forEach(m -> m.setTurnVoltage(volts.in(Units.Volts))),
-  //         null, this));
+  private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+          volts -> modules.forEach(m -> m.setTurnVoltage(volts.in(Units.Volts))),
+          null, this));
 
   public Drivetrain() {
+  }
+  /* COMMANDS */
+  /**
+   * Drives the robot using joystick inputs.
+   *
+   * @param x A double representing speed in the x direction.
+   * @param y A double representing speed in the y direction.
+   * @param rot A double representing rotation.
+   * @param fieldRel A boolean to indicate field relativity.
+   * @param rateLim a boolean to indicate rate limit.
+   * 
+   * @return The command to drive the robot.
+   */
+  public Command defaultCmd(double x, double y, double rot, boolean fieldRel, boolean rateLim, double deadband) {
+    return this.run(() -> drive( // all joy.get values were prev negative
+    MathUtil.applyDeadband(x, deadband),
+    MathUtil.applyDeadband(y, deadband),
+    MathUtil.applyDeadband(rot, deadband),
+    true,
+    true));
+  }
+
+  /**
+   * Resets gyro.
+   */
+  public Command resetGyroCmd() {
+    return this.runOnce(() -> zeroHeading());
   }
 
   @Override
@@ -298,19 +325,19 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /* SYSID CMDS */
-  // public Command driveQuasistatic(SysIdRoutine.Direction direction) {
-  //   return driveRoutine.quasistatic(direction);
-  // }
+  public Command driveQuasistatic(SysIdRoutine.Direction direction) {
+    return driveRoutine.quasistatic(direction);
+  }
 
-  // public Command turnQuasistatic(SysIdRoutine.Direction direction) {
-  //   return turnRoutine.quasistatic(direction);
-  // }
+  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
+    return turnRoutine.quasistatic(direction);
+  }
 
-  // public Command driveDynamic(SysIdRoutine.Direction direction) {
-  //   return driveRoutine.dynamic(direction);
-  // }
+  public Command driveDynamic(SysIdRoutine.Direction direction) {
+    return driveRoutine.dynamic(direction);
+  }
 
-  // public Command turnDynamic(SysIdRoutine.Direction direction) {
-  //   return turnRoutine.dynamic(direction);
-  // }
+  public Command turnDynamic(SysIdRoutine.Direction direction) {
+    return turnRoutine.dynamic(direction);
+  }
 }

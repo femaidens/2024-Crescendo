@@ -36,7 +36,7 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 0;
 
     // velocities
-    public static final double INTAKE_VEL = 5*DEGREES;
+    public static final double INTAKE_VEL = 7*DEGREES;
     public static final double OUTTAKE_VEL = -INTAKE_VEL;
 
     // pid constants -> need to populate 

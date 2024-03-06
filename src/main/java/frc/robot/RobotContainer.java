@@ -46,9 +46,9 @@ public class RobotContainer implements Logged {
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
 
-  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
-  private final Intaking intaking = new Intaking(intake, hopper);
-  private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
+//   private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
+//   private final Intaking intaking = new Intaking(intake, hopper);
+//   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -74,8 +74,7 @@ public class RobotContainer implements Logged {
             shooterAngle));
         // shooterAngle.setAngleCmd());
 
-    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
-    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(5.0*360));
+    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
 
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
@@ -83,15 +82,15 @@ public class RobotContainer implements Logged {
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
-    autonChooser.addOption("Shoot Amp", shooter.autonShoot(AutoConstants.WHEEL_SPEED, ShooterAngleConstants.AMP_FLUSH));
+    // autonChooser.addOption("Shoot Amp", shooter.autonShoot(AutoConstants.WHEEL_SPEED, ShooterAngleConstants.AMP_FLUSH));
   }
 
   private void configureButtonBindings() {
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
-        // driveJoy.rightBumper()
-        //     .onTrue(drivetrain.resetGyroCmd());
+        driveJoy.rightBumper()
+            .onTrue(drivetrain.resetGyroCmd());
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -107,10 +106,12 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
+            // comment out default command when running just speed
             // .onTrue(intake.setSpeedCmd(IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());
 
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL)) // just the intake mech
+            // just intake mech
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
             // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
             // entire intake routine
@@ -170,28 +171,40 @@ public class RobotContainer implements Logged {
                 new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
 
     /* * * SHOOTER ANGLE BUTTONS * * */
-        // toggles arm manual
+        // toggles arm manual -> made default command
         // operJoy.rightStick()
         //     .toggleOnTrue(shooterAngle.setManualAngleCmd(
         //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)));
 
         // amp flush
         operJoy.a()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH)
+                .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH)));
 
         // speaker flush
         operJoy.x()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH));
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH));
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+                .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH)));
             
         // speaker stage
         operJoy.y()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
+                .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE)));
 
         // speaker wing
         operJoy.b()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_WING, ShooterWheelConstants.SPEAKER_WING));
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_WING, ShooterWheelConstants.SPEAKER_WING));
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_WING)
+                .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
+        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
+        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
+        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
+
         /*
          * controlTypes: pid, sysid
          * pid subsystems: shooterAngle, shooterWheel
@@ -210,10 +223,6 @@ public class RobotContainer implements Logged {
         //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
         // driveJoy.leftBumper()
         //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
-
-        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
-        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
-        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
   }
 
   /**

@@ -65,7 +65,7 @@ public final class Constants {
     public static final double AMP_FLUSH = 0.0; // placeholder
 
     public static final double SPEAKER_FLUSH = 0.0; // placeholder
-    public static final double SPEAKER_STAGE = 42.7; // 42.7 degrees 
+    public static final double SPEAKER_STAGE = 0.0;//42.7; // 42.7 degrees 
     public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
@@ -103,11 +103,11 @@ public final class Constants {
     public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET + 1; 
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = PHYSICAL_OFFSET; // placeholder
+    public static final double AMP_FLUSH = 60.0; // placeholder
 
-    public static final double SPEAKER_FLUSH = 70.0; // placeholder
+    public static final double SPEAKER_FLUSH = 50.0; // placeholder
     public static final double SPEAKER_STAGE = 40.0; // placeholder
-    public static final double SPEAKER_WING = 20.0; // placeholder
+    public static final double SPEAKER_WING = 25.0; // placeholder
 
     // speeds
     public static final double CONSTANT_SPEED = 0.1;

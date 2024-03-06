@@ -24,4 +24,9 @@ public class Intaking {
         return intake.setVelocitySetpointCmd(velocity)
                 .alongWith(hopper.setVelocitySetpointCmd(velocity));
     }
+
+    public Command setIntakeHopperSetpoints(double setpoint) {
+        return intake.setVelocitySetpointCmd(setpoint)
+        .alongWith(hopper.setVelocitySetpointCmd(setpoint));
+    }
 }

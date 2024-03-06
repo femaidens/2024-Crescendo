@@ -47,7 +47,7 @@ public class RobotContainer implements Logged {
   private final Climb climb = new Climb();
 
 //   private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
-//   private final Intaking intaking = new Intaking(intake, hopper);
+  private final Intaking intaking = new Intaking(intake, hopper);
 //   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -116,10 +116,19 @@ public class RobotContainer implements Logged {
             
             // entire intake routine
             // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
-            .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL)
-                .alongWith(hopper.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
-                .until(()-> (hopper.isHopperFull()))
-            );
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED)
+            //     .alongWith(hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            //     .waitUntil(()-> hopper.isHopperFull())
+            //     .andThen(intake.setVelocitySetpoint(0))
+            //     .alongWith(hopper.setVelocitySetpoint(0))
+            // );
+            
+            .onTrue(Commands.waitUntil(hopper::isHopperEmpty)
+                .andThen(Commands.waitUntil(hopper::isHopperFull))
+                .deadlineWith(intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED))
+                .finallyDo(() -> intaking.setIntakeHopperSetpoints(0))
+                );
+
             // deadline and ishopperfull is the cut conditions
         // runs outtake
         operJoy.leftBumper()
@@ -151,7 +160,7 @@ public class RobotContainer implements Logged {
             .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
                 .beforeStarting(hopper.resetStateCountCmd())
                 .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
-                .deadlineWith(hopper.setVelocityCmd(2*360.0)) // runs hopper motors until note has been fed into shooter
+                .deadlineWith(hopper.setVelocityCmd(1*360.0)) // runs hopper motors until note has been fed into shooter
                 .finallyDo(() -> hopper.setVelocitySetpointCmd(0)));
 
     /* * * SHOOTER WHEEL * * */

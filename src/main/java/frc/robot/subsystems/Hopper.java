@@ -133,6 +133,7 @@ public class Hopper extends SubsystemBase implements Logged {
 
   public void resetStateCount() {
     stateCount = 0;
+    System.out.println("hopper state count reset");
   }
 
   // checks if beam break has changed from broken to unbroken

@@ -175,12 +175,20 @@ public class RobotContainer implements Logged {
             // .onTrue(hopper.feedNote());
 
             // feeds shooter; to test, stick note in first
+            // .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+            //     .beforeStarting(hopper.resetStateCountCmd())
+            //     .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
+            //     .deadlineWith(hopper.setVelocitySetpointCmd(1*360.0))// runs hopper motors until note has been fed into shooter
+            //     .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
+            // );
+
             .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
                 .beforeStarting(hopper.resetStateCountCmd())
-                .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
-                .deadlineWith(hopper.setVelocitySetpointCmd(1*360.0))// runs hopper motors until note has been fed into shooter
+                .andThen(hopper.setVelocitySetpointCmd(360.0))
+                .until(() -> hopper.isHopperEmpty())
                 .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
             );
+
 
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive

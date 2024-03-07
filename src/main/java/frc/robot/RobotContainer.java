@@ -28,6 +28,7 @@ import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
 import monologue.Logged;
@@ -45,6 +46,7 @@ public class RobotContainer implements Logged {
   private final ShooterWheel shooterWheel = new ShooterWheel();
   private final ShooterAngle shooterAngle = new ShooterAngle();
   private final Climb climb = new Climb();
+  private final Limelight limelight = new Limelight();
 
 //   private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
   private final Intaking intaking = new Intaking(intake, hopper);

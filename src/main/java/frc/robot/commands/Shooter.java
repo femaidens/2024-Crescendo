@@ -30,8 +30,8 @@ public class Shooter {
             .finallyDo(() -> {
                 shooterWheel.setVelocitySetpointCmd(0);
                 hopper.setVelocitySetpointCmd(0);
-                // shooterWheel.stopMotors();
-                // hopper.stopMotor();
+                shooterWheel.stopMotors();
+                hopper.stopMotor();
                 }
             );
     }

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
@@ -88,6 +90,8 @@ public class RobotContainer implements Logged {
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
+    // if default velocity is 0, need to run command when scheduling the command
+    // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
   }
@@ -98,6 +102,7 @@ public class RobotContainer implements Logged {
   }
 
   private void configureButtonBindings() {
+    Trigger beambreak = new Trigger(hopper::isHopperFull).debounce(0, DebounceType.kFalling);
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
@@ -118,6 +123,30 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
+        
+            // unit testing 
+            // test to see if the setIntakeSetpoints from intaking works
+            .onTrue(
+                intaking.setIntakeHopperSetpoints(0)
+            )
+            .onFalse(
+                intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED)
+            );
+
+            // running hopper until beam break is activated
+            // .onTrue(
+            //     intake.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED)
+            //     .until(hopper::isHopperFull)
+            // );
+            
+            // full intake routines?
+            // .onTrue(
+            //     intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED)
+            //     .until(hopper::isHopperFull)
+            //     .finallyDo(intaking.setIntakeHopperSetpoints(0))
+            //     .andThen(intaking.setIntakeHopperSetpoints(0))
+            // );
+/* 
             // comment out default command when running just speed
             // .onTrue(intake.setSpeedCmd(IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());
@@ -141,24 +170,21 @@ public class RobotContainer implements Logged {
             //     .deadlineWith(intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED))
             //     .finallyDo(() -> intaking.setIntakeHopperSetpoints(0))
             // );
-
-            .onTrue(
-                intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED)
-                .until(hopper::isHopperFull)
-                .andThen(intaking.setIntakeHopperSetpoints(0))
-            );
             
             // deadline and ishopperfull is the cut conditions
+*/
         // runs outtake
         operJoy.leftBumper()
+            // separate motion
+            .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
+            .onFalse(intake.stopMotorCmd());
+
             // .onTrue(intake.setVelocitySetpointCmd(-IntakeConstants.OUTTAKE_VEL))
             // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
             // entire outtake routine
-            // .onTrue(intaking.moveNote(-IntakeHopperConstants.INTAKE_NOTE_SPEED));
-
-            .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
-            .onFalse(intake.stopMotorCmd());
+            // .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
     /* * * HOPPER BUTTONS * * */
         // runs hopper (towards shooter)
@@ -169,7 +195,18 @@ public class RobotContainer implements Logged {
             .onFalse(hopper.setVelocitySetpointCmd(0));
 
         // runs reverse hopper (towards intake)
-        operJoy.back()
+        operJoy.back() // feeds note from hopper to shooter
+            .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+                .beforeStarting(hopper.resetStateCountCmd())
+                .andThen(hopper.setVelocitySetpointCmd(360.0))
+                .until(() -> hopper.isHopperEmpty())
+                .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
+            );
+
+            // simple hopper motion
+            // .onTrue(hopper.setVelocitySetpointCmd(360.0))
+            // .onFalse(hopper.setVelocitySetpointCmd(0));
+
             // .onTrue(hopper.setHopperSpeedCmd(-0.7))
             // .onFalse(hopper.stopHopperMotorCmd());
             // .onTrue(hopper.setVelocitySetpointCmd(-360))
@@ -184,29 +221,35 @@ public class RobotContainer implements Logged {
             //     .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
             // );
 
-            .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
-                .beforeStarting(hopper.resetStateCountCmd())
-                .andThen(hopper.setVelocitySetpointCmd(360.0))
-                .until(() -> hopper.isHopperEmpty())
-                .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
-            );
-
-
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
         operJoy.rightTrigger()
             // .onTrue(shooter.shoot(shooterWheel.getSetpoint()));
             // .onTrue(shooter.shoot(25.0*360));
-            .onTrue(shooterWheel.setVelocityCmd(12.0*360));
-            // .onTrue(hopper.feedNote());
+
+            // just run shooter
+            // .onTrue(shooterWheel.setVelocityCmd(12.0*360));
+
+            // shoot than go back to default
+            .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
+            // .andThen(hopper.feedNote())
+            .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
+            .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
+            );
         
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
         operJoy.leftTrigger()
-            .onTrue(
-                new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
-            .onFalse(
-                new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
+            // .onTrue(
+            //     new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
+            // .onFalse(
+            //     new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
+            // shoot than go back to default
+            .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
+            // .andThen(hopper.feedNote())
+            .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
+            .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
+            );
 
     /* * * SHOOTER ANGLE BUTTONS * * */
         // toggles arm manual -> made default command

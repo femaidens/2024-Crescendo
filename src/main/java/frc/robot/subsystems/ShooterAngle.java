@@ -169,5 +169,6 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void periodic() {
     SmartDashboard.putNumber("current arm angle", getAngle());
     SmartDashboard.putNumber("desired angle", pSetpoint);
+    SmartDashboard.putBoolean("at shooterAngle", atAngle(pSetpoint));
   }
 }

@@ -240,17 +240,24 @@ public class RobotContainer implements Logged {
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
         operJoy.leftTrigger()
+            // reset to default config
             // .onTrue(
-            //     new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
-            // .onFalse(
-            //     new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
-            // shoot than go back to default
+            //     shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.DEFAULT_ANGLE) // amp angle
+            //     .alongWith(intake.setVelocitySetpointCmd(0))
+            //     .alongWith(hopper.setVelocitySetpointCmd(0))
+            // );
+
             .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
             // .andThen(hopper.feedNote())
             .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
             .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
             );
-
+            
+            // .onTrue(
+            //     new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
+            // .onFalse(
+            //     new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
+            // shoot than go back to default
     /* * * SHOOTER ANGLE BUTTONS * * */
         // toggles arm manual -> made default command
         // operJoy.rightStick()

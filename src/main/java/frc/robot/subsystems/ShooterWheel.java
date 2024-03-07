@@ -142,7 +142,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
 
   // checks if current velocity is within error margin of vSetpoint
   public boolean atVelocity() {
-    System.out.println("shooter wheel at velocity");
+    // System.out.println("shooter wheel at velocity");
     return shooterWheelPID.atSetpoint();
   }
 
@@ -196,6 +196,8 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());
     SmartDashboard.putNumber("right shooter vel: ", getFollowerVelocity());
     SmartDashboard.putNumber("desired shooter velocity: ", vSetpoint);
+    
+    SmartDashboard.putBoolean("at shooterVelocity", atVelocity());
     // SmartDashboard.putNumber("current shooter wheel voltage: ", leaderMotor.getOut());
   }
 }

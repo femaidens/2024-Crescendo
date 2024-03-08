@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.IntakeHopperConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
@@ -23,6 +24,9 @@ public class Intaking {
     public Command moveNote(double velocity) {
         return intake.setVelocitySetpointCmd(velocity)
                 .alongWith(hopper.setVelocitySetpointCmd(velocity));
+        // return Commands.waitUntil(hopper::isHopperEmpty)
+        // .andThen(Commands.waitUntil(hopper::isHopperFull)
+        // .deadlineWith(setIntakeHopperSetpoints(velocity)));
     }
 
     public Command setIntakeHopperSetpoints(double setpoint) {

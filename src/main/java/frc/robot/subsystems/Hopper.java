@@ -76,9 +76,11 @@ public class Hopper extends SubsystemBase implements Logged {
   /* COMMANDS */
   public Command feedNote() {
     return Commands.waitUntil(() -> isHopperFull())
-      .andThen(Commands.waitUntil(() -> isHopperEmpty())) // denotes when cmd ends
-      .deadlineWith(setVelocityCmd()) // runs hopper motors until note has been fed into shooter
-      .finallyDo(() -> resetStateCountCmd()); // reset the state count
+    // .beforeStarting(resetStateCountCmd())
+    .andThen(setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+    .andThen(Commands.waitUntil(() -> isHopperEmpty()))
+    .andThen(setVelocitySetpointCmd(0));
+    // .finallyDo(() -> setVelocitySetpointCmd(0));
   }
 
   public Command setSpeedCmd(double speed) {
@@ -106,7 +108,8 @@ public class Hopper extends SubsystemBase implements Logged {
   }
 
   public Command resetStateCountCmd() {
-    return this.runOnce(() -> resetStateCount());
+    System.out.println("state count reset");
+    return this.runOnce(() -> resetStateCount()).asProxy();
   }
 
   /* * * BEAM BREAK * * */
@@ -119,20 +122,29 @@ public class Hopper extends SubsystemBase implements Logged {
   // hopper is empty once state change count == 2;
   @Log.NT
   public boolean isHopperEmpty() {
+    int temp;
+
     if (hasStateChanged()) {
       stateCount++;
       System.out.println(stateCount);
     }
-    return stateCount == 2;
+
+    temp = stateCount;
+    resetStateCount();
+    return temp == 2;
   }
 
   @Log.NT
   public boolean isHopperFull() {
+    if(stateCount>=2) {
+      resetStateCount();
+    }
     return !getReceiverStatus();
   }
 
   public void resetStateCount() {
     stateCount = 0;
+    System.out.println("hopper state count reset");
   }
 
   // checks if beam break has changed from broken to unbroken
@@ -188,6 +200,7 @@ public class Hopper extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("state count", stateCount);
     SmartDashboard.putNumber("hopper vel", getVelocity());
     SmartDashboard.putNumber("hopper sp", vSetpoint);
 

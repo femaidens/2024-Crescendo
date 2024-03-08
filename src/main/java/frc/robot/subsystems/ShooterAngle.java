@@ -54,7 +54,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
 
-    pSetpoint = getAngle();
+    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */
@@ -104,8 +104,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
     shooterAngleMotor.setVoltage(voltage);
 
-    System.out.println("angle voltage: " + voltage);
-    System.out.println("setting angle");
+    // System.out.println("angle voltage: " + voltage);
+    // System.out.println("setting angle");
   }
 
   // for auton commands; overloads setAngle no params
@@ -118,7 +118,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void setAngleSetpoint(double setpoint) {
     // isManual = false;
     pSetpoint = setpoint;
-    System.out.println("setpoint changed");
+    System.out.println("shooter angle changed");
   }
 
   @Log.NT
@@ -140,7 +140,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.stopMotor();
   }
 
-  public boolean atAngle(double angle) {
+  public boolean atAngle() {
+
     return shooterAnglePID.atSetpoint();
   }
 
@@ -169,5 +170,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void periodic() {
     SmartDashboard.putNumber("current arm angle", getAngle());
     SmartDashboard.putNumber("desired angle", pSetpoint);
+
+    SmartDashboard.putBoolean("at min angle", atAngle());
+    SmartDashboard.putBoolean("at amp angle", atAngle());
   }
 }

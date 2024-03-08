@@ -21,7 +21,7 @@ public class TaxiAmp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      // new RunCommand(() -> drivetrain.drive(-0.1, 0, 0, true, false), drivetrain).withTimeout(AutoConstants.DRIVE_TIME),
+      // new RunCommand(() -> drivetrain.drive(-0.1, 0, 0, true, false), drivetrain).withTimeout(AutoConstants.TAXIAMP_TIME),
       // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH),
       // hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED),
       // shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH),

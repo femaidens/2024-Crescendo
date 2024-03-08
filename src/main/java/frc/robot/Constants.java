@@ -135,7 +135,8 @@ public final class Constants {
     public static final double PYController = 1;
     public static final double PThetaController = 1;
 
-    public static final double DRIVE_TIME = 4; //seconds
+    public static final double TAXIAMP_TIME = 4; //seconds
+    public static final double TAXISPEAKER_TIME = 0; 
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

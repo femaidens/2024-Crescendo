@@ -27,11 +27,33 @@ public class LED extends SubsystemBase {
 
   }
 
+  /* * * COMMANDS * * */
+  // public Command setLEDBufferCmd(){
+  //   return this.run(() -> led.setData(ledBuffer));
+  // }
+
+  public Command setPurpleCmd(){
+    return this.run(() -> setLedPurple());
+  }
+
+  public Command setGreenCmd(){
+    return this.run(() -> setLedGreen());
+  }
+
+  public Command setRedCmd(){
+    return this.run(() -> setLedRed());
+  }
+
+  // default cmd
+  public Command setRainbowCmd(){
+    return this.run(() -> setRainbow());
+  }
+
   public void setLedPurple() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 160, 32, 340);
     }
-    //led.setData(ledBuffer);
+    led.setData(ledBuffer);
     System.out.println("running purple leds");
   }
 
@@ -116,28 +138,6 @@ public class LED extends SubsystemBase {
     System.out.println("SOLID");
 
   }
-
-  /* * * COMMANDS * * */
-  public Command setLEDBufferCmd(){
-    return this.run(() -> led.setData(ledBuffer));
-  }
-
-  public Command setPurpleCmd(){
-    return this.run(() -> setLedPurple());
-  }
-
-  public Command setGreenCmd(){
-    return this.run(() -> setLedGreen());
-  }
-
-  public Command setRedCmd(){
-    return this.run(() -> setLedRed());
-  }
-
-  public Command setRainbowCmd(){
-    return this.run(() -> setRainbow());
-  }
-
 
   @Override
   public void periodic() {

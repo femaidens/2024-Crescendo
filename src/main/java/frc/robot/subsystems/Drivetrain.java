@@ -127,6 +127,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+    zeroHeading();
     // updates periodically
     odometry.update(
         Rotation2d.fromDegrees(getAngle()),

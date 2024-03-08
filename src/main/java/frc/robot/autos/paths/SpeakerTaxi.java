@@ -26,7 +26,7 @@ public class SpeakerTaxi extends SequentialCommandGroup {
       // shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH),
       // Commands.waitUntil(hopper::isHopperEmpty),
       
-      // // taxi after shooting
+      // // taxi after shooting - may need to edit speed and direction
       // new RunCommand(() -> drivetrain.drive(0.1, 0, 0, true, false), drivetrain).withTimeout(AutoConstants.TAXISPEAKER_TIME)
     );
   }

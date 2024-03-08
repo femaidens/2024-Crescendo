@@ -59,4 +59,8 @@ public class Ports {
     public static final int EMITTER = 2;
   }
 
+  public static final class LEDPorts{ 
+    public static final int LED_PORT = 0; 
+  }
+
 }

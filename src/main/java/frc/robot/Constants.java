@@ -15,13 +15,13 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 3 * DEGREES; // 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 4.0 * DEGREES; // 3 rotations
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 0.05;
+    public static final double TRANSITION_SPEED = 4*DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -36,7 +36,7 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 0;
 
     // velocities
-    public static final double INTAKE_VEL = 7*DEGREES;
+    public static final double INTAKE_VEL = IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
     public static final double OUTTAKE_VEL = -INTAKE_VEL;
 
     // pid constants -> need to populate 
@@ -64,9 +64,9 @@ public final class Constants {
     
     public static final double AMP_FLUSH = 12*DEGREES; // placeholder
 
-    public static final double SPEAKER_FLUSH = 0.0; // placeholder
-    public static final double SPEAKER_STAGE = 0.0;//42.7; // 42.7 degrees 
-    public static final double SPEAKER_WING = 0.0; // placeholder
+    public static final double SPEAKER_FLUSH = 55*DEGREES; // placeholder
+    public static final double SPEAKER_STAGE = 55*DEGREES;
+    // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
     public static final double DEFAULT_VELOCITY = 5*DEGREES; // check how much voltage this is drawing
@@ -74,7 +74,7 @@ public final class Constants {
 
     // auton
     public static final double SHOOTER_METERS_SECOND = 2.0;
-    public static final double AUTON_SPEED = 720; // degrees/sec
+    public static final double AUTON_SPEED = 2*DEGREES; // degrees/sec
 
     // ff -> need to populate
     public static final double kS = 0.22083; //as of 2/28 sys id results
@@ -95,20 +95,21 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
-    public static final double P_TOLERANCE = 1.0;
+    public static final double P_TOLERANCE = 3.0;
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = PHYSICAL_OFFSET + 1; 
+    public static final double SHOOTER_MIN_ANGLE = 40.0; 
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 61.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
-    public static final double SPEAKER_FLUSH = 50.0; // placeholder
+    public static final double INITIAL_ANGLE = 65.0;
+    public static final double SPEAKER_FLUSH = AMP_FLUSH; // placeholder
     public static final double SPEAKER_STAGE = 40.0; // placeholder
     public static final double SPEAKER_WING = 25.0; // placeholder
-    public static final double DEFAULT_ANGLE = AMP_FLUSH;
+    public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
 
 
     // speeds
@@ -133,6 +134,8 @@ public final class Constants {
     public static final double PXController = 1;
     public static final double PYController = 1;
     public static final double PThetaController = 1;
+
+    public static final double DRIVE_TIME = 4; //seconds
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

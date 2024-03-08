@@ -54,7 +54,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
 
-    pSetpoint = getAngle();
+    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */
@@ -140,7 +140,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.stopMotor();
   }
 
-  public boolean atAngle(double angle) {
+  public boolean atAngle() {
+
     return shooterAnglePID.atSetpoint();
   }
 
@@ -169,6 +170,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void periodic() {
     SmartDashboard.putNumber("current arm angle", getAngle());
     SmartDashboard.putNumber("desired angle", pSetpoint);
-    SmartDashboard.putBoolean("at shooterAngle", atAngle(pSetpoint));
+
+    SmartDashboard.putBoolean("at min angle", atAngle());
+    SmartDashboard.putBoolean("at amp angle", atAngle());
   }
 }

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
@@ -30,7 +31,7 @@ public class LED extends SubsystemBase {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 160, 32, 340);
     }
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
     System.out.println("running purple leds");
   }
 
@@ -38,14 +39,14 @@ public class LED extends SubsystemBase {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 0, 225, 0);
     }
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
   }
 
   public void setDefault() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 0, 0, 0);
     }
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
     System.out.println("Default Working ");
   }
 
@@ -56,7 +57,7 @@ public class LED extends SubsystemBase {
     }
     rainbowFirstPixelHue += 3;
     rainbowFirstPixelHue %= 180;
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
 
     System.out.println("Rainbow Running ");
   }
@@ -77,7 +78,7 @@ public class LED extends SubsystemBase {
       }
       green = !green;
     }
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
     System.out.println("green purple led test");
 
  
@@ -92,16 +93,16 @@ public class LED extends SubsystemBase {
     rainbowFirstPixelHue += 3;
     rainbowFirstPixelHue %= 180;
 
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
   }
 
-  public void setRed() {
+  public void setLedRed() {
 
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 255, 0, 0);
     }
 
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
     System.out.println("RED!");
   }
 
@@ -111,10 +112,32 @@ public class LED extends SubsystemBase {
       ledBuffer.setRGB(j, solid[0], solid[1], solid[2]);
     }
     
-    led.setData(ledBuffer);
+    //led.setData(ledBuffer);
     System.out.println("SOLID");
 
   }
+
+  /* * * COMMANDS * * */
+  public Command setLEDBufferCmd(){
+    return this.run(() -> led.setData(ledBuffer));
+  }
+
+  public Command setPurpleCmd(){
+    return this.run(() -> setLedPurple());
+  }
+
+  public Command setGreenCmd(){
+    return this.run(() -> setLedGreen());
+  }
+
+  public Command setRedCmd(){
+    return this.run(() -> setLedRed());
+  }
+
+  public Command setRainbowCmd(){
+    return this.run(() -> setRainbow());
+  }
+
 
   @Override
   public void periodic() {

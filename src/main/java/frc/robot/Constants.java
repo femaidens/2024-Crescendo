@@ -15,7 +15,7 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 6 * DEGREES; // 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // , 6 prev, 3 rotations
   }
 
   public static final class HopperConstants {
@@ -100,7 +100,7 @@ public final class Constants {
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = 43.0; 
+    public static final double SHOOTER_MIN_ANGLE = 31.0; //43.0
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61

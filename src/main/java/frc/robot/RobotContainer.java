@@ -79,16 +79,16 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    // drivetrain.setDefaultCommand(
-    //  // clariy turning with right or with left
-    //   new RunCommand(
-    //       () -> drivetrain.drive( // all joy.get values were prev negative
-    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-    //           true, false),
-    //       drivetrain)
-    // );
+    drivetrain.setDefaultCommand(
+     // clariy turning with right or with left
+      new RunCommand(
+          () -> drivetrain.drive( // all joy.get values were prev negative
+              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+              true, false),
+          drivetrain)
+    );
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
@@ -98,11 +98,11 @@ public class RobotContainer implements Logged {
         // shooterAngle.setAngleCmd()
     );
 
-    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
-    // if default velocity is 0, need to run command when scheduling the command
-    // if not, make sure that setpoints are changing correctly
+    // // if default velocity is 0, need to run command when scheduling the command
+    // // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
     leds.setDefaultCommand(leds.setRainbowCmd());
@@ -143,7 +143,7 @@ public class RobotContainer implements Logged {
             .onFalse(climb.stopMotorsCmd());
 
     /* * * INTAKE BUTTONS * * */
-        // runs intake routine
+        // // runs intake routine
         operJoy.rightBumper()
             // entire intake routine
             .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
@@ -165,16 +165,15 @@ public class RobotContainer implements Logged {
             
         // runs outtake
         operJoy.leftBumper()
-            // separate motion
-            // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
-            // .onFalse(intake.stopMotorCmd());
-
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
-            // .onFalse(intake.setVelocitySetpointCmd(0.0));
-            
             // entire outtake routine
             .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
             .onFalse(intaking.setIntakeHopperSetpoints(0));
+        //     // separate motion
+        //     // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
+        //     // .onFalse(intake.stopMotorCmd());
+
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
+            // .onFalse(intake.setVelocitySetpointCmd(0.0));
 
 
     /* * * HOPPER BUTTONS * * */
@@ -224,8 +223,8 @@ public class RobotContainer implements Logged {
             // just run shooter
             // .onTrue(shooterWheel.setVelocityCmd(ShooterWheelConstants.AMP_FLUSH));
         
-        // runs shooter intake -> negative
-        // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
+        // // runs shooter intake -> negative
+        // // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
         operJoy.leftTrigger()
             // reset to default config
             .onTrue(
@@ -266,11 +265,11 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
-            // .alongWith(hopper.setStateLimitCmd(1))
-            // );
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
 
-            .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
+            // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
             
             // shooting with buttons

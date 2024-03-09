@@ -24,6 +24,7 @@ public class Shooter {
     }
 
     public Command shoot(double vel) {
+        // CHECKING IS HOPPER FULL
         // return Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
         //     .andThen(hopper.feedNote())
         //     .deadlineWith(shooterWheel.setVelocityCmd(vel))
@@ -34,16 +35,27 @@ public class Shooter {
         //         hopper.stopMotor();
         //         }
         //     );
-        // return Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
-        // .andThen(hopper.feedNote())
-        // .andThen(shooterWheel.setVelocitySetpointCmd(vel))
-        // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0));
 
+        // CHECKING IS SHOOTER AT ANGLE
         return Commands.waitUntil(() -> shooterWheel.atVelocity() && shooterAngle.atAngle())
             .andThen(hopper.feedNote())
             // .andThen(Commands.waitUntil(hopper::isHopperEmpty))
             .andThen(shooterWheel.setVelocitySetpointCmd(0)
         );
+        // return Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
+        // .andThen(hopper.feedNote())
+        // .andThen(shooterWheel.setVelocitySetpointCmd(vel))
+        // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0));
+
+        // shoot than go back to default
+        // .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
+        // // .andThen(hopper.feedNote())
+        // .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
+        // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
+        // );
+        // .onTrue(shooter.shoot(ShooterWheelConstants.DEFAULT_VELOCITY));
+        // .onTrue(hopper.setSpeedCmd(-0.1));
+        // .onTrue(hopper.resetStateEmergencyCmd());
     }
 
     public Command shoot() {

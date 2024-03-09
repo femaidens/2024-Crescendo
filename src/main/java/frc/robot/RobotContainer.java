@@ -26,6 +26,7 @@ import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
 import frc.robot.autos.paths.Taxi;
 import frc.robot.autos.paths.TaxiAmp;
+import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
 import frc.robot.commands.Controls;
@@ -78,22 +79,24 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)); // field rel = true
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
+    // );
 
-    // shooterAngle.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> shooterAngle.setManualAngle(
-    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-    //         shooterAngle));
-        // shooterAngle.setAngleCmd());
+    shooterAngle.setDefaultCommand(
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+            shooterAngle)
+        // shooterAngle.setAngleCmd()
+    );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
@@ -102,24 +105,31 @@ public class RobotContainer implements Logged {
     // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
-    // leds.setDefaultCommand(leds.setLEDBufferCmd());
+    leds.setDefaultCommand(leds.setRainbowCmd());
   }
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
     autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
     // autonChooser.addOption("Shoot Amp", shooter.autonShoot(AutoConstants.WHEEL_SPEED, ShooterAngleConstants.AMP_FLUSH));
   }
 
   private void configureButtonBindings() {
-    // Trigger beambreak = new Trigger(hopper::isHopperFull).debounce(0, DebounceType.kFalling);
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
         driveJoy.rightBumper()
             .onTrue(drivetrain.resetGyroCmd());
+        
+        driveJoy.a()
+            .onTrue(
+                // intaking.setIntakeHopperSetpoints(0)
+                Commands.waitUntil(hopper::isHopperFull)
+                .andThen(leds.setGreenCmd().withTimeout(3))
+                // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
+            );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -135,39 +145,23 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
-        
-            // unit testing 
-            // intaking setintakesetpoints work
-            // .onTrue(
-            //     intaking.setIntakeHopperSetpoints(3*360)
-            // )
-            // .onFalse(
-            //     intaking.setIntakeHopperSetpoints(0)
-            // );
-        
             // entire intake routine
-            // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
-            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
-            //     .andThen(intaking.setIntakeHopperSetpoints(0))
-            //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
-            //     // .andThen(() -> leds.setLedGreen()).withTimeout(2)
-            // );
+            .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
+                .andThen(Commands.waitUntil(hopper::isHopperFull))
+                .andThen(intaking.setIntakeHopperSetpoints(0))
+                // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
+                .andThen(leds.setGreenCmd().withTimeout(2))
+                // .finallyDo(() -> leds.setLedGreen()).withTimeout(2)
+            );
 
-            // testing led
-            // .onTrue(Commands.waitUntil(hopper::isHopperFull)
-            // .andThen(leds.setGreenCmd()).withTimeout(2)
-            // );
-
-            // to test, just stick hand in; the motors should stop running
-            // .onTrue(Commands.waitUntil(hopper::isHopperEmpty)
-            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
-            //     .deadlineWith(intaking.setIntakeHopperSetpoints(IntakeHopperConstants.INTAKE_NOTE_SPEED))
-            //     .finallyDo(() -> intaking.setIntakeHopperSetpoints(0))
-            // );
+            // unit testing 
+            // intaking intakeHopper work
+            // .onTrue(intaking.setIntakeHopperSetpoints(3*360))
+            // .onFalse(intaking.setIntakeHopperSetpoints(0));
             
             // just intake mech
-            .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
-            .onFalse(intake.setVelocitySetpointCmd(0.0));
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
+            // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
         // runs outtake
         operJoy.leftBumper()
@@ -175,12 +169,12 @@ public class RobotContainer implements Logged {
             // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());
 
-            .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
-            .onFalse(intake.setVelocitySetpointCmd(0.0));
+            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
+            // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
             // entire outtake routine
-            // .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
-            // .onFalse(intaking.setIntakeHopperSetpoints(0));
+            .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            .onFalse(intaking.setIntakeHopperSetpoints(0));
 
 
     /* * * HOPPER BUTTONS * * */
@@ -192,62 +186,58 @@ public class RobotContainer implements Logged {
             .onFalse(hopper.setVelocitySetpointCmd(0));
 
         // runs reverse hopper (towards intake)
-        // operJoy.back() // feeds note from hopper to shooter
-        //     .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
-        //         .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
-        //         .andThen(Commands.waitUntil(hopper::isHopperEmpty))
-        //         .andThen(hopper.setVelocitySetpointCmd(0))
-        //         .andThen(shooterWheel.setVelocitySetpointCmd(0))
-        //         .andThen(hopper.resetStateCountCmd()) // testing, commented in before
-        //         // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
-        //     );
+        operJoy.back() // feeds note from hopper to shooter
+            // .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+            //     .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+            //     .andThen(Commands.waitUntil(hopper::isHopperEmpty))
+            //     .andThen(hopper.setVelocitySetpointCmd(0))
+            //     .andThen(shooterWheel.setVelocitySetpointCmd(0))
+            //     .andThen(hopper.resetStateCountCmd()) // testing, commented in before
+            //     // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
+            // );
+
+            // TEST resetting state count before setting state count
+            .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+                .andThen(hopper.resetStateCountCmd())
+                .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+                .andThen(Commands.waitUntil(hopper::isHopperEmpty))
+                .andThen(hopper.setVelocitySetpointCmd(0))
+                .andThen(shooterWheel.setVelocitySetpointCmd(0))
+                // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
+            );
+
+            // TEST CALLING CMD
             // .onTrue(hopper.feedNote());
 
-            // simple hopper motion
-            // .onTrue(hopper.setVelocitySetpointCmd(360.0))
+            // FAIL SAFE simple hopper FEED
+            // .onTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
             // .onFalse(hopper.setVelocitySetpointCmd(0));
-
-            // feeds shooter; to test, stick note in first
-            // .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
-            //     .beforeStarting(hopper.resetStateCountCmd())
-            //     .andThen(Commands.waitUntil(() -> hopper.isHopperEmpty())) // denotes when cmd ends
-            //     .deadlineWith(hopper.setVelocitySetpointCmd(1*360.0))// runs hopper motors until note has been fed into shooter
-            //     .finallyDo(() -> hopper.setVelocitySetpointCmd(0))
-            // );
 
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
+        // voltage ramping shooter
         operJoy.rightTrigger()
-            // .onTrue(shooter.shoot(shooterWheel.getSetpoint()));
+            .onTrue(hopper.resetStateEmergencyCmd()
+        );
             // .onTrue(shooter.shoot(25.0*360));
 
             // just run shooter
-            .onTrue(shooterWheel.setVelocityCmd(ShooterWheelConstants.AMP_FLUSH));
-
-            // shoot than go back to default
-            // .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
-            // // .andThen(hopper.feedNote())
-            // .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
-            // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
-            // );
-            // .onTrue(shooter.shoot(ShooterWheelConstants.DEFAULT_VELOCITY));
-            // .onTrue(hopper.setSpeedCmd(-0.1));
-            // .onTrue(hopper.resetStateEmergencyCmd());
+            // .onTrue(shooterWheel.setVelocityCmd(ShooterWheelConstants.AMP_FLUSH));
         
         // runs shooter intake -> negative
         // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
         operJoy.leftTrigger()
             // reset to default config
-            // .onTrue(
-            //     shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SHOOTER_MIN_ANGLE) // amp angle
-            //     .alongWith(intaking.setIntakeHopperSetpoints(0))
-            //     .alongWith(shooterWheel.setVelocitySetpointCmd(0))
-            //     // .alongWith(hopper.resetStateCountCmd())
-            // );
-            .onTrue(shooterWheel.setVelocitySetpointCmd(0)
-                .alongWith(hopper.setVelocitySetpointCmd(0))
-                .alongWith(shooterWheel.stopMotorsCmd())
+            .onTrue(
+                shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SHOOTER_MIN_ANGLE) // amp angle
+                .alongWith(intaking.setIntakeHopperSetpoints(0))
+                .alongWith(shooterWheel.setVelocitySetpointCmd(0))
+                // .alongWith(hopper.resetStateCountCmd())
             );
+            // .onTrue(shooterWheel.setVelocitySetpointCmd(0)
+            //     .alongWith(hopper.setVelocitySetpointCmd(0))
+            //     .alongWith(shooterWheel.stopMotorsCmd())
+            // );
             // shooter intake
             // .onTrue(
             //     new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
@@ -262,23 +252,26 @@ public class RobotContainer implements Logged {
 
         // amp flush
         operJoy.a()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH)
-            // .alongWith(hopper.setStateLimitCmd(2))
-            // );
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH)
+            .alongWith(hopper.setStateLimitCmd(2))
+            );
 
             // shooting with button cmd
-            .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.AMP_FLUSH)
+            // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.AMP_FLUSH)
                 // .andThen(shooter.shoot(ShooterWheelConstants.AMP_FLUSH))
-            );
+            // );
 
             // testing at angle 
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH));
         
         // speaker flush
-        // operJoy.x()
-        //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
-        //     .alongWith(hopper.setStateLimitCmd(1))
-        //     );
+        operJoy.x()
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
+            // .alongWith(hopper.setStateLimitCmd(1))
+            // );
+
+            .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
+
             
             // shooting with buttons
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)

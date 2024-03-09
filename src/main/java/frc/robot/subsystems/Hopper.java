@@ -25,22 +25,22 @@ import monologue.Annotations.Log;
 
 public class Hopper extends SubsystemBase implements Logged {
 
-  @Log.NT
+  // @Log.NT
   private final CANSparkMax hopperMotor;
 
-  @Log.NT
+  // @Log.NT
   private final RelativeEncoder hopperEncoder;
 
-  @Log.NT
+  // @Log.NT
   private final SimpleMotorFeedforward hopperFF;
   // private final PIDController hopperPID;
 
-  @Log.NT
+  // @Log.NT
   private final DigitalInput receiver;
 
   private final SysIdRoutine hopperRoutine;
 
-  @Log.NT
+  // @Log.NT
   private double vSetpoint;
   
   private boolean currentState, lastState;
@@ -69,7 +69,7 @@ public class Hopper extends SubsystemBase implements Logged {
         new SysIdRoutine.Mechanism(
             volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
-    vSetpoint = 2;//0;
+    vSetpoint = 0;
     currentState = getReceiverStatus();
     lastState = currentState;
   }
@@ -129,7 +129,7 @@ public class Hopper extends SubsystemBase implements Logged {
   }
 
   // hopper is empty once state change count == 2;
-  @Log.NT
+  // @Log.NT
   public boolean isHopperEmpty() {
     // int temp;
 
@@ -143,7 +143,7 @@ public class Hopper extends SubsystemBase implements Logged {
     return stateCount == stateLimit;
   }
 
-  @Log.NT
+  // @Log.NT
   public boolean isHopperFull() {
     // if(stateCount>=2) {
     //   resetStateCount();

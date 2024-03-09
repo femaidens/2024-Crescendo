@@ -25,10 +25,10 @@ import monologue.Annotations.Log;
 
 public class Intake extends SubsystemBase implements Logged {
 
-  @Log.NT
+  // @Log.NT
   private final CANSparkMax intakeMotor;
 
-  @Log.NT
+  // @Log.NT
   private final RelativeEncoder intakeEncoder;
 
   // private final PIDController intakePID;
@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase implements Logged {
 
   private final SysIdRoutine intakeRoutine;
 
-  @Log.NT
+  // @Log.NT
   private double vSetpoint;
 
   public Intake() {

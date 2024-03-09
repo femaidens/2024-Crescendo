@@ -27,8 +27,10 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   private final CANSparkMax leaderMotor; // left motor
   private final CANSparkMax followerMotor; // right motor
 
+  /*
   // private final CANSparkFlex leaderFlex;
   // private final CANSparkFlex followerFlex;
+  */
 
   private final RelativeEncoder leaderEncoder;
   private final RelativeEncoder followerEncoder;
@@ -39,6 +41,8 @@ public class ShooterWheel extends SubsystemBase implements Logged {
 
   private double vSetpoint;
 
+  /* SYSID ROUTINES */
+  /* 
   private final SysIdRoutine leftRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
@@ -48,6 +52,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
           volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
+  */
 
   public ShooterWheel() {
     leaderMotor = new CANSparkMax(ShooterPorts.LEADER_MOTOR, MotorType.kBrushless);
@@ -76,6 +81,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     followerMotor.burnFlash();
 
     /* FLEX VARIATIONS */
+    /*
     // leaderFlex = new CANSparkFlex(ShooterPorts.LEADER_FLEX, MotorType.kBrushless);
     // followerFlex = new CANSparkFlex(ShooterPorts.FOLLOWER_FLEX, MotorType.kBrushless);
 
@@ -92,6 +98,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
 
     // leaderEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
     // followerEncoder.setVelocityConversionFactor(ShooterWheelConstants.VEL_CFACTOR);
+    */
   }
 
   /* COMMANDS */
@@ -167,6 +174,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   }
 
   /* SYSID */
+  /*
   public void setLeftVoltage(double voltage) {
     leaderMotor.setVoltage(voltage);
   }
@@ -190,7 +198,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   public Command rightDyna(SysIdRoutine.Direction direction) {
     return rightRoutine.dynamic(direction);
   }
-
+  */
   @Override
   public void periodic() {
     SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());

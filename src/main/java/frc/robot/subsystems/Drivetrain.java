@@ -102,11 +102,12 @@ public class Drivetrain extends SubsystemBase implements Logged {
   /**
    * Drives the robot using joystick inputs.
    *
-   * @param x A double representing speed in the x direction.
-   * @param y A double representing speed in the y direction.
+   * @param x A double representing forward speed (y-dir)
+   * @param y A double representing sideways speed (x-dir)
    * @param rot A double representing rotation.
    * @param fieldRel A boolean to indicate field relativity.
    * @param rateLim a boolean to indicate rate limit.
+   * @param deadband A double representing the joystick deadband
    * 
    * @return The command to drive the robot.
    */
@@ -144,7 +145,9 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // SmartDashboard.putNumber("gyro x", gyroX()); <-
   }
 
-  // returns currently-estimated pose of robot
+  /** 
+   * @return currently-estimated pose of robot
+   */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }

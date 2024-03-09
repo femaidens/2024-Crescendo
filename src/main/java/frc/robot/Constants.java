@@ -11,11 +11,11 @@ public final class Constants {
   public static final double DEGREES = 360.0;
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.7;
+    public static final double ARM_SPEED = 0.85;
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 5 * DEGREES; // 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 6 * DEGREES; // 3 rotations
   }
 
   public static final class HopperConstants {
@@ -64,7 +64,7 @@ public final class Constants {
     
     public static final double AMP_FLUSH = 13*DEGREES; // placeholder
 
-    public static final double SPEAKER_FLUSH = 55*DEGREES; // placeholder
+    public static final double SPEAKER_FLUSH = 57*DEGREES; // placeholder
     public static final double SPEAKER_STAGE = 60*DEGREES;
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
@@ -135,7 +135,9 @@ public final class Constants {
     public static final double PYController = 1;
     public static final double PThetaController = 1;
 
-    public static final double DRIVE_TIME = 4; //seconds
+    public static final double TAXI_AMP_TIME = 4; //seconds
+    public static final double TAXI_SPEAKER_TIME = 4.0; 
+    public static final double DRIVE_TIME = 4.0;
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

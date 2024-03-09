@@ -5,6 +5,7 @@ package frc.robot.autos.paths;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -23,16 +24,29 @@ public class TaxiSpeaker extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
-        .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
+      // reset gyro
+      new InstantCommand(() -> drivetrain.zeroHeading()),
+      // shoot
+      // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+        //.alongWith
+        (shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
         .alongWith(hopper.setStateLimitCmd(1)),
-      new WaitCommand(1),
-      // Commands.waitUntil(() -> shooterAngle.atAngle())
+      new WaitCommand(2),
+      // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(1.5),
       hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED),
-      Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(1.5),
+      Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
       shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),
+      // taxi
+
       new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
-        .withTimeout(AutoConstants.DRIVE_TIME) // positive because intake is forward
+        .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
+
+
+      // just setting angle to see if zip tie will break
+      // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+      //   .withTimeout(2)
     );
+
+
   }
 }

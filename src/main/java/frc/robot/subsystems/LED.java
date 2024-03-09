@@ -28,48 +28,51 @@ public class LED extends SubsystemBase {
   }
 
   /* * * COMMANDS * * */
+  public Command setDefaultCmd() {
+    return this.run(() -> setDefault());
+  }
   public Command setLEDBufferCmd(){
     return this.run(() -> led.setData(ledBuffer));
   }
 
   public Command setPurpleCmd(){
-    return this.runOnce(() -> setLedPurple()).asProxy();
+    return this.run(() -> setLedPurple());
   }
 
   public Command setGreenCmd(){
-    return this.runOnce(() -> setLedGreen()).asProxy();
+    return this.run(() -> setLedGreen());
   }
 
   public Command setRedCmd(){
-    return this.runOnce(() -> setLedRed()).asProxy();
+    return this.run(() -> setLedRed());
   }
 
   // default cmd
   public Command setRainbowCmd(){
-    return this.runOnce(() -> setRainbow()).asProxy();
+    return this.run(() -> setRainbow());
   }
 
   public void setLedPurple() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 160, 32, 340);
     }
-    // led.setData(ledBuffer);
-    System.out.println("running purple leds");
+    led.setData(ledBuffer);
+    // System.out.println("running purple leds");
   }
 
   public void setLedGreen() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 0, 225, 0);
     }
-    // led.setData(ledBuffer);
+    led.setData(ledBuffer);
   }
 
   public void setDefault() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, 0, 0, 0);
     }
-    // led.setData(ledBuffer);
-    System.out.println("Default Working ");
+    led.setData(ledBuffer);
+    // System.out.println("Default Working ");
   }
 
   public void setRainbow() {
@@ -79,9 +82,9 @@ public class LED extends SubsystemBase {
     }
     rainbowFirstPixelHue += 3;
     rainbowFirstPixelHue %= 180;
-    // led.setData(ledBuffer);
+    led.setData(ledBuffer);
 
-    System.out.println("Rainbow Running ");
+    // System.out.println("Rainbow Running ");
   }
 
   public void setGrupleFlicker(boolean isGreen) {
@@ -101,7 +104,7 @@ public class LED extends SubsystemBase {
       green = !green;
     }
     led.setData(ledBuffer);
-    System.out.println("green purple led test");
+    // System.out.println("green purple led test");
 
  
   }
@@ -115,7 +118,7 @@ public class LED extends SubsystemBase {
     rainbowFirstPixelHue += 3;
     rainbowFirstPixelHue %= 180;
 
-    // led.setData(ledBuffer);
+    led.setData(ledBuffer);
   }
 
   public void setLedRed() {
@@ -124,8 +127,8 @@ public class LED extends SubsystemBase {
       ledBuffer.setRGB(i, 255, 0, 0);
     }
 
-    // led.setData(ledBuffer);
-    System.out.println("RED!");
+    led.setData(ledBuffer);
+    // System.out.println("RED!");
   }
 
   public void setSolid(int[] solid) {
@@ -134,8 +137,8 @@ public class LED extends SubsystemBase {
       ledBuffer.setRGB(j, solid[0], solid[1], solid[2]);
     }
     
-    // led.setData(ledBuffer);
-    System.out.println("SOLID");
+    led.setData(ledBuffer);
+    // System.out.println("SOLID");
 
   }
 

@@ -11,17 +11,17 @@ public final class Constants {
   public static final double DEGREES = 360.0;
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.3;
+    public static final double ARM_SPEED = 0.7;
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 4.0 * DEGREES; // 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 5 * DEGREES; // 3 rotations
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 4*DEGREES;
+    public static final double TRANSITION_SPEED = 4.5*DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -36,7 +36,7 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 0;
 
     // velocities
-    public static final double INTAKE_VEL = IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
+    public static final double INTAKE_VEL =  2*360;// IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
     public static final double OUTTAKE_VEL = -INTAKE_VEL;
 
     // pid constants -> need to populate 
@@ -62,10 +62,10 @@ public final class Constants {
     // limits
     public static final int CURRENT_LIMIT = 30;
     
-    public static final double AMP_FLUSH = 12*DEGREES; // placeholder
+    public static final double AMP_FLUSH = 13*DEGREES; // placeholder
 
     public static final double SPEAKER_FLUSH = 55*DEGREES; // placeholder
-    public static final double SPEAKER_STAGE = 55*DEGREES;
+    public static final double SPEAKER_STAGE = 60*DEGREES;
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
@@ -100,14 +100,14 @@ public final class Constants {
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = 40.0; 
+    public static final double SHOOTER_MIN_ANGLE = 43.0; 
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 61.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
     public static final double INITIAL_ANGLE = 65.0;
-    public static final double SPEAKER_FLUSH = AMP_FLUSH; // placeholder
-    public static final double SPEAKER_STAGE = 40.0; // placeholder
+    public static final double SPEAKER_FLUSH = 60.0; // placeholder
+    public static final double SPEAKER_STAGE = 43.0; // placeholder
     public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
 

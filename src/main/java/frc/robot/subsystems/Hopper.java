@@ -45,6 +45,7 @@ public class Hopper extends SubsystemBase implements Logged {
   
   private boolean currentState, lastState;
   private int stateCount = 0;
+  private int stateLimit = 2;
 
   /** Creates a new Hopper. */
   public Hopper() {
@@ -68,7 +69,7 @@ public class Hopper extends SubsystemBase implements Logged {
         new SysIdRoutine.Mechanism(
             volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
-    vSetpoint = 0;
+    vSetpoint = 2;//0;
     currentState = getReceiverStatus();
     lastState = currentState;
   }
@@ -107,9 +108,17 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> stopMotor());
   }
 
+  public Command setStateLimitCmd(int limit) {
+    return this.runOnce(() -> setStateLimit(limit)).asProxy();
+  }
+
   public Command resetStateCountCmd() {
     System.out.println("state count reset");
     return this.runOnce(() -> resetStateCount()).asProxy();
+  }
+
+  public Command resetStateEmergencyCmd() {
+    return this.runOnce(() -> resetStateEmergency()).asProxy();
   }
 
   /* * * BEAM BREAK * * */
@@ -122,29 +131,39 @@ public class Hopper extends SubsystemBase implements Logged {
   // hopper is empty once state change count == 2;
   @Log.NT
   public boolean isHopperEmpty() {
-    int temp;
+    // int temp;
 
     if (hasStateChanged()) {
       stateCount++;
       System.out.println(stateCount);
     }
 
-    temp = stateCount;
-    resetStateCount();
-    return temp == 2;
+    // temp = stateCount;
+    // resetStateCount();
+    return stateCount == stateLimit;
   }
 
   @Log.NT
   public boolean isHopperFull() {
-    if(stateCount>=2) {
-      resetStateCount();
-    }
+    // if(stateCount>=2) {
+    //   resetStateCount();
+    // }
     return !getReceiverStatus();
   }
 
   public void resetStateCount() {
+    if(stateCount >= stateLimit) {
+      stateCount = 0;
+    }
+    // System.out.println("hopper state count reset");
+  }
+
+  public void resetStateEmergency() {
     stateCount = 0;
-    System.out.println("hopper state count reset");
+  }
+
+  public void setStateLimit(int limit) {
+    stateLimit = limit;
   }
 
   // checks if beam break has changed from broken to unbroken

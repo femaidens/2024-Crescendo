@@ -107,7 +107,7 @@ public final class Constants {
 
     public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // placeholder
-    public static final double SPEAKER_STAGE = 43.0; // placeholder
+    public static final double SPEAKER_STAGE = 38.5; // placeholder
     public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
 

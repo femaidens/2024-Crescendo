@@ -340,13 +340,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
     return this.runOnce(() -> regSpeed());
   }
   
-  public DriverStation.Alliance red() {
-    return DriverStation.Alliance.Red;
-  }
-
-  public DriverStation.Alliance blue() {
-    return DriverStation.Alliance.Blue;
-  }
   /* SYSID CMDS */
   public Command driveQuasistatic(SysIdRoutine.Direction direction) {
     return driveRoutine.quasistatic(direction);
@@ -362,16 +355,5 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   public Command turnDynamic(SysIdRoutine.Direction direction) {
     return turnRoutine.dynamic(direction);
-  }
-
-  public Command redAlliance() {
-    // if(alliance == "Blue") {
-    //   return DriverStation.Alliance.Red();
-    // }
-      return this.runOnce(() -> red());
-  }
-
-  public Command blueAlliance() {
-    return this.runOnce(() -> blue()); 
   }
 }

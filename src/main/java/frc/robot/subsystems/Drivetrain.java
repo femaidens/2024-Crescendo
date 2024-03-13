@@ -13,6 +13,7 @@ import frc.robot.DrivetrainConstants.*;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -329,6 +330,23 @@ public class Drivetrain extends SubsystemBase implements Logged {
     speedFactor = 1;
   }
 
+  /* SPEED FACTOR CMD */
+  public Command slowCmd()
+  {
+    return this.runOnce(() -> slowSpeed());
+  }
+  public Command regularCmd()
+  {
+    return this.runOnce(() -> regSpeed());
+  }
+  
+  public DriverStation.Alliance red() {
+    return DriverStation.Alliance.Red;
+  }
+
+  public DriverStation.Alliance blue() {
+    return DriverStation.Alliance.Blue;
+  }
   /* SYSID CMDS */
   public Command driveQuasistatic(SysIdRoutine.Direction direction) {
     return driveRoutine.quasistatic(direction);
@@ -344,5 +362,16 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   public Command turnDynamic(SysIdRoutine.Direction direction) {
     return turnRoutine.dynamic(direction);
+  }
+
+  public Command redAlliance() {
+    // if(alliance == "Blue") {
+    //   return DriverStation.Alliance.Red();
+    // }
+      return this.runOnce(() -> red());
+  }
+
+  public Command blueAlliance() {
+    return this.runOnce(() -> blue()); 
   }
 }

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,6 +64,7 @@ public class RobotContainer implements Logged {
 //   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
   public RobotContainer() {
     // configurations
@@ -110,26 +112,26 @@ public class RobotContainer implements Logged {
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
+    SmartDashboard.putData("Choose Alliance: ", allianceChooser);
     // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
     // autonChooser.addOption("Shoot Amp", shooter.autonShoot(AutoConstants.WHEEL_SPEED, ShooterAngleConstants.AMP_FLUSH));
+    autonChooser.addOption("Red", drivetrain.redAlliance());
+    autonChooser.addOption("Blue", drivetrain.blueAlliance());
   }
 
   private void configureButtonBindings() {
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
-        // driveJoy.rightBumper()
-        //     .onTrue(drivetrain.resetGyroCmd());
-        
-        // driveJoy.a()
-        //     .onTrue(
-        //         // intaking.setIntakeHopperSetpoints(0)
-        //         Commands.waitUntil(hopper::isHopperFull)
-        //         .andThen(leds.setGreenCmd().withTimeout(3))
-        //         // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
-        //     );
+        driveJoy.rightBumper()
+            .onTrue(drivetrain.resetGyroCmd());
+
+        // speed factor
+        driveJoy.leftTrigger()
+            .onTrue(drivetrain.slowCmd())
+            .onFalse(drivetrain.regularCmd());
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm

@@ -106,9 +106,9 @@ public final class Constants {
     public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
     public static final double INITIAL_ANGLE = 65.0;
-    public static final double SPEAKER_FLUSH = 60.0; // placeholder
-    public static final double SPEAKER_STAGE = 38.5; // placeholder
-    public static final double SPEAKER_WING = 25.0; // placeholder
+    public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
+    public static final double SPEAKER_STAGE = 38.5; // actual angle -> 36.5
+    // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
 
 

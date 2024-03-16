@@ -5,10 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Time;
+import edu.wpi.first.units.Units;
 
 public final class Constants {
 
   public static final double DEGREES = 360.0;
+  public static final Measure<Time> PERIOD = Units.Seconds.of(0.02);
 
   public static final class ClimberConstants {
     public static final double ARM_SPEED = 0.85;

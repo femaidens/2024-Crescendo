@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
@@ -23,7 +26,11 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
+import frc.robot.DrivetrainConstants.DriveConstants;
+import frc.robot.DrivetrainConstants.ModuleConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
+import frc.robot.DrivetrainConstants.ModuleConstants.Drive;
+import frc.robot.DrivetrainConstants.ModuleConstants.Turning;
 import frc.robot.Ports.*;
 import frc.robot.autos.paths.Taxi;
 import frc.robot.autos.paths.TaxiAmp;
@@ -41,9 +48,16 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
+import monologue.Annotations.Log;
 import monologue.Logged;
-
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import org.littletonrobotics.urcl.URCL;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 public class RobotContainer implements Logged {
 
@@ -67,11 +81,15 @@ public class RobotContainer implements Logged {
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
+@Log.NT private final SendableChooser<Command> autos;
+
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
     configureDefaultCommands();
+    autos = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autos);
   }
 
   public void configureSubsystemDefaults() {
@@ -115,9 +133,34 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+
+    NamedCommands.registerCommand("shoot", shooter.shoot());
+    NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
+
+    AutoBuilder.configureHolonomic(
+        drivetrain::getPose, 
+        drivetrain::resetOdometry, 
+        drivetrain::getRobotRelativeChassisSpeeds, //chassis speed supplier must be robot relative
+        drivetrain::setChassisSpeeds, //method that will drive the robot based on robot relative chassis speed
+        new HolonomicPathFollowerConfig(
+            new PIDConstants(Drive.kP, Drive.kI, Drive.kD), // Translation PID constants
+            new PIDConstants(Turning.kP, Turning.kI, Turning.kD), // Rotation PID constants
+            DriveConstants.MAX_SPEED, // Max module speed, in m/s
+            ModuleConstants.WHEEL_DIAMETER/2, 
+            new ReplanningConfig()
+        ), 
+        () -> {
+        var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+        drivetrain);
   }
 
   private void configureButtonBindings() {
+    RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(autos::getSelected));
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro

@@ -8,6 +8,7 @@ import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.modules.MaxSwerveModule;
 import frc.robot.utils.SwerveUtils;
 import monologue.Logged;
+import frc.robot.Constants;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -19,8 +20,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -35,22 +38,22 @@ import java.util.List;
 public class Drivetrain extends SubsystemBase implements Logged {
   // Create MaxSwerveModules
 
-  private final MaxSwerveModule frontLeft = new MaxSwerveModule(
+  private static MaxSwerveModule frontLeft = new MaxSwerveModule(
       DrivetrainPorts.FRONT_LEFT_DRIVE,
       DrivetrainPorts.FRONT_LEFT_TURNING,
       DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
 
-  private final MaxSwerveModule frontRight = new MaxSwerveModule(
+  private static MaxSwerveModule frontRight = new MaxSwerveModule(
       DrivetrainPorts.FRONT_RIGHT_DRIVE,
       DrivetrainPorts.FRONT_RIGHT_TURNING,
       DriveConstants.FR_CHASSIS_ANGULAR_OFFSET);
 
-  private final MaxSwerveModule rearLeft = new MaxSwerveModule(
+  private static MaxSwerveModule rearLeft = new MaxSwerveModule(
       DrivetrainPorts.REAR_LEFT_DRIVE,
       DrivetrainPorts.REAR_LEFT_TURNING,
       DriveConstants.RL_CHASSIS_ANGULAR_OFFSET);
 
-  private final MaxSwerveModule rearRight = new MaxSwerveModule(
+  private static MaxSwerveModule rearRight = new MaxSwerveModule(
       DrivetrainPorts.REAR_RIGHT_DRIVE,
       DrivetrainPorts.REAR_RIGHT_TURNING,
       DriveConstants.RR_CHASSIS_ANGULAR_OFFSET);
@@ -68,9 +71,11 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private double prevTime = WPIUtilJNI.now() * 1e-6;
   private double speedFactor = 1.0; // was 0.3 for school
 
+  private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(DriveConstants.MODULE_OFFSET);
+
   // odometry robot pose
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      DriveConstants.DRIVE_KINEMATICS,
+      kinematics,
       Rotation2d.fromDegrees(getAngle()),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
@@ -79,8 +84,9 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearRight.getPosition()
       });
 
-  private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
-
+  // Translation2d frontLeftLocation 
+  private final static SwerveModuleState[] moduleStates = {frontLeft.getState(), frontRight.getState(), rearLeft.getState(), rearRight.getState()};
+  private final List<MaxSwerveModule> modules = List.of(frontLeft,frontRight,rearLeft,rearRight);
   /* SYSID INSTANTIATIONS */
   private final SysIdRoutine driveRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
@@ -247,7 +253,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // System.out.println("yspeed drive: " + ySpeedDelivered);
 
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
-    var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
+    var swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
                 Rotation2d.fromDegrees(getAngle()))
@@ -278,6 +284,26 @@ public class Drivetrain extends SubsystemBase implements Logged {
     frontRight.setDesiredState(desiredStates[1]);
     rearLeft.setDesiredState(desiredStates[2]);
     rearRight.setDesiredState(desiredStates[3]);
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    return moduleStates;
+  }
+
+  //   public void setChassisSpeeds(ChassisSpeeds speeds) {
+  //   setModuleStates(
+  //       Kinematics.toSwerveModuleStates(
+  //           ChassisSpeeds.discretize(speeds, in(Seconds))));
+  // }
+
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
+    return kinematics.toChassisSpeeds(moduleStates);
+  }
+
+  public void setChassisSpeeds(ChassisSpeeds speeds) {
+    setModuleStates(
+        kinematics.toSwerveModuleStates(
+            ChassisSpeeds.discretize(speeds, Constants.PERIOD.in(Units.Seconds))));
   }
 
   // resets drive encoders

@@ -181,6 +181,8 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearRight.getPosition()
         });
     
+    field2d.setRobotPose(getCurrentPose());
+    
 
     SmartDashboard.putNumber("gyro angle", getAngle());
     // System.out.println("yaw reading" + gyro.getYaw());
@@ -193,6 +195,10 @@ public class Drivetrain extends SubsystemBase implements Logged {
    */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
+  }
+
+  public Pose2d getCurrentPose(){
+    return poseEstimator.getEstimatedPosition();
   }
 
   // public SwerveModulePosition[] getModulePositions(){

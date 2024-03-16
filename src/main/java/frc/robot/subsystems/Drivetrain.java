@@ -39,6 +39,7 @@ import java.util.List;
 
 public class Drivetrain extends SubsystemBase implements Logged {
 
+  // private final MaxSwerveModule[] swerveModules;
   private final MaxSwerveModule frontLeft = new MaxSwerveModule(
       DrivetrainPorts.FRONT_LEFT_DRIVE,
       DrivetrainPorts.FRONT_LEFT_TURNING,
@@ -109,7 +110,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   public Drivetrain() {
     zeroHeading();
-
     poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
       Rotation2d.fromDegrees(gyro.getAngle()),

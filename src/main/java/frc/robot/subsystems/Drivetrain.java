@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Drivetrain extends SubsystemBase implements Logged {
@@ -86,7 +87,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearRight.getPosition()
       });
 
-  private final SwerveDrivePoseEstimator odometryEstimator;
+  private final SwerveDrivePoseEstimator poseEstimator;
   
   @Log.NT
   private final Field2d field2d = new Field2d();
@@ -111,7 +112,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
   public Drivetrain() {
     zeroHeading();
 
-    odometryEstimator = new SwerveDrivePoseEstimator(
+    poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
       gyro.getRotation2d(),
       new SwerveModulePosition[]{
@@ -172,6 +173,16 @@ public class Drivetrain extends SubsystemBase implements Logged {
             rearLeft.getPosition(),
             rearRight.getPosition()
         });
+    
+    poseEstimator.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+          frontLeft.getPosition(),
+          frontRight.getPosition(),
+          rearLeft.getPosition(),
+          rearRight.getPosition()
+        });
+    
 
     SmartDashboard.putNumber("gyro angle", getAngle());
     // System.out.println("yaw reading" + gyro.getYaw());
@@ -185,6 +196,10 @@ public class Drivetrain extends SubsystemBase implements Logged {
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
+
+  // public SwerveModulePosition[] getModulePositions(){
+  //   return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);
+  // }
 
   // resets the odometry to the specified pose
   public void resetOdometry(Pose2d pose) {

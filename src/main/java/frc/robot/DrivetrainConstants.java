@@ -34,11 +34,12 @@ public final class DrivetrainConstants {
     // distance between front and back wheels on robot -> replace with known values
     public static final double WHEEL_BASE = Units.inchesToMeters(26.5);
     
-    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+    public static final Translation2d[] MODULE_OFFSET = {
         new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // fl
         new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2), // fr
         new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2), // rl
-        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)); // rr
+        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2) // rr
+    };
 
     // angular offsets of the modules relative to the chassis in radians
     public static final double FL_CHASSIS_ANGULAR_OFFSET = -Math.PI / 2;

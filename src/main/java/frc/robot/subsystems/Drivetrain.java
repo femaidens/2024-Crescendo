@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -59,6 +61,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   private final AHRS gyro = new AHRS();
 
+  private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(DriveConstants.MODULE_OFFSET);
 
   // Slew rate filter variables for controlling lateral acceleration
   private double currentRotation = 0.0;
@@ -72,8 +75,9 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private double speedFactor = 1.0; // was 0.3 for school
 
   // odometry robot pose
+  //out of date - swerve drive pose estimator is new
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      DriveConstants.DRIVE_KINEMATICS,
+      kinematics,
       Rotation2d.fromDegrees(getAngle()),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
@@ -81,6 +85,8 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearLeft.getPosition(),
           rearRight.getPosition()
       });
+
+  private final SwerveDrivePoseEstimator odometryEstimator;
   
   @Log.NT
   private final Field2d field2d = new Field2d();
@@ -104,7 +110,28 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   public Drivetrain() {
     zeroHeading();
+
+    odometryEstimator = new SwerveDrivePoseEstimator(
+      kinematics,
+      gyro.getRotation2d(),
+      new SwerveModulePosition[]{
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        rearLeft.getPosition(),
+        rearRight.getPosition()
+      }, 
+      new Pose2d(),
+      VecBuilder.fill(
+        0.1,
+        0.1,
+        0.1),
+      VecBuilder.fill(
+        0.9,
+        0.9,
+        0.9
+      ));
   }
+  
   /* COMMANDS */
   /**
    * Drives the robot using joystick inputs.
@@ -253,7 +280,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // System.out.println("yspeed drive: " + ySpeedDelivered);
 
     double rotDelivered = currentRotation * DriveConstants.MAX_ANGULAR_SPEED;
-    var swerveModuleStates = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
+    var swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
                 Rotation2d.fromDegrees(getAngle()))

@@ -121,17 +121,17 @@ public class Drivetrain extends SubsystemBase implements Logged {
         rearRight.getPosition()
       }, 
       new Pose2d(),
-      VecBuilder.fill(
+      VecBuilder.fill( //state stdev - increasing values will lead to estimator trusting state estimate more than incoming data - lots of "noise"
         0.1,
         0.1,
         0.1),
-      VecBuilder.fill(
+      VecBuilder.fill( //stdev of vision pose measurement
         0.9,
         0.9,
         0.9
       ));
   }
-  
+
   /* COMMANDS */
   /**
    * Drives the robot using joystick inputs.

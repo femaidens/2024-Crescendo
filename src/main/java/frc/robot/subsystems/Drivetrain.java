@@ -81,6 +81,9 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearLeft.getPosition(),
           rearRight.getPosition()
       });
+  
+  @Log.NT
+  private final Field2d field2d = new Field2d();
 
   private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 

@@ -213,7 +213,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
   }
 
   public void resetFieldPosition(){
-
+    setCurrentPose(new Pose2d());
   }
 
   // public SwerveModulePosition[] getModulePositions(){

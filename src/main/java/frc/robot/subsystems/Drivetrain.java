@@ -182,7 +182,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
         });
     
     field2d.setRobotPose(getCurrentPose());
-    
 
     SmartDashboard.putNumber("gyro angle", getAngle());
     // System.out.println("yaw reading" + gyro.getYaw());
@@ -199,6 +198,22 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
   public Pose2d getCurrentPose(){
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public void setCurrentPose(Pose2d newPose){
+    poseEstimator.resetPosition(
+      Rotation2d.fromDegrees(gyro.getAngle()),
+      new SwerveModulePosition[]{
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        rearLeft.getPosition(),
+        rearRight.getPosition()
+      }, 
+      newPose);
+  }
+
+  public void resetFieldPosition(){
+
   }
 
   // public SwerveModulePosition[] getModulePositions(){

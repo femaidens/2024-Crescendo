@@ -8,12 +8,14 @@ import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.modules.MaxSwerveModule;
 import frc.robot.utils.SwerveUtils;
 import monologue.Logged;
+import monologue.Annotations.Log;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -56,6 +58,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
       DriveConstants.RR_CHASSIS_ANGULAR_OFFSET);
 
   private final AHRS gyro = new AHRS();
+
 
   // Slew rate filter variables for controlling lateral acceleration
   private double currentRotation = 0.0;

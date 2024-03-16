@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Drivetrain extends SubsystemBase implements Logged {
-  // Create MaxSwerveModules
 
   private final MaxSwerveModule frontLeft = new MaxSwerveModule(
       DrivetrainPorts.FRONT_LEFT_DRIVE,
@@ -76,7 +75,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private double speedFactor = 1.0; // was 0.3 for school
 
   // odometry robot pose
-  //out of date - swerve drive pose estimator is new
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       kinematics,
       Rotation2d.fromDegrees(getAngle()),
@@ -114,7 +112,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
 
     poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
-      gyro.getRotation2d(),
+      Rotation2d.fromDegrees(gyro.getAngle()),
       new SwerveModulePosition[]{
         frontLeft.getPosition(),
         frontRight.getPosition(),
@@ -175,7 +173,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
         });
     
     poseEstimator.update(
-        gyro.getRotation2d(),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),

@@ -12,9 +12,12 @@ import frc.robot.Constants;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -59,6 +62,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
       DriveConstants.RR_CHASSIS_ANGULAR_OFFSET);
 
   private final AHRS gyro = new AHRS();
+  private Field2d field = new Field2d();
 
   // Slew rate filter variables for controlling lateral acceleration
   private double currentRotation = 0.0;
@@ -150,6 +154,11 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // System.out.println("yaw reading" + gyro.getYaw());
     // System.out.println("angle reading " + getAngle());
     // SmartDashboard.putNumber("gyro x", gyroX()); <-
+       // Set up custom logging to add the current path to a field 2d widget
+    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+
+    SmartDashboard.putData("Field", field);
+    field.setRobotPose(getPose());
   }
 
   /** 

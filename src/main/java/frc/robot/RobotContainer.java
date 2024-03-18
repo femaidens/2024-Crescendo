@@ -55,6 +55,7 @@ import org.littletonrobotics.urcl.URCL;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -382,6 +383,10 @@ public class RobotContainer implements Logged {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autonChooser.getSelected();
+    // Load the path you want to follow using its name in the GUI
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
   }
 }

@@ -15,7 +15,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.Units;
+import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,6 +32,17 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   private final PIDController shooterAnglePID;
 
   private double pSetpoint;
+
+  // private final MutableMeasure<Voltage> rampRate = MutableMeasure.mutable(Units.Volts.of(0));
+
+  // private final SysIdRoutine.Config config = new SysIdRoutine.Config(
+  //   Volts.of(3)
+  // );
+
+  //  private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(3).per(Seconds.of(1)),
+  //           Volts.of(3),
+  //           Seconds.of(3),
+  //           null);
 
   private final SysIdRoutine angleRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
@@ -150,19 +161,19 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.setVoltage(voltage);
   }
 
-  public Command leftQuas(SysIdRoutine.Direction direction) {
+  public boolean atMaxAngle(){
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) > ShooterAngleConstants.SHOOTER_MAX_ANGLE;
+  }
+
+  public boolean atMinAngle(){
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) < ShooterAngleConstants.SHOOTER_MIN_ANGLE;
+  }
+
+  public Command quasiCmd(SysIdRoutine.Direction direction) {
     return angleRoutine.quasistatic(direction);
   }
 
-  public Command leftDyna(SysIdRoutine.Direction direction) {
-    return angleRoutine.dynamic(direction);
-  }
-
-  public Command rightQuas(SysIdRoutine.Direction direction) {
-    return angleRoutine.quasistatic(direction);
-  }
-
-  public Command rightDyna(SysIdRoutine.Direction direction) {
+  public Command dynaCmd(SysIdRoutine.Direction direction) {
     return angleRoutine.dynamic(direction);
   }
 

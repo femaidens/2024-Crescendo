@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -130,13 +131,32 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
+        //mins and maxes switched because direction of motor is reversed
         driveJoy.a()
-            .onTrue(
-                // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
-                // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
+            .whileTrue(
+                shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMinAngle)
             );
+
+        driveJoy.b()
+            .whileTrue(
+                shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMaxAngle)
+            );
+        
+        driveJoy.x()
+            .whileTrue(
+                shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMinAngle)
+            );
+
+        driveJoy.y()
+            .whileTrue(
+                shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMaxAngle)
+            );
+            // .onTrue(
+            //     // intaking.setIntakeHopperSetpoints(0)
+            //     Commands.waitUntil(hopper::isHopperFull)
+            //     .andThen(leds.setGreenCmd().withTimeout(3))
+            //     // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
+            // );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm

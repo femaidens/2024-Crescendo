@@ -79,18 +79,25 @@ public class RobotContainer implements Logged {
   private final Intaking intaking = new Intaking(intake, hopper);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+//   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
-@Log.NT private final SendableChooser<Command> autos;
+//   private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
+
+// @Log.NT private final SendableChooser<Command> autos;
+  @Log.NT private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
 
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
     configureDefaultCommands();
-    autos = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autos);
+    // autos = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Chooser", autos);
+
+    pathplannerChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Pathplanner Auto Mode", pathplannerChooser);
+
   }
 
   public void configureSubsystemDefaults() {
@@ -130,11 +137,11 @@ public class RobotContainer implements Logged {
   }
   
   public void configureAuton() {
-    SmartDashboard.putData("Choose Auto: ", autonChooser);
-    autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
-    autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
-
+    // SmartDashboard.putData("Choose Auto: ", autonChooser);
+    // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
+    // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
+    // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+    
     NamedCommands.registerCommand("shoot", shooter.shoot());
     NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
 
@@ -161,7 +168,9 @@ public class RobotContainer implements Logged {
   }
 
   private void configureButtonBindings() {
-    RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(autos::getSelected));
+    // RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(autos::getSelected));
+
+    RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(pathplannerChooser::getSelected));
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
@@ -384,9 +393,11 @@ public class RobotContainer implements Logged {
    */
   public Command getAutonomousCommand() {
     // Load the path you want to follow using its name in the GUI
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return AutoBuilder.followPath(path);
+    // return AutoBuilder.followPath(path);
+
+    return pathplannerChooser.getSelected();
   }
 }

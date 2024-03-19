@@ -51,10 +51,14 @@ import frc.robot.subsystems.ShooterWheel;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+
+import java.util.List;
+
 import org.littletonrobotics.urcl.URCL;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -79,21 +83,20 @@ public class RobotContainer implements Logged {
   private final Intaking intaking = new Intaking(intake, hopper);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
-//   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
-//   private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
+  private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
 
-// @Log.NT private final SendableChooser<Command> autos;
-  @Log.NT private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
-
+@Log.NT private final SendableChooser<Command> autos;
+  @Log.NT private SendableChooser<Command> pathplanner = new SendableChooser<>();
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
     configureDefaultCommands();
-    // autos = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto Chooser", autos);
+    autos = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autos);
 
     pathplannerChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Pathplanner Auto Mode", pathplannerChooser);
@@ -137,11 +140,11 @@ public class RobotContainer implements Logged {
   }
   
   public void configureAuton() {
-    // SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
-    // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
-    
+    SmartDashboard.putData("Choose Auto: ", autonChooser);
+    autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
+    autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
+    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+    // SmartDashboard.putData("Choose Auto: ", pathplannerChooser);
     NamedCommands.registerCommand("shoot", shooter.shoot());
     NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
 
@@ -168,7 +171,7 @@ public class RobotContainer implements Logged {
   }
 
   private void configureButtonBindings() {
-    // RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(autos::getSelected));
+    RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(autos::getSelected));
 
     RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(pathplannerChooser::getSelected));
 
@@ -391,13 +394,13 @@ public class RobotContainer implements Logged {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public SendableChooser<Command> getAutonomousCommand() {
     // Load the path you want to follow using its name in the GUI
     // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
-    // return AutoBuilder.followPath(path);
+    // List<PathPlannerPath> threeNoteFlush = PathPlannerAuto.getPathGroupFromAutoFile("3 note flush");
 
-    return pathplannerChooser.getSelected();
-  }
+    return AutoBuilder.buildAutoChooser();
+ }
 }

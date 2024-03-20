@@ -19,7 +19,7 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 4.5*DEGREES;
 
@@ -30,7 +30,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
-    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
     public static final double ROLLER_SPEED = 0.175;
 
     public static final int CURRENT_LIMIT = 0;

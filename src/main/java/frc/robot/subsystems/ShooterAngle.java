@@ -36,8 +36,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // private final MutableMeasure<Voltage> rampRate = MutableMeasure.mutable(Units.Volts.of(0));
 
-   private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1)),
-            Volts.of(3),
+   private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.25).per(Seconds.of(1)),
+            Volts.of(1),
             Seconds.of(5),
             null);
 
@@ -159,11 +159,11 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   }
 
   public boolean atMaxAngle(){
-    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) > ShooterAngleConstants.SHOOTER_MAX_ANGLE;
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) >= ShooterAngleConstants.SHOOTER_MAX_ANGLE;
   }
 
   public boolean atMinAngle(){
-    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) < ShooterAngleConstants.SHOOTER_MIN_ANGLE;
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) <= ShooterAngleConstants.SHOOTER_MIN_ANGLE;
   }
 
   public Command quasiCmd(SysIdRoutine.Direction direction) {

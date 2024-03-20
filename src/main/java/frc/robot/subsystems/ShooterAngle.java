@@ -15,7 +15,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.*;
+// import edu.wpi.first.units.*;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Seconds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -39,15 +42,15 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   //   Volts.of(3)
   // );
 
-  //  private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(3).per(Seconds.of(1)),
-  //           Volts.of(3),
-  //           Seconds.of(3),
-  //           null);
+   private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1)),
+            Volts.of(3),
+            Seconds.of(5),
+            null);
 
   private final SysIdRoutine angleRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
+      config,
       new SysIdRoutine.Mechanism(
-          volts -> setVoltage(volts.in(Units.Volts)), null, this));
+          volts -> setVoltage(volts.in(Volts)), null, this));
 
   // possibly add an armFF later
 

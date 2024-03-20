@@ -130,7 +130,7 @@ public class RobotContainer implements Logged {
             .onTrue(drivetrain.slowCmd())
             .onFalse(drivetrain.regularCmd());
         
-        // tests led after trigger is triggered -> works!
+        /* SHOOTER ANGLE SYSID BUTTONS */
         //mins and maxes switched because direction of motor is reversed
         driveJoy.a()
             .whileTrue(

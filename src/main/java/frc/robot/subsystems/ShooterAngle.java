@@ -36,10 +36,6 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // private final MutableMeasure<Voltage> rampRate = MutableMeasure.mutable(Units.Volts.of(0));
 
-  // private final SysIdRoutine.Config config = new SysIdRoutine.Config(
-  //   Volts.of(3)
-  // );
-
    private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1)),
             Volts.of(3),
             Seconds.of(5),

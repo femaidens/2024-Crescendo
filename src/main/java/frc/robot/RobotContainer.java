@@ -89,17 +89,29 @@ public class RobotContainer implements Logged {
 //   private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
 
 // @Log.NT private final SendableChooser<Command> autos;
-  @Log.NT private SendableChooser<Command> pathplanner = new SendableChooser<>();
+  @Log.NT private final SendableChooser<Command> pathplanner;
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
+
+
+    NamedCommands.registerCommand("shoot", shooter.shoot());
+    NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
+
+
     configureDefaultCommands();
-    // autos = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto Chooser", autos);
+
 
     pathplanner = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Pathplanner Auto Mode", pathplannerChooser);
+    SmartDashboard.putData("Choose Auto: ", pathplanner);
+
+
+
+    // autos = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Chooser", autos);
+    // pathplanner.addOption("3 note flush", );
+    // SmartDashboard.putData("Auto", pathplanner);
 
   }
 
@@ -144,11 +156,7 @@ public class RobotContainer implements Logged {
     // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
-
-    SmartDashboard.putData("Choose Pathplanner Auto: ", pathplanner);
-    NamedCommands.registerCommand("shoot", shooter.shoot());
-    NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
-
+    
     AutoBuilder.configureHolonomic(
         drivetrain::getPose, 
         drivetrain::resetOdometry, 
@@ -159,8 +167,7 @@ public class RobotContainer implements Logged {
             new PIDConstants(Turning.kP, Turning.kI, Turning.kD), // Rotation PID constants
             DriveConstants.MAX_SPEED, // Max module speed, in m/s
             ModuleConstants.WHEEL_DIAMETER/2, 
-            new ReplanningConfig()
-        ), 
+            new ReplanningConfig()), 
         () -> {
         var alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
@@ -172,9 +179,12 @@ public class RobotContainer implements Logged {
   }
 
   private void configureButtonBindings() {
-    // RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(pathplanner::getSelected));
 
-    RobotModeTriggers.autonomous().whileTrue(Commands.deferredProxy(pathplanner::getSelected));
+    /* * * PATHPLANNER * * */
+
+    RobotModeTriggers.autonomous()
+    .whileTrue(Commands.deferredProxy(pathplanner::getSelected));
+
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
@@ -395,11 +405,12 @@ public class RobotContainer implements Logged {
    *
    * @return the command to run in autonomous
    */
-  public SendableChooser<Command> getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     // Load the path you want to follow using its name in the GUI
-    return pathplanner;
+    // return pathplanner;
     // Create a path following command using AutoBuilder. This will also trigger event markers.
     // List<PathPlannerPath> threeNoteFlush = PathPlannerAuto.getPathGroupFromAutoFile("3 note flush");
     // return pathplannerChooser;
+    return pathplanner.getSelected();
  }
 }

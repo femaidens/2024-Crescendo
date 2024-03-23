@@ -194,7 +194,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
     
     LimelightHelpers.PoseEstimate llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
     if(llMeasurement.tagCount >= 2){
-      poseEstimator.setVisionMeasurementStdDevs(null);
+      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.99)); //need to be changed
       poseEstimator.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
     }
   }

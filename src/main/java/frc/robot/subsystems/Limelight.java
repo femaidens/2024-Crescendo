@@ -12,18 +12,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 
 public class Limelight extends SubsystemBase {
-  private NetworkTable table;
+  // private NetworkTable table;
   private NetworkTableEntry tv;
   private double tx;
   private double ta;
   private NetworkTableEntry ts;
   private double ty;
+  private final Limelight limelight;
+
 
   /** Creates a new Limelight. */
   public Limelight() {
-    table = NetworkTableInstance.getDefault().getTable("limelight");
+    // table = NetworkTableInstance.getDefault().getTable("limelight");
+    limelight = new Limelight();
 
-    tv = table.getEntry("tv");
+    // tv = table.getEntry("tv");
     tx = LimelightHelpers.getTX("");
     ta = LimelightHelpers.getTA("");
     ty = LimelightHelpers.getTY("");

@@ -33,8 +33,8 @@ public class Robot extends TimedRobot implements Logged {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    // DataLogManager.start();
-    // URCL.start();
+    DataLogManager.start();
+    URCL.start();
     Monologue.setupMonologue(this, "/Robot", false, false);
   }
 

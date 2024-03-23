@@ -95,21 +95,21 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
-    );
+    // shooterAngle.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> shooterAngle.setManualAngle(
+    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //         shooterAngle)
+    // );
 
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
-    // // if default velocity is 0, need to run command when scheduling the command
-    // // if not, make sure that setpoints are changing correctly
-    hopper.setDefaultCommand(hopper.setVelocityCmd());
-    intake.setDefaultCommand(intake.setVelocityCmd());
-    leds.setDefaultCommand(leds.setRainbowCmd());
+    // // // if default velocity is 0, need to run command when scheduling the command
+    // // // if not, make sure that setpoints are changing correctly
+    // hopper.setDefaultCommand(hopper.setVelocityCmd());
+    // intake.setDefaultCommand(intake.setVelocityCmd());
+    // leds.setDefaultCommand(leds.setRainbowCmd());
   }
   
   public void configureAuton() {
@@ -132,13 +132,13 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
-        driveJoy.a()
-            .onTrue(
-                // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
-                // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
-            );
+        // driveJoy.a()
+        //     .onTrue(
+        //         // intaking.setIntakeHopperSetpoints(0)
+        //         Commands.waitUntil(hopper::isHopperFull)
+        //         .andThen(leds.setGreenCmd().withTimeout(3))
+        //         // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
+        //     );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -312,25 +312,39 @@ public class RobotContainer implements Logged {
 
     /* * * CONTROL BINDINGS * * */
     /* DRIVETRAIN SYSID */
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
+
+    // driveJoy.start()
+    // .onTrue(
+    //     new InstantCommand(
+    //         () -> drivetrain.setStraight()
+    //     )
+    // );
+
+    // driveJoy.back()
+    // .onTrue(
+    //     new InstantCommand(
+    //         () -> drivetrain.setX()
+    //     )
+    // );
 
     // driveJoy.a()
     //     .whileTrue(

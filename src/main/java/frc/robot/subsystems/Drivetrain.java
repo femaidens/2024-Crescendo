@@ -270,6 +270,13 @@ public class Drivetrain extends SubsystemBase implements Logged {
     rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  public void setStraight(){
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+  }
+
   // sets the swerve ModuleStates.
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -354,6 +361,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
   }
 
   public Command turnDynamic(SysIdRoutine.Direction direction) {
-    return turnRoutine.dynamic(direction);
+    return turnAllRoutine.dynamic(direction);
   }
 }

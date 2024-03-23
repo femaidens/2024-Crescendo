@@ -26,8 +26,7 @@ public class Limelight extends SubsystemBase {
     // table = NetworkTableInstance.getDefault().getTable("limelight");
     limelight = new Limelight();
 
-    // tv = table.getEntry("tv");
-    tx = LimelightHelpers.getTX("");
+    tx = LimelightHelpers.getTX(""); //limelight by default if empty string
     ta = LimelightHelpers.getTA("");
     ty = LimelightHelpers.getTY("");
   }

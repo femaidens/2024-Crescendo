@@ -192,7 +192,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearRight.getPosition()
         });
     
-    LimelightHelpers.PoseEstimate llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
+    LimelightHelpers.PoseEstimate llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed(""); //can be changed to blue or red
     if(llMeasurement.tagCount >= 2){
       poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.99)); //need to be changed
       poseEstimator.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);

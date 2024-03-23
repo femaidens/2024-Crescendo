@@ -9,6 +9,7 @@ import frc.robot.subsystems.modules.MaxSwerveModule;
 import frc.robot.utils.SwerveUtils;
 import monologue.Logged;
 import monologue.Annotations.Log;
+import frc.robot.LimelightHelpers;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -171,7 +172,17 @@ public class Drivetrain extends SubsystemBase implements Logged {
             rearLeft.getPosition(),
             rearRight.getPosition()
         });
+    updateOdometry();
     
+    field2d.setRobotPose(getCurrentPose());
+
+    SmartDashboard.putNumber("gyro angle", getAngle());
+    // System.out.println("yaw reading" + gyro.getYaw());
+    // System.out.println("angle reading " + getAngle());
+    // SmartDashboard.putNumber("gyro x", gyroX()); <-
+  }
+  
+  public void updateOdometry(){
     poseEstimator.update(
         Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
@@ -181,12 +192,11 @@ public class Drivetrain extends SubsystemBase implements Logged {
           rearRight.getPosition()
         });
     
-    field2d.setRobotPose(getCurrentPose());
-
-    SmartDashboard.putNumber("gyro angle", getAngle());
-    // System.out.println("yaw reading" + gyro.getYaw());
-    // System.out.println("angle reading " + getAngle());
-    // SmartDashboard.putNumber("gyro x", gyroX()); <-
+    LimelightHelpers.PoseEstimate llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
+    if(llMeasurement.tagCount >= 2){
+      poseEstimator.setVisionMeasurementStdDevs(null);
+      poseEstimator.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+    }
   }
 
   /** 

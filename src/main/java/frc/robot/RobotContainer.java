@@ -6,10 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
@@ -26,15 +23,12 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
-import frc.robot.DrivetrainConstants.DriveConstants;
-import frc.robot.DrivetrainConstants.ModuleConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
-import frc.robot.DrivetrainConstants.ModuleConstants.Drive;
-import frc.robot.DrivetrainConstants.ModuleConstants.Turning;
 import frc.robot.Ports.*;
 import frc.robot.autos.paths.Taxi;
 import frc.robot.autos.paths.TaxiAmp;
 import frc.robot.autos.paths.TaxiSpeaker;
+import frc.robot.commands.ThreeNoteFlushAuto;
 // import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
 import frc.robot.commands.Controls;
@@ -48,21 +42,9 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
-import monologue.Annotations.Log;
 import monologue.Logged;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-
-import java.util.List;
 
 import org.littletonrobotics.urcl.URCL;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 public class RobotContainer implements Logged {
 
@@ -83,36 +65,16 @@ public class RobotContainer implements Logged {
   private final Intaking intaking = new Intaking(intake, hopper);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
-//   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-//   private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
-//   private SendableChooser<Command> pathplannerChooser = new SendableChooser<>();
+    // private final ThreeNoteFlushAuto auton = new ThreeNoteFlushAuto(drivetrain, intaking, shooter);
 
-// @Log.NT private final SendableChooser<Command> autos;
-  @Log.NT private final SendableChooser<Command> pathplanner;
   public RobotContainer() {
     // configurations
     configureButtonBindings();
     configureAuton();
-
-
-    NamedCommands.registerCommand("shoot", shooter.shoot());
-    NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
-
-
     configureDefaultCommands();
-
-
-    pathplanner = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Choose Auto: ", pathplanner);
-
-
-
-    // autos = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto Chooser", autos);
-    // pathplanner.addOption("3 note flush", );
-    // SmartDashboard.putData("Auto", pathplanner);
-
   }
 
   public void configureSubsystemDefaults() {
@@ -141,7 +103,7 @@ public class RobotContainer implements Logged {
             shooterAngle)
     );
 
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
     // // if default velocity is 0, need to run command when scheduling the command
@@ -152,39 +114,15 @@ public class RobotContainer implements Logged {
   }
   
   public void configureAuton() {
-    // SmartDashboard.putData("Choose Auto: ", autonChooser);
-    // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
-    // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+    SmartDashboard.putData("Choose Auto: ", autonChooser);
+    autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
+    autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
+    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
     
-    AutoBuilder.configureHolonomic(
-        drivetrain::getPose, 
-        drivetrain::resetOdometry, 
-        drivetrain::getRobotRelativeChassisSpeeds, //chassis speed supplier must be robot relative
-        drivetrain::setChassisSpeeds, //method that will drive the robot based on robot relative chassis speed
-        new HolonomicPathFollowerConfig(
-            new PIDConstants(Drive.kP, Drive.kI, Drive.kD), // Translation PID constants
-            new PIDConstants(Turning.kP, Turning.kI, Turning.kD), // Rotation PID constants
-            DriveConstants.MAX_SPEED, // Max module speed, in m/s
-            ModuleConstants.WHEEL_DIAMETER/2, 
-            new ReplanningConfig()), 
-        () -> {
-        var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-        drivetrain);
+    autonChooser.addOption("three note flush", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));
   }
 
   private void configureButtonBindings() {
-
-    /* * * PATHPLANNER * * */
-
-    RobotModeTriggers.autonomous()
-    .whileTrue(Commands.deferredProxy(pathplanner::getSelected));
-
 
     /* * * DRIVE BUTTONS * * */
         // reset gyro
@@ -406,11 +344,6 @@ public class RobotContainer implements Logged {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Load the path you want to follow using its name in the GUI
-    // return pathplanner;
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
-    // List<PathPlannerPath> threeNoteFlush = PathPlannerAuto.getPathGroupFromAutoFile("3 note flush");
-    // return pathplannerChooser;
-    return pathplanner.getSelected();
- }
+    return autonChooser.getSelected();
+  }
 }

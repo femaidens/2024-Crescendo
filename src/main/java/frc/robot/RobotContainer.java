@@ -28,11 +28,12 @@ import frc.robot.Ports.*;
 import frc.robot.autos.paths.Taxi;
 import frc.robot.autos.paths.TaxiAmp;
 import frc.robot.autos.paths.TaxiSpeaker;
-import frc.robot.commands.ThreeNoteFlushAuto;
+// import frc.robot.commands.ThreeNoteFlushAuto;
 // import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
 import frc.robot.commands.Controls;
 import frc.robot.commands.Intaking;
+// import frc.robot.commands.OneNoteLeft;
 import frc.robot.commands.Shooter;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
@@ -45,6 +46,8 @@ import frc.robot.subsystems.ShooterWheel;
 import monologue.Logged;
 
 import org.littletonrobotics.urcl.URCL;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 public class RobotContainer implements Logged {
 
@@ -65,7 +68,7 @@ public class RobotContainer implements Logged {
   private final Intaking intaking = new Intaking(intake, hopper);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private SendableChooser<Command> autonChooser = new SendableChooser<>();
   private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
     // private final ThreeNoteFlushAuto auton = new ThreeNoteFlushAuto(drivetrain, intaking, shooter);
@@ -75,6 +78,8 @@ public class RobotContainer implements Logged {
     configureButtonBindings();
     configureAuton();
     configureDefaultCommands();
+
+    autonChooser = AutoBuilder.buildAutoChooser();
   }
 
   public void configureSubsystemDefaults() {
@@ -119,7 +124,10 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
     
-    autonChooser.addOption("three note flush", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));
+    // autonChooser = AutonBuilder.
+    // autonChooser.addOption("flush three notes", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));
+    // autonChooser.addOption("flush one note", new OneNoteLeft(drivetrain, intaking, shooter));
+
   }
 
   private void configureButtonBindings() {

@@ -85,7 +85,7 @@ public class RobotContainer implements Logged {
   public void configureDefaultCommands() {
 
     drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
+    //  clariy turning with right or with left
       new RunCommand(
           () -> drivetrain.drive( // all joy.get values were prev negative
               MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
@@ -332,39 +332,39 @@ public class RobotContainer implements Logged {
     //         drivetrain.driveDynamic(Direction.kReverse)
     //     );
 
-    // driveJoy.start()
-    // .onTrue(
-    //     new InstantCommand(
-    //         () -> drivetrain.setStraight()
-    //     )
-    // );
+    driveJoy.start()
+    .onTrue(
+        new InstantCommand(
+            () -> drivetrain.setStraight()
+        )
+    );
 
-    // driveJoy.back()
-    // .onTrue(
-    //     new InstantCommand(
-    //         () -> drivetrain.setX()
-    //     )
-    // );
+    driveJoy.back()
+    .onTrue(
+        new InstantCommand(
+            () -> drivetrain.setX()
+        )
+    );
 
-    // driveJoy.a()
-    //     .whileTrue(
-    //         drivetrain.turnQuasistatic(Direction.kForward)
-    //     );
+    driveJoy.a()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kForward)
+        );
 
-    // driveJoy.b()
-    //     .whileTrue(
-    //         drivetrain.turnQuasistatic(Direction.kReverse)
-    //     );
+    driveJoy.b()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kReverse)
+        );
 
-    // driveJoy.x()
-    //     .whileTrue(
-    //         drivetrain.turnDynamic(Direction.kForward)
-    //     );
+    driveJoy.x()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kForward)
+        );
 
-    // driveJoy.y()
-    //     .whileTrue(
-    //         drivetrain.turnDynamic(Direction.kReverse)
-    //     );
+    driveJoy.y()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kReverse)
+        );
         // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
         // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
         // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));

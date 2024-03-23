@@ -102,7 +102,7 @@ public class RobotContainer implements Logged {
             shooterAngle)
     );
 
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
     // // if default velocity is 0, need to run command when scheduling the command

@@ -29,6 +29,11 @@ public class Intaking {
         // .deadlineWith(setIntakeHopperSetpoints(velocity)));
     }
 
+    public Command moveNote(){
+        return intake.setVelocitySetpointCmd(5 * 360.0)
+                .alongWith(hopper.setVelocitySetpointCmd(0.5 * 360.0));
+    }
+
     public Command setIntakeHopperSetpoints(double setpoint) {
         return intake.setVelocitySetpointCmd(setpoint)
         .alongWith(hopper.setVelocitySetpointCmd(setpoint));

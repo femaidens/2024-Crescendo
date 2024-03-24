@@ -42,7 +42,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   private double vSetpoint;
 
   /* SYSID ROUTINES */
-  /* 
+   
   private final SysIdRoutine leftRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
@@ -52,7 +52,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
       new SysIdRoutine.Config(),
       new SysIdRoutine.Mechanism(
           volts -> setRightVoltage(volts.in(Units.Volts)), null, this));
-  */
+  
 
   public ShooterWheel() {
     leaderMotor = new CANSparkMax(ShooterPorts.LEADER_MOTOR, MotorType.kBrushless);
@@ -174,7 +174,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   }
 
   /* SYSID */
-  /*
+  
   public void setLeftVoltage(double voltage) {
     leaderMotor.setVoltage(voltage);
   }
@@ -191,14 +191,14 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     return leftRoutine.dynamic(direction);
   }
   
-  public Command rightQuas(SysIdRoutine.Direction direction) {
-    return rightRoutine.quasistatic(direction);
-  }
+  // public Command rightQuas(SysIdRoutine.Direction direction) {
+  //   return rightRoutine.quasistatic(direction);
+  // }
 
-  public Command rightDyna(SysIdRoutine.Direction direction) {
-    return rightRoutine.dynamic(direction);
-  }
-  */
+  // public Command rightDyna(SysIdRoutine.Direction direction) {
+  //   return rightRoutine.dynamic(direction);
+  // }
+  
   @Override
   public void periodic() {
     SmartDashboard.putNumber("left shooter vel: ", getLeaderVelocity());

@@ -15,17 +15,17 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // 4, 6 prev, 3 rotations
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 4.5*DEGREES;
+    public static final double TRANSITION_SPEED = 4.5 * DEGREES; //4.5
 
-    public static final double kS = 0.22973; //values as of 3/2
-    public static final double kV = 0.017661; //3/2
-    public static final double kA = 0.0012902; //3/2
+    public static final double kS = 0.24365; //0.22973; //values as of 3/2
+    public static final double kV = 0.036019; //0.017661; //3/2
+    public static final double kA = 0.0052157; //0.0012902; //3/2
   }
 
   public static final class IntakeConstants {
@@ -45,9 +45,9 @@ public final class Constants {
     public static final double kD = 0.0;
 
     // ff constants -> need to populate
-    public static final double kS = 0.32982; //ff values as of 3/2 sysid
-    public static final double kV = 0.0014383; //values as of 3/2 sysid
-    public static final double kA = 0.00020542; //values as of 
+    public static final double kS = 0.32367; //0.32982; //ff values as of 3/2 sysid
+    public static final double kV = 0.0014425; //0.0014383; //values as of 3/2 sysid
+    public static final double kA = 0.00014654; //0.00020542; //values as of 
   }
 
   public static final class ShooterWheelConstants {
@@ -77,9 +77,9 @@ public final class Constants {
     public static final double AUTON_SPEED = 2*DEGREES; // degrees/sec
 
     // ff -> need to populate
-    public static final double kS = 0.22083; //as of 2/28 sys id results
-    public static final double kV = 0.00034866; //as of 2/28 sys id results
-    public static final double kA = 2.9726E-05;
+    public static final double kS = 0.22054; //0.22083; //as of 2/28 sys id results
+    public static final double kV = 0.00047971; //0.00034866; //as of 2/28 sys id results
+    public static final double kA = 5.0683E-05; //2.9726E-05;
 
     // pid -> need to populate
     public static final double kP = 0;
@@ -121,6 +121,11 @@ public final class Constants {
     public static final double kP = 0.11;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double kS = 0.13601;
+    public static final double kV = 0.001622;
+    public static final double kA = 0.00050685;
+    public static final double kG = 1.0622;
 
   }
 

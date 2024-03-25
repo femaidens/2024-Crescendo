@@ -19,7 +19,7 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 4.5*DEGREES;
 

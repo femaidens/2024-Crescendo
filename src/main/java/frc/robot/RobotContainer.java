@@ -67,7 +67,6 @@ public class RobotContainer implements Logged {
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-  private final SendableChooser<Command> allianceChooser = new SendableChooser<>();
 
   public RobotContainer() {
     // configurations
@@ -155,13 +154,20 @@ public class RobotContainer implements Logged {
         // runs intake routine
         operJoy.rightBumper()
             // entire intake routine
-            .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
+            .onTrue(intake.setSpeedCmd(0.3).alongWith(hopper.setSpeedCmd(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
                 .andThen(Commands.waitUntil(hopper::isHopperFull))
                 .andThen(intaking.setIntakeHopperSetpoints(0))
                 // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
                 .andThen(leds.setGreenCmd().withTimeout(2))
                 // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
             );
+            // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
+            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
+            //     .andThen(intaking.setIntakeHopperSetpoints(0))
+            //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
+            //     .andThen(leds.setGreenCmd().withTimeout(2))
+            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
+            // );
 
             // unit testing 
             // intaking intakeHopper work
@@ -274,12 +280,12 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
-            // .alongWith(hopper.setStateLimitCmd(1);
-            // );
-             .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
             .alongWith(hopper.setStateLimitCmd(1))
             );
+            //  .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            // .alongWith(hopper.setStateLimitCmd(1))
+            // );
             
 
             // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
@@ -294,10 +300,10 @@ public class RobotContainer implements Logged {
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
         // speaker stage
-        // operJoy.y()
-        //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
-        //     .alongWith(hopper.setStateLimitCmd(1))
-        //     );
+        operJoy.y()
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
             //     .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE)));
             

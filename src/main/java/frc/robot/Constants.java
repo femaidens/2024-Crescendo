@@ -65,7 +65,7 @@ public final class Constants {
     public static final double AMP_FLUSH = 13*DEGREES; // placeholder
 
     public static final double SPEAKER_FLUSH = 57*DEGREES; // placeholder
-    public static final double SPEAKER_STAGE = 60*DEGREES;
+    public static final double SPEAKER_STAGE = 65*DEGREES;
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
@@ -107,7 +107,7 @@ public final class Constants {
 
     public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
-    public static final double SPEAKER_STAGE = 38.5; // actual angle -> 36.5
+    public static final double SPEAKER_STAGE = 47.0; // actual angle -> 45
     // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
 

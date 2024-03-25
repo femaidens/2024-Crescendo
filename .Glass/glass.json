@@ -4,6 +4,15 @@
       "open": false
     },
     "transitory": {
+      "Robot": {
+        "open": true,
+        "robotContainer": {
+          "open": true,
+          "shooterAngle": {
+            "open": true
+          }
+        }
+      },
       "Shuffleboard": {
         "open": true
       },
@@ -16,6 +25,7 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Robot/robotContainer/shooterAngle/shooterAnglePID": "PIDController",
       "/SmartDashboard/Choose Auto: ": "String Chooser"
     }
   },

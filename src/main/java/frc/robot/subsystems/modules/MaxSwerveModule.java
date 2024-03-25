@@ -34,8 +34,8 @@ public class MaxSwerveModule {
   // private final PIDController drivePID;
   // private final PIDController turningPID;
 
-  // private final SimpleMotorFeedforward driveFF;
-  // private final SimpleMotorFeedforward turnFF;
+  private final SimpleMotorFeedforward driveFF;
+  private final SimpleMotorFeedforward turnFF;
 
   private double chassisAngularOffset = 0;
   private SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
@@ -69,8 +69,8 @@ public class MaxSwerveModule {
     // drivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
     // turningPID = new PIDController(Turning.kP, Turning.kI, Turning.kD);
 
-    // driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
-    // turnFF = new SimpleMotorFeedforward(Turning.kS, Turning.kV, Turning.kA);
+    driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
+    turnFF = new SimpleMotorFeedforward(Turning.kS, Turning.kV, Turning.kA);
 
     // rev version
     turningPID.setPositionPIDWrappingEnabled(true);
@@ -150,6 +150,29 @@ public class MaxSwerveModule {
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     drivePID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+    turningPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+
+    this.desiredState = desiredState;
+  }
+
+  /**
+   * Sets the desired state for the module, without drive motor PID.
+   *
+   * @param desiredState Desired state with speed and angle.
+   */
+  public void setDesiredStateNoPID(SwerveModuleState desiredState){
+    // Apply chassis angular offset to the desired state.
+    SwerveModuleState correctedDesiredState = new SwerveModuleState();
+    correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
+
+    // Optimize the reference state to avoid spinning further than 90 degrees.
+    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+        new Rotation2d(turningEncoder.getPosition()));
+
+    // Command driving and turning SPARKS MAX towards their respective setpoints.
+    // drivePID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+    driveFF.calculate(optimizedDesiredState.speedMetersPerSecond);
     turningPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     this.desiredState = desiredState;

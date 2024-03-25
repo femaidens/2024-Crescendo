@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -309,6 +311,46 @@ public class RobotContainer implements Logged {
         //         .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
+    /* DRIVETRAIN SYSID */
+    driveJoy.a()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kForward)
+        );
+
+    driveJoy.b()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kReverse)
+        );
+
+    driveJoy.x()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kForward)
+        );
+
+    driveJoy.y()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kReverse)
+        );
+
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.turnQuasistatic(Direction.kForward)
+    //     );
+
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.turnQuasistatic(Direction.kReverse)
+    //     );
+
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.turnDynamic(Direction.kForward)
+    //     );
+
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.turnDynamic(Direction.kReverse)
+    //     );
         // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
         // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
         // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));

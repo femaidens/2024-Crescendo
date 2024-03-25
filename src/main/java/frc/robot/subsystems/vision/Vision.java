@@ -5,9 +5,28 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 
-/** Add your docs here. */
-public class Vision {
-    private Pose2d botpose;
+public class Vision extends SubsystemBase {
+  
+  private Pose2d botPose;
+  private Pose2d estimatePose;
+  private LimelightHelpers.LimelightResults jsonDump;
+
+  public Vision(){
+    botPose = new Pose2d();
+    estimatePose = new Pose2d();
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
+  public void updateOdometry(){
+    jsonDump = LimelightHelpers.getLatestResults("");
+    estimatePose = LimelightHelpers.getBotPose2d_wpiBlue("");
     
+  }
 }

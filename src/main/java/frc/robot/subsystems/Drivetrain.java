@@ -172,6 +172,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
             rearLeft.getPosition(),
             rearRight.getPosition()
         });
+        
     updateOdometry();
     
     field2d.setRobotPose(getCurrentPose());

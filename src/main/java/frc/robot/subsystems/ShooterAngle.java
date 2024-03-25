@@ -67,7 +67,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
 
-    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = getAngle();
+    //ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */

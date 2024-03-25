@@ -19,18 +19,18 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final double VEL_CFACTOR = DEGREES / (60.0 * 100.0); // 360 degrees/sec, 100:1 gr
+    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
     public static final int CURRENT_LIMIT = 35;
     public static final double TRANSITION_SPEED = 4.5 * DEGREES; //4.5
 
-    public static final double kS = 0.24365; //0.22973; //values as of 3/2
-    public static final double kV = 0.036019; //0.017661; //3/2
-    public static final double kA = 0.0052157; //0.0012902; //3/2
+    public static final double kS = 0.36814; //0.24365; //0.22973; //values as of 3/2
+    public static final double kV = 0.0019064; //0.036019; //0.017661; //3/2
+    public static final double kA = 0.00012656; //0.0052157; //0.0012902; //3/2
   }
 
   public static final class IntakeConstants {
     // (1/GR) * (1 rot/ min) * (360 degrees/rot) * (1 min/ 60 sec)
-    public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr
+    public static final double VEL_CFACTOR = (DEGREES * 18.0)/ (60.0 * 4.0 * 24.0); // 360 degrees/sec, 4:1 gr, 24:18
     public static final double ROLLER_SPEED = 0.175;
 
     public static final int CURRENT_LIMIT = 0;
@@ -46,7 +46,7 @@ public final class Constants {
 
     // ff constants -> need to populate
     public static final double kS = 0.32367; //0.32982; //ff values as of 3/2 sysid
-    public static final double kV = 0.0014425; //0.0014383; //values as of 3/2 sysid
+    public static final double kV = 0.014425;//0.014425; //0.0014383; //values as of 3/2 sysid
     public static final double kA = 0.00014654; //0.00020542; //values as of 
   }
 

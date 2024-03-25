@@ -32,6 +32,7 @@ public class Intake extends SubsystemBase implements Logged {
   private final RelativeEncoder intakeEncoder;
 
   // private final PIDController intakePID;
+  @Log.NT
   private final SimpleMotorFeedforward intakeFF;
 
   private final SysIdRoutine intakeRoutine;

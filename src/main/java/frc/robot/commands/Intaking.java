@@ -30,8 +30,8 @@ public class Intaking {
     }
 
     public Command moveNote(){
-        return intake.setVelocitySetpointCmd(5 * 360.0)
-                .alongWith(hopper.setVelocitySetpointCmd(0.5 * 360.0));
+        return intake.setVelocitySetpointCmd(4 * 360.0)
+                .alongWith(hopper.setVelocitySetpointCmd(4 * 360.0));
     }
 
     public Command setIntakeHopperSetpoints(double setpoint) {

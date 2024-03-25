@@ -124,6 +124,27 @@ public class RobotContainer implements Logged {
         driveJoy.rightBumper()
             .onTrue(drivetrain.resetGyroCmd());
 
+        
+        // driveJoy.a()
+        //     .onTrue(
+        //         intake.setVelocitySetpointCmd(1 * 360.0)
+        //     );
+
+        // driveJoy.b()
+        //     .onTrue(
+        //         intake.setVelocitySetpointCmd(2 * 360.0)
+        //     );
+
+        // driveJoy.x()
+        //     .onTrue(
+        //         intake.setVelocitySetpointCmd(3 * 360.0)
+        //     );
+
+        // driveJoy.y()
+        //     .onTrue(
+        //         intake.setVelocitySetpointCmd(4 * 360.0)
+        //     );
+
         // // speed factor
         // driveJoy.leftTrigger()
         //     .onTrue(drivetrain.slowCmd())
@@ -280,17 +301,11 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
-            // .alongWith(hopper.setStateLimitCmd(1);
-            // );
-             .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
             .alongWith(hopper.setStateLimitCmd(1))
             );
-            
-
             // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
-            
             // shooting with buttons
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
             //     .andThen(shooter.shoot(ShooterWheelConstants.SPEAKER_FLUSH))
@@ -300,10 +315,10 @@ public class RobotContainer implements Logged {
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
         // speaker stage
-        // operJoy.y()
-        //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
-        //     .alongWith(hopper.setStateLimitCmd(1))
-        //     );
+        operJoy.y()
+         .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
             //     .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE)));
             
@@ -361,7 +376,7 @@ public class RobotContainer implements Logged {
         //         hopper.hopperDyna(SysIdRoutine.Direction.kReverse)
         //     );
 
-        // /* INTAKE SYSID */
+        /* INTAKE SYSID */
         //   driveJoy.a()
         //     .whileTrue(
         //         intake.intakeQuas(SysIdRoutine.Direction.kForward)

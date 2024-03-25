@@ -26,7 +26,11 @@ public class Vision extends SubsystemBase {
 
   public void updateOdometry(){
     jsonDump = LimelightHelpers.getLatestResults("");
-    estimatePose = LimelightHelpers.getBotPose2d_wpiBlue("");
-    
+    estimatePose = LimelightHelpers.getBotPose2d_wpiBlue(""); //megatag with blue driver
+
+  }
+
+  public boolean visionAccurate(Pose2d current){
+    return LimelightHelpers.getTV(""); //change
   }
 }

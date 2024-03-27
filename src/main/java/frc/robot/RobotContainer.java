@@ -77,7 +77,7 @@ public class RobotContainer implements Logged {
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
 
-  private SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private SendableChooser<Command> autonChooser;
 
     // private final ThreeNoteFlushAuto auton = new ThreeNoteFlushAuto(drivetrain, intaking, shooter);
 
@@ -85,6 +85,7 @@ public class RobotContainer implements Logged {
     // configurations
     configureButtonBindings();
     configureAuton();
+    autonChooser = AutoBuilder.buildAutoChooser();
     configureDefaultCommands();
   }
 

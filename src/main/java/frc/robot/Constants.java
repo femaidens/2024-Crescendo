@@ -5,7 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-
+import monologue.Logged;
+ 
 public final class Constants {
 
   public static final double DEGREES = 360.0;
@@ -60,16 +61,16 @@ public final class Constants {
     public static final double V_TOLERANCE = 2; // 2 degrees/second
 
     // limits
-    public static final int CURRENT_LIMIT = 30;
+    public static final int CURRENT_LIMIT = 50;
     
-    public static final double AMP_FLUSH = 13*DEGREES; // placeholder
+    public static final double AMP_FLUSH = 15 * DEGREES; // 13
 
-    public static final double SPEAKER_FLUSH = 57*DEGREES; // placeholder
-    public static final double SPEAKER_STAGE = 65*DEGREES;
+    public static final double SPEAKER_FLUSH = 60 * DEGREES; //57 
+    public static final double SPEAKER_STAGE = 70 * DEGREES; //60
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
-    public static final double DEFAULT_VELOCITY = 5*DEGREES; // check how much voltage this is drawing
+    public static final double DEFAULT_VELOCITY = 5 * DEGREES; // check how much voltage this is drawing
     public static final double SHOOTER_INTAKE_SPEED = -DEFAULT_VELOCITY;
 
     // auton
@@ -103,7 +104,7 @@ public final class Constants {
     public static final double SHOOTER_MIN_ANGLE = 31.0; //43.0
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
     public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
@@ -121,6 +122,11 @@ public final class Constants {
     public static final double kP = 0.11;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double kS = 0.13601;
+    public static final double kV = 0.001622;
+    public static final double kA = 0.00050685;
+    public static final double kG = 1.0622;
 
   }
 

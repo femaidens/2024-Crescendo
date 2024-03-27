@@ -135,7 +135,7 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
-        driveJoy.a()
+        driveJoy.start()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
                 leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3))
@@ -143,6 +143,26 @@ public class RobotContainer implements Logged {
                 // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
+
+        // driveJoy.a()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(25)
+        //   );
+
+        // driveJoy.b()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(35)
+        //   );
+
+        // driveJoy.x()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(50)
+        //   );
+
+        // driveJoy.y()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(60)
+        //   );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -323,25 +343,25 @@ public class RobotContainer implements Logged {
 
     /* * * CONTROL BINDINGS * * */
     /* DRIVETRAIN SYSID */
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
 
     // driveJoy.a()
     //     .whileTrue(
@@ -362,9 +382,6 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.turnDynamic(Direction.kReverse)
     //     );
-        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
-        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
-        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
 
         /*
          * controlTypes: pid, sysid

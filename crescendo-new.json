@@ -55,15 +55,6 @@
               "_children": [
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/isHopperFull",
-                  "_title": "isHopperFull",
-                  "_glyph": 148,
-                  "_showGlyph": false,
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
-                },
-                {
-                  "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/isHopperEmpty",
                   "_title": "isHopperEmpty",
                   "_glyph": 148,
@@ -75,6 +66,15 @@
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/beam break",
                   "_title": "beam break",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/isHopperFull",
+                  "_title": "isHopperFull",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -558,15 +558,67 @@
               "imageWidth": 0,
               "imageHeight": 0
             }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/hopper vel",
+              "_title": "/SmartDashboard/hopper vel",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/hopper sp",
+              "_title": "/SmartDashboard/hopper sp",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intake vel",
+              "_title": "/SmartDashboard/intake vel",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intake sp",
+              "_title": "/SmartDashboard/intake sp",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": -7.5130438804626465,
-    "y": -7.5130438804626465,
-    "width": 1617.8087158203125,
-    "height": 876.5217895507812
+    "x": -7.333333492279053,
+    "y": -7.333333492279053,
+    "width": 1294.6666259765625,
+    "height": 686.6666870117188
   }
 }

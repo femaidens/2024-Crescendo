@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -108,7 +109,10 @@ public class RobotContainer implements Logged {
     // // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
-    leds.setDefaultCommand(leds.setRainbowCmd());
+    // leds.setDefaultCommand(leds.setRainbowCmd());
+    leds.setDefaultCommand(
+        leds.setPurpGreenCmd().andThen(new WaitCommand(3))
+    );
   }
   
   public void configureAuton() {
@@ -134,8 +138,9 @@ public class RobotContainer implements Logged {
         driveJoy.a()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
+                leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3))
+                // Commands.waitUntil(hopper::isHopperFull)
+                // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
 

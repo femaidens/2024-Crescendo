@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Ports;
 
 public class LED extends SubsystemBase {
@@ -31,6 +32,10 @@ public class LED extends SubsystemBase {
   public Command setDefaultCmd() {
     return this.run(() -> setDefault());
   }
+
+  public Command setSolidCmd(int[] color){
+    return this.run(() -> setSolid(color));
+  }
   public Command setLEDBufferCmd(){
     return this.run(() -> led.setData(ledBuffer));
   }
@@ -45,6 +50,10 @@ public class LED extends SubsystemBase {
 
   public Command setRedCmd(){
     return this.run(() -> setLedRed());
+  }
+
+  public Command setPurpGreenCmd(){
+    return this.run(() -> setPurpGreen());
   }
 
   // default cmd
@@ -141,6 +150,32 @@ public class LED extends SubsystemBase {
     // System.out.println("SOLID");
 
   }
+
+  public void setPurpGreen(){
+    boolean green = false;
+    for (int i = 0; i <ledBuffer.getLength() / 6; i += 1) {
+      for (int j = 0; j < 6; j++){
+
+        if (green){
+          ledBuffer.setRGB(i*6+j, 90, 244, 0);
+        }
+        //i*6 + j
+        else{
+          ledBuffer.setRGB(i*6+j, 200, 0, 255); //purple  
+        }
+        //} //alternating purple n green every 6
+        // if (i%2 == 0) green = true;
+        // else {
+        //   green = false;
+        // }
+        
+      }
+      green = !green;
+
+    }
+    led.setData(ledBuffer);
+  }
+
 
   @Override
   public void periodic() {

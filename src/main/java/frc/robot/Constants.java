@@ -16,7 +16,7 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 2 * DEGREES; // , 6 prev, 3 rotations
   }
 
   public static final class HopperConstants {

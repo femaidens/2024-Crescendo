@@ -181,7 +181,7 @@ public class RobotContainer implements Logged {
             // entire intake routine
             .onTrue(intake.setSpeedCmd(0.3).alongWith(hopper.setSpeedCmd(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
                 .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .andThen(intaking.setIntakeHopperSetpoints(0))
+                .andThen(intake.setSpeedCmd(0).alongWith(hopper.setSpeedCmd(0))) 
                 // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
                 .andThen(leds.setGreenCmd().withTimeout(2))
                 // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
@@ -205,9 +205,14 @@ public class RobotContainer implements Logged {
             
         // runs outtake
         operJoy.leftBumper()
-            // entire outtake routine
+            // setVelocity entire outtake routine
             .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
             .onFalse(intaking.setIntakeHopperSetpoints(0));
+
+            // setSpeed entire outtake routines
+            // .whileTrue(intake.setSpeedCmd(-0.3).alongWith(hopper.setSpeedCmd(-0.3))) // bc it's a runOnce, it automatically went to setting sp to 0
+            // .onFalse(intake.setSpeedCmd(0).alongWith(hopper.setSpeedCmd(0)));
+
             // separate motion
             // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
             // .onFalse(intake.stopMotorCmd());

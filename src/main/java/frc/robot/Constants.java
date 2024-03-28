@@ -91,6 +91,7 @@ public final class Constants {
   public static final class ShooterAngleConstants {
 
     // conversion
+    public static final double VEL_CFACTOR = DEGREES / (25 * 60);
     public static final double POS_CFACTOR = DEGREES; // degrees, 25:1 gr
 
     // limits
@@ -99,8 +100,8 @@ public final class Constants {
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
-    public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = 27.0; //43.0
+    public static final double MAX_ANGLE = 62.0;
+    public static final double MIN_ANGLE = 23.0; 
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61
@@ -109,7 +110,7 @@ public final class Constants {
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
     public static final double SPEAKER_STAGE = 38.5; // actual angle -> 36.5
     // public static final double SPEAKER_WING = 25.0; // placeholder
-    public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
+    public static final double DEFAULT_ANGLE = MIN_ANGLE;
 
 
     // speeds
@@ -125,7 +126,7 @@ public final class Constants {
     public static final double kS = 0.1902; //0.13601;
     public static final double kV = 0.0013292; // 0.001622;
     public static final double kA = 0.00083976; //0.00050685;
-    public static final double kG = 2.159; // 1.0622;
+    public static final double kG = 1.159; // 1.0622;
 
   }
 

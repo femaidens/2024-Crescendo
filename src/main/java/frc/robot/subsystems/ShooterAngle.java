@@ -40,7 +40,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   private final ProfiledPIDController profiledShooterAnglePID;
   // private final PIDController shooterAnglePID;
 
-
+  @Log.NT
   private final ArmFeedforward shooterAngleFF;
 
   private double pSetpoint;

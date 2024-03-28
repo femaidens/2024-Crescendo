@@ -3,10 +3,21 @@
     "Persistent Values": {
       "open": false
     },
-    "Retained Values": {
-      "open": false
+    "retained": {
+      "SmartDashboard": {
+        "open": true
+      }
     },
     "transitory": {
+      "Robot": {
+        "open": true,
+        "robotContainer": {
+          "open": true,
+          "shooterAngle": {
+            "open": true
+          }
+        }
+      },
       "Shuffleboard": {
         "open": true
       },
@@ -19,6 +30,7 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Robot/robotContainer/shooterAngle/profiledShooterAnglePID": "ProfiledPIDController",
       "/Robot/robotContainer/shooterAngle/shooterAnglePID": "PIDController",
       "/SmartDashboard/Choose Auto: ": "String Chooser"
     }
@@ -248,6 +260,42 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/intake vel"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 501,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/current arm angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/desired angle"
             }
           ]
         }

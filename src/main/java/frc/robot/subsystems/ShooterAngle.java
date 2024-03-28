@@ -16,7 +16,13 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +37,9 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   private final AbsoluteEncoder shooterAngleEncoder;
 
   @Log.NT
-  private final PIDController shooterAnglePID;
+  private final ProfiledPIDController profiledShooterAnglePID;
+  // private final PIDController shooterAnglePID;
+
 
   private final ArmFeedforward shooterAngleFF;
 
@@ -59,13 +67,15 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
 
-    shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
+    // shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
+    profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, new TrapezoidProfile.Constraints(0.3, 0.1));
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
     shooterAngleMotor.burnFlash();
-
-    shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
+// 
+    // shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
+    profiledShooterAnglePID.setTolerance(2.0);
 
     pSetpoint = getAngle();
     //ShooterAngleConstants.INITIAL_ANGLE;
@@ -115,7 +125,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
+    double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
     // double ff = shooterAngleFF.calculate(shooterAnglePID.getSetpoint(), shooterAnglePID.getSetpoint().velocity );
 
     shooterAngleMotor.setVoltage(voltage);
@@ -137,10 +147,10 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     System.out.println("shooter angle changed");
   }
 
-  @Log.NT
-  public double getSetpoint() {
-    return shooterAnglePID.getSetpoint();
-  }
+  // @Log.NT
+  // public double getSetpoint() {
+  //   return profiledShooterAnglePID.getGoal();
+  // }
 
   @Log.NT
   // added physical offset lowest angle is 18.3 deg above the horizontal
@@ -158,7 +168,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   public boolean atAngle() {
 
-    return shooterAnglePID.atSetpoint();
+    return profiledShooterAnglePID.atSetpoint();
   }
 
   /* SYSID */

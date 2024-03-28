@@ -86,6 +86,7 @@ public class RobotContainer implements Logged {
     configureButtonBindings();
     configureAuton();
     autonChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Choose Auto: ", autonChooser);
     configureDefaultCommands();
   }
 
@@ -126,10 +127,9 @@ public class RobotContainer implements Logged {
   }
   
   public void configureAuton() {
-    SmartDashboard.putData("Choose Auto: ", autonChooser);
-    autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
-    autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
+    // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
+    // autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
+    // autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
     
     // autonChooser = AutonBuilder.
     // autonChooser.addOption("flush three notes", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));

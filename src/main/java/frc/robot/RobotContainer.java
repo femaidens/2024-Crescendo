@@ -138,7 +138,7 @@ public class RobotContainer implements Logged {
         driveJoy.start()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
-                leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3))
+                leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3)) // -> works
                 // Commands.waitUntil(hopper::isHopperFull)
                 // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)

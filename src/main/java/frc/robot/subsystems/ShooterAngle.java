@@ -110,10 +110,10 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void setAngle() {
 
     double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
-    double ff = shooterAngleFF.calculate(shooterAnglePID.getSetpoint(), 0);
-    shooterAngleMotor.setVoltage(ff+ voltage);
-  
-
+    // double ff = shooterAngleFF.calculate(shooterAnglePID.getSetpoint(), 0);
+    // shooterAngleMotor.setVoltage(ff+ voltage);
+    shooterAngleMotor.setVoltage(voltage);
+    
     // System.out.println("angle voltage: " + voltage);
     // System.out.println("setting angle");
   }

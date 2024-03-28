@@ -14,7 +14,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +40,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
       new SysIdRoutine.Mechanism(
           volts -> setVoltage(volts.in(Units.Volts)), null, this));
 
+  private final ArmFeedforward shooterAngleFF;
+
   // possibly add an armFF later
 
   public ShooterAngle() {
@@ -53,6 +57,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.burnFlash();
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
+
+    shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kS);
 
     pSetpoint = getAngle();
     //ShooterAngleConstants.INITIAL_ANGLE;
@@ -102,8 +108,11 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
+
     double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
-    shooterAngleMotor.setVoltage(voltage);
+    double ff = shooterAngleFF.calculate(shooterAnglePID.getSetpoint(), 0);
+    shooterAngleMotor.setVoltage(ff+ voltage);
+  
 
     // System.out.println("angle voltage: " + voltage);
     // System.out.println("setting angle");

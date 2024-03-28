@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -108,7 +109,10 @@ public class RobotContainer implements Logged {
     // // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
-    leds.setDefaultCommand(leds.setRainbowCmd());
+    // leds.setDefaultCommand(leds.setRainbowCmd());
+    leds.setDefaultCommand(
+        leds.setPurpGreenCmd().andThen(new WaitCommand(3))
+    );
   }
   
   public void configureAuton() {
@@ -131,13 +135,34 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
-        driveJoy.a()
+        driveJoy.start()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
+                leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3))
+                // Commands.waitUntil(hopper::isHopperFull)
+                // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
+
+        // driveJoy.a()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(25)
+        //   );
+
+        // driveJoy.b()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(35)
+        //   );
+
+        // driveJoy.x()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(50)
+        //   );
+
+        // driveJoy.y()
+        //   .onTrue(
+        //     shooterAngle.setAngleSetpointCmd(60)
+        //   );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -318,25 +343,25 @@ public class RobotContainer implements Logged {
 
     /* * * CONTROL BINDINGS * * */
     /* DRIVETRAIN SYSID */
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
 
     // driveJoy.a()
     //     .whileTrue(
@@ -357,9 +382,6 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.turnDynamic(Direction.kReverse)
     //     );
-        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
-        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
-        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
 
         /*
          * controlTypes: pid, sysid

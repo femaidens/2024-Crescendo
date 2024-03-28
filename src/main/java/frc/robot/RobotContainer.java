@@ -181,7 +181,7 @@ public class RobotContainer implements Logged {
             // entire intake routine
             .onTrue(intake.setSpeedCmd(0.3).alongWith(hopper.setSpeedCmd(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
                 .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .andThen(intake.setSpeedCmd(0).alongWith(hopper.setSpeedCmd(0))) 
+                .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
                 // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
                 .andThen(leds.setGreenCmd().withTimeout(2))
                 // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better

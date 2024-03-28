@@ -101,8 +101,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     }
     // run PID
     else {
-      setAngle();
-      // stopMotor();
+      // setAngle();
+      stopMotor();
     }
   }
 

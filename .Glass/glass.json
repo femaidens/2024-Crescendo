@@ -3,6 +3,9 @@
     "Persistent Values": {
       "open": false
     },
+    "Retained Values": {
+      "open": false
+    },
     "retained": {
       "SmartDashboard": {
         "open": true
@@ -14,7 +17,10 @@
         "robotContainer": {
           "open": true,
           "shooterAngle": {
-            "open": true
+            "open": true,
+            "profiledShooterAnglePID": {
+              "open": true
+            }
           }
         }
       },
@@ -190,7 +196,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 580,
           "series": [
             {
               "color": [
@@ -277,7 +283,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 501,
+          "height": 0,
           "series": [
             {
               "color": [

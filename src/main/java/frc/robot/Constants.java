@@ -33,7 +33,7 @@ public final class Constants {
     public static final double VEL_CFACTOR = (DEGREES * 18.0)/ (60.0 * 4.0 * 24.0); // 360 degrees/sec, 4:1 gr, 24:18
     public static final double ROLLER_SPEED = 0.175;
 
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 30;
 
     // velocities
     public static final double INTAKE_VEL =  2*360;// IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out

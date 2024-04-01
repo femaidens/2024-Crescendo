@@ -85,8 +85,10 @@ public class RobotContainer implements Logged {
     // configurations
     configureButtonBindings();
     configureAuton();
+
     autonChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Choose Auto: ", autonChooser);
+    
     configureDefaultCommands();
   }
 

@@ -12,6 +12,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Robot/robotContainer/shooterAngle/shooterAnglePID": "PIDController",
+      "/SmartDashboard/Choose Auto: ": "String Chooser",
       "/SmartDashboard/Field": "Field2d"
     }
   },

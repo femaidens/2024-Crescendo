@@ -24,6 +24,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
@@ -61,10 +62,10 @@ public class RobotContainer implements Logged {
   private final Climb climb = new Climb();
 
   private final Limelight limelight = new Limelight();
-  private final LED leds = new LED();
+  private final LED led = new LED();
 
-  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
-  private final Intaking intaking = new Intaking(intake, hopper);
+  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper, led);
+  private final Intaking intaking = new Intaking(intake, hopper, led);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -110,8 +111,8 @@ public class RobotContainer implements Logged {
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
     // leds.setDefaultCommand(leds.setRainbowCmd());
-    leds.setDefaultCommand(
-        leds.setPurpGreenCmd().andThen(new WaitCommand(3))
+    led.setDefaultCommand(
+        led.setPurpGreenCmd().andThen(new WaitCommand(3))
     );
   }
   
@@ -138,31 +139,23 @@ public class RobotContainer implements Logged {
         driveJoy.start()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
-                leds.setRedCmd().until(hopper::isHopperFull).andThen(leds.setGreenCmd().withTimeout(3)) // -> works
+                led.setRedCmd().until(hopper::isHopperFull).andThen(led.setGreenCmd().withTimeout(3)) // -> works
                 // Commands.waitUntil(hopper::isHopperFull)
                 // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
 
         // driveJoy.a()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(25)
-        //   );
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(25));
 
         // driveJoy.b()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(35)
-        //   );
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(35));
 
         // driveJoy.x()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(50)
-        //   );
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(50));
 
         // driveJoy.y()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(60)
-        //   );
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(60));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -178,14 +171,18 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
+            // test entire routine
+            .onTrue(intaking.intakeNote());
+
             // entire intake routine with setSpeed
-            .onTrue(intaking.setIntakeHopperSpeeds(0.3) // bc it's a runOnce, it automatically went to setting sp to 0
-                .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
-                // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
-                .andThen(leds.setGreenCmd().withTimeout(2))
-                // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
-            );
+            // .onTrue(leds.setSolidCmd(LEDConstants.RED) // test led red
+            //     .andThen(intaking.setIntakeHopperSpeeds(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
+            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
+            //     .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
+            //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
+            //     .andThen(leds.setGreenCmd().withTimeout(2))
+            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
+            // );
             
             // entire intake routine with setVelocity
             // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
@@ -200,10 +197,6 @@ public class RobotContainer implements Logged {
             // intaking intakeHopper work
             // .onTrue(intaking.setIntakeHopperSetpoints(3*360))
             // .onFalse(intaking.setIntakeHopperSetpoints(0));
-            
-            // just intake mech
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
-            // .onFalse(intake.setVelocitySetpointCmd(0.0));
             
         // runs outtake
         operJoy.leftBumper()
@@ -224,14 +217,14 @@ public class RobotContainer implements Logged {
             .onFalse(hopper.setVelocitySetpointCmd(0));
 
         // runs reverse hopper (towards intake)
-        operJoy.back() // feeds note from hopper to shooter
+        operJoy.back() // feeds note from hopper to shooter aka "trigger"
             .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
                 .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
                 .andThen(Commands.waitUntil(hopper::isHopperEmpty))
                 .andThen(hopper.setVelocitySetpointCmd(0))
                 .andThen(shooterWheel.setVelocitySetpointCmd(0))
                 .andThen(hopper.resetStateCountCmd()) // testing, commented in before
-                // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
+                .andThen(led.setSolidCmd(LEDConstants.PURPLE).withTimeout(2))
             );
 
             // TEST resetting state count before setting state count

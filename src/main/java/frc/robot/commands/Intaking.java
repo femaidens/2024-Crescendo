@@ -6,27 +6,30 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.IntakeHopperConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 
 /** Add your docs here. */
 public class Intaking {
     
     private Intake intake;
     private Hopper hopper;
+    private LED led;
 
-    public Intaking(Intake intake, Hopper hopper) {
+    public Intaking(Intake intake, Hopper hopper, LED led) {
         this.intake = intake;
         this.hopper = hopper;
+        this.led = led;
     }
 
-    public Command moveNote(double velocity) {
-        return intake.setVelocitySetpointCmd(velocity)
-                .alongWith(hopper.setVelocitySetpointCmd(velocity));
-        // return Commands.waitUntil(hopper::isHopperEmpty)
-        // .andThen(Commands.waitUntil(hopper::isHopperFull)
-        // .deadlineWith(setIntakeHopperSetpoints(velocity)));
+    public Command intakeNote() {
+        return led.setSolidCmd(LEDConstants.RED) // test led red
+                .andThen(setIntakeHopperSpeeds(0.3)) // runOnce
+                .andThen(Commands.waitUntil(hopper::isHopperFull))
+                .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
+                .andThen(led.setGreenCmd().withTimeout(2));
     }
 
     public Command setIntakeHopperSetpoints(double setpoint) {

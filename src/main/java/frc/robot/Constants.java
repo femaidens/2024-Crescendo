@@ -11,8 +11,16 @@ public final class Constants {
 
   public static final double DEGREES = 360.0;
 
+  public static final class LEDConstants{
+    public static final int PINK[] = {255, 71, 221}; 
+    public static final int PURPLE[] = {189, 63, 235}; 
+    public static final int BLUE[] = {51, 116, 225};
+    public static final int RED[] = {255, 0, 0};
+    public static final int GREEN[] = {0, 255, 0};
+  }
+
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.85;
+    public static final double ARM_SPEED = 0.1;//0.85;
   }
 
   public static final class IntakeHopperConstants {
@@ -153,7 +161,5 @@ public final class Constants {
     public static final double WHEEL_SPEED = 5.0 * DEGREES;
     // intake wheels
     public static final double AUTON_OUTTAKE_TIME = 2;
-
-
   }
 }

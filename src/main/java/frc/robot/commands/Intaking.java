@@ -25,8 +25,8 @@ public class Intaking {
     }
 
     public Command intakeNote() {
-        return led.setSolidCmd(LEDConstants.RED) // test led red
-                .andThen(setIntakeHopperSpeeds(0.3)) // runOnce
+        return //led.setSolidCmd(LEDConstants.RED) // test led red
+                setIntakeHopperSpeeds(0.3) // runOnce
                 .andThen(Commands.waitUntil(hopper::isHopperFull))
                 .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
                 .andThen(led.setGreenCmd().withTimeout(2));

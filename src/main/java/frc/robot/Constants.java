@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.1;//0.85;
+    public static final double ARM_SPEED = 0.2;//0.85;
   }
 
   public static final class IntakeHopperConstants {
@@ -30,7 +30,7 @@ public final class Constants {
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 4.5*DEGREES;
+    public static final double TRANSITION_VEL = 4.5*DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -42,7 +42,7 @@ public final class Constants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
     public static final double ROLLER_SPEED = 0.175;
 
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 35;
 
     // velocities
     public static final double INTAKE_VEL =  2*360;// IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
@@ -73,8 +73,8 @@ public final class Constants {
     
     public static final double AMP_FLUSH = 15 * DEGREES; // 13
 
-    public static final double SPEAKER_FLUSH = 60 * DEGREES; //57 
-    public static final double SPEAKER_STAGE = 70 * DEGREES; //60
+    public static final double SPEAKER_FLUSH = 70 * DEGREES; //57 
+    public static final double SPEAKER_STAGE = 80 * DEGREES; //60
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)

@@ -78,7 +78,7 @@ public class Hopper extends SubsystemBase implements Logged {
   /* COMMANDS */
   public Command feedNote() {
     return Commands.waitUntil(() -> isHopperFull())
-    .andThen(setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+    .andThen(setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL))
     .andThen(Commands.waitUntil(() -> isHopperEmpty()))
     .andThen(setVelocitySetpointCmd(0));
   }

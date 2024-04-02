@@ -178,20 +178,22 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
-            // entire intake routine
-            .onTrue(intake.setSpeedCmd(0.3).alongWith(hopper.setSpeedCmd(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
+            // entire intake routine with setSpeed
+            .onTrue(intaking.setIntakeHopperSpeeds(0.3) // bc it's a runOnce, it automatically went to setting sp to 0
                 .andThen(Commands.waitUntil(hopper::isHopperFull))
                 .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
                 // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
                 .andThen(leds.setGreenCmd().withTimeout(2))
-                // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
+                // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
             );
+            
+            // entire intake routine with setVelocity
             // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
             //     .andThen(Commands.waitUntil(hopper::isHopperFull))
             //     .andThen(intaking.setIntakeHopperSetpoints(0))
             //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
             //     .andThen(leds.setGreenCmd().withTimeout(2))
-            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
+            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
             // );
 
             // unit testing 
@@ -206,20 +208,12 @@ public class RobotContainer implements Logged {
         // runs outtake
         operJoy.leftBumper()
             // setVelocity entire outtake routine
-            .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
-            .onFalse(intaking.setIntakeHopperSetpoints(0));
+            // .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
             // setSpeed entire outtake routines
-            // .whileTrue(intake.setSpeedCmd(-0.3).alongWith(hopper.setSpeedCmd(-0.3))) // bc it's a runOnce, it automatically went to setting sp to 0
-            // .onFalse(intake.setSpeedCmd(0).alongWith(hopper.setSpeedCmd(0)));
-
-            // separate motion
-            // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
-            // .onFalse(intake.stopMotorCmd());
-
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
-            // .onFalse(intake.setVelocitySetpointCmd(0.0));
-
+            .onTrue(intaking.setOuttakeSpeeds(-0.3))
+            .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */
         // runs hopper (towards shooter)

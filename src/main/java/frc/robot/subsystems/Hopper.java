@@ -89,6 +89,10 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> setSpeed(speed));
   }
 
+  public Command setOuttakeSpeedCmd(double speed) {
+    return this.run(() -> setSpeed(speed));
+  }
+
   // is default command, DO NOT ADD AS PROXY
   public Command setVelocityCmd() {
     // return Commands.print("running hopper velocity pid");

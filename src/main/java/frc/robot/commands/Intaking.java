@@ -33,4 +33,14 @@ public class Intaking {
         return intake.setVelocitySetpointCmd(setpoint)
         .alongWith(hopper.setVelocitySetpointCmd(setpoint));
     }
+
+    public Command setIntakeHopperSpeeds(double speed) { 
+        return intake.setSpeedCmd(speed)
+        .alongWith(hopper.setSpeedCmd(speed));
+    }
+
+    public Command setOuttakeSpeeds(double speed) { 
+        return intake.setOuttakeSpeedCmd(speed)
+        .alongWith(hopper.setOuttakeSpeedCmd(speed));
+    }
 }

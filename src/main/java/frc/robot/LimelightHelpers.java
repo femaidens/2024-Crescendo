@@ -457,7 +457,7 @@ public class LimelightHelpers { //single file library
                     Units.degreesToRadians(inData[5])));
     }
 
-    private static Pose2d toPose2D(double[] inData){
+    public static Pose2d toPose2D(double[] inData){
         if(inData.length < 6)
         {
             //System.err.println("Bad LL 2D Pose Data!");

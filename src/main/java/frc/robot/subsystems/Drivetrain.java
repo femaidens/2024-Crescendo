@@ -16,10 +16,12 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -90,7 +92,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private final SwerveDrivePoseEstimator poseEstimator;
   
   @Log.NT
-  private final Field2d field2d = new Field2d();
+  private final Field2d m_field2d = new Field2d();
 
   private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
@@ -173,59 +175,77 @@ public class Drivetrain extends SubsystemBase implements Logged {
             rearRight.getPosition()
         });
         
-    // updateOdometry();
+    updateOdometry();
     
-    // field2d.setRobotPose(getCurrentPose());
+    m_field2d.setRobotPose(getCurrentPose());
 
     SmartDashboard.putNumber("gyro angle", getAngle());
     // System.out.println("yaw reading" + gyro.getYaw());
     // System.out.println("angle reading " + getAngle());
     // SmartDashboard.putNumber("gyro x", gyroX()); <-
   }
-  
-  // public void updateOdometry(){
-  //   poseEstimator.update(
-  //       Rotation2d.fromDegrees(getAngle()),
-  //       new SwerveModulePosition[] {
-  //         frontLeft.getPosition(),
-  //         frontRight.getPosition(),
-  //         rearLeft.getPosition(),
-  //         rearRight.getPosition()
-  //       });
-    
-  //   LimelightHelpers.PoseEstimate jsonDump = LimelightHelpers.getBotPoseEstimate_wpiRed(""); //can be changed to blue or red
-  //   if(jsonDump.tagCount >= 2){
-  //     poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.99)); //need to be changed
-  //     poseEstimator.addVisionMeasurement(jsonDump.pose, jsonDump.timestampSeconds);
-  //   }
+
+  // public PoseEstimator getPoseEstimator(){
+  //   return poseEstimator;
   // }
+  
+  public void updateOdometry(){
+    poseEstimator.update(
+        Rotation2d.fromDegrees(getAngle()),
+        new SwerveModulePosition[] {
+          frontLeft.getPosition(),
+          frontRight.getPosition(),
+          rearLeft.getPosition(),
+          rearRight.getPosition()
+        });
+    
+    LimelightHelpers.PoseEstimate jsonDump = LimelightHelpers.getBotPoseEstimate_wpiRed(""); //can be changed to blue or red
+    // if(jsonDump.tagCount >= 2){
+    //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.99)); //need to be changed
+    //   poseEstimator.addVisionMeasurement(jsonDump.pose, jsonDump.timestampSeconds);
+    // }
+
+    LimelightHelpers.Results results = 
+        LimelightHelpers.getLatestResults("").targetingResults;
+
+    if(LimelightHelpers.getTV("")){ 
+      Pose2d camPose = LimelightHelpers.toPose2D(results.botpose_wpiblue);
+      poseEstimator.addVisionMeasurement(camPose, 
+      Timer.getFPGATimestamp());
+      m_field2d.getObject("atPose").setPose(camPose);
+    } else {
+      m_field2d.getObject("goPose").setPose(poseEstimator.getEstimatedPosition());
+    }
+
+    m_field2d.setRobotPose(poseEstimator.getEstimatedPosition());
+  }
 
   /** 
    * @return currently-estimated pose of robot
    */
-  // public Pose2d getPose() {
-  //   return odometry.getPoseMeters();
-  // }
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
 
-  // public Pose2d getCurrentPose(){
-  //   return poseEstimator.getEstimatedPosition();
-  // }
+  public Pose2d getCurrentPose(){
+    return poseEstimator.getEstimatedPosition();
+  }
 
-  // public void setCurrentPose(Pose2d newPose){
-  //   poseEstimator.resetPosition(
-  //     Rotation2d.fromDegrees(gyro.getAngle()),
-  //     new SwerveModulePosition[]{
-  //       frontLeft.getPosition(),
-  //       frontRight.getPosition(),
-  //       rearLeft.getPosition(),
-  //       rearRight.getPosition()
-  //     }, 
-  //     newPose);
-  // }
+  public void setCurrentPose(Pose2d newPose){
+    poseEstimator.resetPosition(
+      Rotation2d.fromDegrees(gyro.getAngle()),
+      new SwerveModulePosition[]{
+        frontLeft.getPosition(),
+        frontRight.getPosition(),
+        rearLeft.getPosition(),
+        rearRight.getPosition()
+      }, 
+      newPose);
+  }
 
-  // public void resetFieldPosition(){
-  //   setCurrentPose(new Pose2d());
-  // }
+  public void resetFieldPosition(){
+    setCurrentPose(new Pose2d());
+  }
 
   // public SwerveModulePosition[] getModulePositions(){
   //   return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);

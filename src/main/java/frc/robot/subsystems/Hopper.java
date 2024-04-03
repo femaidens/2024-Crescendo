@@ -121,6 +121,10 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> resetStateEmergency()).asProxy();
   }
 
+  public Command getPositionCmd(){
+    return this.runOnce(() -> getHopperPosition());
+  }
+
   /* * * BEAM BREAK * * */
   public boolean getReceiverStatus() {
     return receiver.get();
@@ -202,6 +206,10 @@ public class Hopper extends SubsystemBase implements Logged {
 
   public void stopMotor() {
     hopperMotor.stopMotor();
+  }
+
+  public double getHopperPosition(){
+    return hopperEncoder.getPosition();
   }
 
   /* SYSID */

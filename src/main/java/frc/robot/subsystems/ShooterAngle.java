@@ -43,6 +43,9 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   @Log.NT
   private final ArmFeedforward shooterAngleFF;
 
+  @Log.NT
+  private final TrapezoidProfile.Constraints trapezoidProfile;
+
   private double pSetpoint;
 
   // private final MutableMeasure<Voltage> rampRate = MutableMeasure.mutable(Units.Volts.of(0));
@@ -69,7 +72,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder.setVelocityConversionFactor(ShooterAngleConstants.VEL_CFACTOR);
 
     // shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
-    profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, new TrapezoidProfile.Constraints(15, 10));
+    trapezoidProfile = new TrapezoidProfile.Constraints(20, 15);
+    profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, new TrapezoidProfile.Constraints(20, 15));
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
@@ -119,17 +123,17 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     }
     // run PID
     else {
-      // setAngle();
-      stopMotor();
+      setAngle();
+      // stopMotor();
     }
   }
 
   // sets shooter angle to current setpoint
   public void setAngle() {
     double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
-    double ff = shooterAngleFF.calculate(profiledShooterAnglePID.getSetpoint().position, profiledShooterAnglePID.getSetpoint().velocity);
+    // double ff = shooterAngleFF.calculate(profiledShooterAnglePID.getSetpoint().position, profiledShooterAnglePID.getSetpoint().velocity);
 
-    shooterAngleMotor.setVoltage(ff+voltage);
+    shooterAngleMotor.setVoltage(voltage);
 
     // System.out.println("angle voltage: " + voltage);
     // System.out.println("setting angle");

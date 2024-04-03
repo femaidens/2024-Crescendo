@@ -120,7 +120,7 @@ public final class Constants {
 
     // pid -> need to populate
     public static final double kP = 0.11;
-    public static final double kI = 0;
+    public static final double kI = 0.005;
     public static final double kD = 0;
 
     public static final double kS = 0.1368; //0.1902; //0.13601;

@@ -83,23 +83,23 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)
-    );
-
-    // shooterAngle.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> shooterAngle.setManualAngle(
-    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-    //         shooterAngle)
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
     // );
+
+    shooterAngle.setDefaultCommand(
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+            shooterAngle)
+    );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
@@ -138,25 +138,25 @@ public class RobotContainer implements Logged {
         //         .andThen(leds.setGreenCmd().withTimeout(3))
         //         // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
         //     );
-        //  driveJoy.a()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(25)
-        //   );
+         driveJoy.a()
+          .onTrue(
+            shooterAngle.setAngleSetpointCmd(28)
+          );
 
-        // driveJoy.b()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(35)
-        //   );
+        driveJoy.b()
+          .onTrue(
+            shooterAngle.setAngleSetpointCmd(35)
+          );
 
-        // driveJoy.x()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(50)
-        //   );
+        driveJoy.x()
+          .onTrue(
+            shooterAngle.setAngleSetpointCmd(50)
+          );
 
-        // driveJoy.y()
-        //   .onTrue(
-        //     shooterAngle.setAngleSetpointCmd(60)
-        //   );
+        driveJoy.y()
+          .onTrue(
+            shooterAngle.setAngleSetpointCmd(60)
+          );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -336,23 +336,23 @@ public class RobotContainer implements Logged {
         //         .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
-    driveJoy.a()
-    .whileTrue(
-        shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
-    );
+    // driveJoy.a()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
 
-    driveJoy.b()
-    .whileTrue(
-        shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
-    );
-    driveJoy.x()
-    .whileTrue(
-        shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
-    );
-    driveJoy.y()
-    .whileTrue(
-        shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
-    );
+    // driveJoy.b()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
+    // driveJoy.x()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+    // driveJoy.y()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
 
     /* DRIVETRAIN SYSID */
     // driveJoy.a()

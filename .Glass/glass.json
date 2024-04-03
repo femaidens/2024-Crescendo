@@ -54,6 +54,9 @@
     "mode": "Client (NT4)",
     "serverTeam": "2265"
   },
+  "NetworkTables View": {
+    "visible": false
+  },
   "Plots": {
     "Plot <0>": {
       "plots": [

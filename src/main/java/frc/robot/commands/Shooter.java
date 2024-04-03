@@ -27,18 +27,19 @@ public class Shooter {
         this.led = led;
     }
 
-    public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it necessary?
+    public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it
+                                                     // necessary?
         return setShooterSetpoints(angle, vel)
                 .andThen(shoot());
     }
 
     public Command shoot() {
         // TEST ACCURACY OF SHOOTER AT ANGLE
-        return //led.setSolidCmd(LEDConstants.RED)
-                Commands.waitUntil(() -> shooterAngle.atAngle()) //shooterWheel.atVelocity() && 
-                .andThen(hopper.feedNote())
-                .andThen(shooterWheel.setVelocitySetpointCmd(0))
-                .andThen(hopper.resetStateCountCmd())
+        return Commands.race(led.setSolidCmd(LEDConstants.RED),
+                Commands.waitUntil(() -> shooterAngle.atAngle()) // shooterWheel.atVelocity() &&
+                        .andThen(hopper.feedNote())
+                        .andThen(shooterWheel.setVelocitySetpointCmd(0))
+                        .andThen(hopper.resetStateCountCmd())) // end of race cmd
                 .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
     }
 

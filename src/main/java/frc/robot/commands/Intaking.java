@@ -13,7 +13,7 @@ import frc.robot.subsystems.LED;
 
 /** Add your docs here. */
 public class Intaking {
-    
+
     private Intake intake;
     private Hopper hopper;
     private LED led;
@@ -25,25 +25,26 @@ public class Intaking {
     }
 
     public Command intakeNote() {
-        return //led.setSolidCmd(LEDConstants.RED) // test led red
+        return Commands.race(
+                led.setSolidCmd(LEDConstants.RED),
                 setIntakeHopperSpeeds(0.3) // runOnce
-                .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
+                        .andThen(Commands.waitUntil(hopper::isHopperFull))
+                        .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd()))) // end of race cmd
                 .andThen(led.setGreenCmd().withTimeout(2));
     }
 
     public Command setIntakeHopperSetpoints(double setpoint) {
         return intake.setVelocitySetpointCmd(setpoint)
-        .alongWith(hopper.setVelocitySetpointCmd(setpoint));
+                .alongWith(hopper.setVelocitySetpointCmd(setpoint));
     }
 
-    public Command setIntakeHopperSpeeds(double speed) { 
+    public Command setIntakeHopperSpeeds(double speed) {
         return intake.setSpeedCmd(speed)
-        .alongWith(hopper.setSpeedCmd(speed));
+                .alongWith(hopper.setSpeedCmd(speed));
     }
 
-    public Command setOuttakeSpeeds(double speed) { 
+    public Command setOuttakeSpeeds(double speed) {
         return intake.setOuttakeSpeedCmd(speed)
-        .alongWith(hopper.setOuttakeSpeedCmd(speed));
+                .alongWith(hopper.setOuttakeSpeedCmd(speed));
     }
 }

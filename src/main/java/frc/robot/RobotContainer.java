@@ -145,17 +145,17 @@ public class RobotContainer implements Logged {
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
 
-        // driveJoy.a()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(25));
+        driveJoy.a()
+          .onTrue(shooterAngle.setAngleSetpointCmd(28));
 
-        // driveJoy.b()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(35));
+        driveJoy.b()
+          .onTrue(shooterAngle.setAngleSetpointCmd(35));
 
-        // driveJoy.x()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(50));
+        driveJoy.x()
+          .onTrue(shooterAngle.setAngleSetpointCmd(50));
 
-        // driveJoy.y()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(60));
+        driveJoy.y()
+          .onTrue(shooterAngle.setAngleSetpointCmd(60));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm

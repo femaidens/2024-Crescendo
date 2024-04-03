@@ -145,17 +145,17 @@ public class RobotContainer implements Logged {
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
 
-        driveJoy.a()
-          .onTrue(shooterAngle.setAngleSetpointCmd(28));
+        // driveJoy.a()
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(28));
 
-        driveJoy.b()
-          .onTrue(shooterAngle.setAngleSetpointCmd(35));
+        // driveJoy.b()
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(35));
 
-        driveJoy.x()
-          .onTrue(shooterAngle.setAngleSetpointCmd(50));
+        // driveJoy.x()
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(50));
 
-        driveJoy.y()
-          .onTrue(shooterAngle.setAngleSetpointCmd(60));
+        // driveJoy.y()
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(60));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -317,25 +317,25 @@ public class RobotContainer implements Logged {
 
     /* * * CONTROL BINDINGS * * */
     /* DRIVETRAIN SYSID */
-    // driveJoy.a()
-    //     .whileTrue(
-    //         drivetrain.driveQuasistatic(Direction.kForward)
-    //     );
+    driveJoy.a()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kForward)
+        );
 
-    // driveJoy.b()
-    //     .whileTrue(
-    //         drivetrain.driveQuasistatic(Direction.kReverse)
-    //     );
+    driveJoy.b()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kReverse)
+        );
 
-    // driveJoy.x()
-    //     .whileTrue(
-    //         drivetrain.driveDynamic(Direction.kForward)
-    //     );
+    driveJoy.x()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kForward)
+        );
 
-    // driveJoy.y()
-    //     .whileTrue(
-    //         drivetrain.driveDynamic(Direction.kReverse)
-    //     );
+    driveJoy.y()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kReverse)
+        );
 
     // driveJoy.a()
     //     .whileTrue(

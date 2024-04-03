@@ -32,8 +32,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   private final AbsoluteEncoder shooterAngleEncoder;
 
-  // @Log.NT
-  // private final PIDController shooterAnglePID;
+  @Log.NT
+  private final PIDController shooterAnglePID;
    @Log.NT
   private final TrapezoidProfile.Constraints trapezoidProfile;
 
@@ -59,14 +59,14 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
 
-    // shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
+    shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
     trapezoidProfile = new TrapezoidProfile.Constraints(20, 15);
     profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, trapezoidProfile);
 
     shooterAngleMotor.burnFlash();
 
-    // shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
-    profiledShooterAnglePID.setTolerance(2.0);
+    shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
+    // profiledShooterAnglePID.setTolerance(2.0);
 
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kS);
@@ -119,16 +119,16 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
+    // double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
     // double ff = shooterAngleFF.calculate(profiledShooterAnglePID.getSetpoint().position, profiledShooterAnglePID.getSetpoint().velocity);
 
-    shooterAngleMotor.setVoltage(voltage);  
+    // shooterAngleMotor.setVoltage(voltage);  
     
     /* setangle with original pid */
-    // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
+    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
     // // double ff = shooterAngleFF.calculate(shooterAnglePID.getSetpoint(), 0);
-    // // shooterAngleMotor.setVoltage(ff+ voltage);
-    // shooterAngleMotor.setVoltage(voltage);
+    // shooterAngleMotor.setVoltage(ff+ voltage);
+    shooterAngleMotor.setVoltage(voltage);
     
     // // System.out.println("angle voltage: " + voltage);
     // // System.out.println("setting angle");

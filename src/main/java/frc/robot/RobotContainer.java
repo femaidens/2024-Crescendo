@@ -131,13 +131,13 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
-        driveJoy.a()
-            .onTrue(
-                // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
-                // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
-            );
+        // driveJoy.a()
+        //     .onTrue(
+        //         // intaking.setIntakeHopperSetpoints(0)
+        //         Commands.waitUntil(hopper::isHopperFull)
+        //         .andThen(leds.setGreenCmd().withTimeout(3))
+        //         // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
+        //     );
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -336,6 +336,12 @@ public class RobotContainer implements Logged {
     // );
 
     /* DRIVETRAIN SYSID */
+    // driveJoy.start()
+    //     .onTrue(new RunCommand
+    //     (() -> drivetrain.setStraight()))
+    //     .onFalse(new InstantCommand(
+    //         () -> sto
+    //     ))
     driveJoy.a()
         .whileTrue(
             drivetrain.driveQuasistatic(Direction.kForward)

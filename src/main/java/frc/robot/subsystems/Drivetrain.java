@@ -84,11 +84,11 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
   /* SYSID INSTANTIATIONS */
-  private final SysIdRoutine driveRoutine = new SysIdRoutine(
+  private final SysIdRoutine driveRoutine = new SysIdRoutine( 
       new SysIdRoutine.Config(), 
       new SysIdRoutine.Mechanism(
-          volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
-          // volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+          // volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
+          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
           null, this));
 
   // private final SysIdRoutine turnRoutine = new SysIdRoutine(
@@ -278,8 +278,14 @@ public class Drivetrain extends SubsystemBase implements Logged {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
     rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //only rear right is acting up
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(180)));
   }
+
+  // public Command setStraightCmd(){
+  //   this.run()
+
+  // }
 
   // sets the swerve ModuleStates.
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -301,6 +307,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
   }
 
   public void setDriveMotorsVoltage(MaxSwerveModule motor1, MaxSwerveModule motor2, MaxSwerveModule motor3, MaxSwerveModule motor4, double voltage) {
+    System.out.println(voltage);
     motor1.setDriveVoltage(voltage);
     motor2.setDriveVoltage(voltage);
     motor3.setDriveVoltage(voltage);

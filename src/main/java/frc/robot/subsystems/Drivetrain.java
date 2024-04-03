@@ -82,8 +82,10 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
   /* SYSID INSTANTIATIONS */
-  private final SysIdRoutine driveRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  private final SysIdRoutine driveRoutine = new SysIdRoutine( 
+      new SysIdRoutine.Config(), 
+      new SysIdRoutine.Mechanism(
+          // volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
           volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
           null, this));
 

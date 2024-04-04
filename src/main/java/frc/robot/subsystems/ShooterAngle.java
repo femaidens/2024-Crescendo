@@ -121,7 +121,6 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
 
     shooterAngleMotor.setVoltage(ff + voltage); 
-    // shooterAngleMotor.setVoltage(ff); 
     
     /* setangle with original pid */
     // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant

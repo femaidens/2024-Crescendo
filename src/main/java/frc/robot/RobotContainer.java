@@ -303,8 +303,13 @@ public class RobotContainer implements Logged {
             // );
             
             // shooting with buttons
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE))
+            // );
+
+            // just setting angle and state limit
             .onTrue(hopper.setStateLimitCmd(1)
-                .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE))
+                .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE))
             );
             
             // testing at angle

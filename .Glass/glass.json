@@ -42,6 +42,9 @@
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
     "Connections": {
       "open": true
     },
@@ -53,9 +56,6 @@
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
     "serverTeam": "2265"
-  },
-  "NetworkTables View": {
-    "visible": false
   },
   "Plots": {
     "Plot <0>": {

@@ -11,6 +11,8 @@ import monologue.Logged;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -86,12 +88,12 @@ public class Drivetrain extends SubsystemBase implements Logged {
       new SysIdRoutine.Config(), 
       new SysIdRoutine.Mechanism(
           // volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
-          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+          volts -> modules.forEach(m -> m.setStraightDrivingVoltage(volts.in(Units.Volts))),
           null, this));
 
-  private final SysIdRoutine turnRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-          volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
+  // private final SysIdRoutine turnRoutine = new SysIdRoutine(
+  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  //         volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
 
   private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
@@ -272,6 +274,14 @@ public class Drivetrain extends SubsystemBase implements Logged {
     rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  public void setStraight(){
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //only rear right is acting up, consider changing it to 180 degrees
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+  }
+
   // sets the swerve ModuleStates.
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -291,6 +301,13 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // Arrays.stream(swerveModules).forEach(RevSwerveModule::resetEncoders);
   }
 
+  public void setDriveMotorsVoltage(MaxSwerveModule motor1, MaxSwerveModule motor2, MaxSwerveModule motor3, MaxSwerveModule motor4, double voltage) {
+    System.out.println(voltage);
+    motor1.setDriveVoltage(voltage);
+    motor2.setDriveVoltage(voltage);
+    motor3.setDriveVoltage(voltage);
+    motor4.setDriveVoltage(-voltage);
+  }
   // zeros heading/resets/calibrates gyro
   public void zeroHeading() {
     gyro.reset();
@@ -348,7 +365,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
   }
 
   public Command turnQuasistatic(SysIdRoutine.Direction direction) {
-    return turnRoutine.quasistatic(direction);
+    return turnAllRoutine.quasistatic(direction);
   }
 
   public Command driveDynamic(SysIdRoutine.Direction direction) {
@@ -356,6 +373,6 @@ public class Drivetrain extends SubsystemBase implements Logged {
   }
 
   public Command turnDynamic(SysIdRoutine.Direction direction) {
-    return turnRoutine.dynamic(direction);
+    return turnAllRoutine.dynamic(direction);
   }
 }

@@ -156,6 +156,14 @@ public class MaxSwerveModule {
   }
 
   /**
+   * 
+   * @param angleRadians Desired angle in radians
+   */
+  public void setDesiredAngleState(double angle){
+    turningPID.setReference(angle, CANSparkMax.ControlType.kPosition);
+  }
+
+  /**
    * Sets the desired state for the module, without drive motor PID.
    *
    * @param desiredState Desired state with speed and angle.
@@ -201,6 +209,16 @@ public class MaxSwerveModule {
     driveMotor.setVoltage(voltage);
   }
 
+  /**
+   * Essentially setDriveVoltage(), except the turning motors are always straight
+   * @param voltage Voltage, in volts
+   */
+  public void setStraightDrivingVoltage(double voltage){
+    driveMotor.setVoltage(voltage);
+    turningPID.setReference(0.0, CANSparkMax.ControlType.kPosition);
+  }
+
+    
   public void setTurnVoltage(double voltage) {
     turningMotor.setVoltage(voltage);
   }

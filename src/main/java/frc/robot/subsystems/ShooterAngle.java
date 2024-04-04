@@ -66,12 +66,11 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.burnFlash();
 
     shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
-    // profiledShooterAnglePID.setTolerance(2.0);
+    profiledShooterAnglePID.setTolerance(2.0);
 
+    shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
-    shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kS);
-
-    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = 50;//ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */
@@ -118,14 +117,14 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    // double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
-    // double ff = shooterAngleFF.calculate(profiledShooterAnglePID.getSetpoint().position, profiledShooterAnglePID.getSetpoint().velocity);
+    double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
+    double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
 
-    // shooterAngleMotor.setVoltage(voltage + ff);  
+    shooterAngleMotor.setVoltage(ff + voltage);  
     
     /* setangle with original pid */
-    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
-    shooterAngleMotor.setVoltage(voltage);
+    // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint);
+    // shooterAngleMotor.setVoltage(voltage);
     
     // // System.out.println("angle voltage: " + voltage);
     // // System.out.println("setting angle");

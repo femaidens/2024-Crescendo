@@ -85,16 +85,16 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)
-    );
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
+    // );
 
     shooterAngle.setDefaultCommand(
         new RunCommand(

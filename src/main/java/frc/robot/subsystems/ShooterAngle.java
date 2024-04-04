@@ -8,6 +8,9 @@ import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Ports.ShooterPorts;
 import monologue.Annotations.Log;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -42,10 +45,18 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   private double pSetpoint;
 
+  private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.4).per(Seconds.of(1)),
+      Volts.of(2),
+      Seconds.of(5),
+      null
+  );
+
   private final SysIdRoutine angleRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-      new SysIdRoutine.Mechanism(
-          volts -> setVoltage(volts.in(Units.Volts)), null, this));
+    config,
+    new SysIdRoutine.Mechanism(
+        volts -> setVoltage(volts.in(Volts)), null, this)
+  );
+
 
   private final ArmFeedforward shooterAngleFF;
 
@@ -177,19 +188,19 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleMotor.setVoltage(voltage);
   }
 
-  public Command leftQuas(SysIdRoutine.Direction direction) {
+  public boolean atMaxAngle(){
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) >= ShooterAngleConstants.MAX_ANGLE;
+  }
+
+  public boolean atMinAngle(){
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) <= ShooterAngleConstants.MIN_ANGLE;
+  }
+
+  public Command quasiCmd(SysIdRoutine.Direction direction) {
     return angleRoutine.quasistatic(direction);
   }
 
-  public Command leftDyna(SysIdRoutine.Direction direction) {
-    return angleRoutine.dynamic(direction);
-  }
-
-  public Command rightQuas(SysIdRoutine.Direction direction) {
-    return angleRoutine.quasistatic(direction);
-  }
-
-  public Command rightDyna(SysIdRoutine.Direction direction) {
+  public Command dynaCmd(SysIdRoutine.Direction direction) {
     return angleRoutine.dynamic(direction);
   }
 

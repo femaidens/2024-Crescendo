@@ -172,7 +172,7 @@ public class RobotContainer implements Logged {
         // runs intake routine
         operJoy.rightBumper()
             // test entire routine
-            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SHOOTER_MIN_ANGLE)
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE)
             .andThen(intaking.intakeNote()));
 
             // entire intake routine with setSpeed
@@ -336,7 +336,8 @@ public class RobotContainer implements Logged {
         .whileTrue(
             drivetrain.driveDynamic(Direction.kReverse)
         );
-
+        
+    /* DRIVETRAIN TURNING SYSID */
     // driveJoy.a()
     //     .whileTrue(
     //         drivetrain.turnQuasistatic(Direction.kForward)
@@ -356,6 +357,25 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.turnDynamic(Direction.kReverse)
     //     );
+
+    /* SHOOTER ANGLE SYSID */
+    // driveJoy.a()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+
+    // driveJoy.b()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
+    // driveJoy.x()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+    // driveJoy.y()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
 
         /*
          * controlTypes: pid, sysid

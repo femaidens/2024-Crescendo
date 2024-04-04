@@ -100,7 +100,7 @@ public final class Constants {
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
-    public static final double MAX_ANGLE = 62.0;
+    public static final double MAX_ANGLE = 65.0;
     public static final double MIN_ANGLE = 23.0; 
 
     //check picture for distances for testing

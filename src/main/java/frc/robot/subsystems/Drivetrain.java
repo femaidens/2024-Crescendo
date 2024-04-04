@@ -88,7 +88,7 @@ public class Drivetrain extends SubsystemBase implements Logged {
       new SysIdRoutine.Config(), 
       new SysIdRoutine.Mechanism(
           // volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
-          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+          volts -> modules.forEach(m -> m.setStraightDrivingVoltage(volts.in(Units.Volts))),
           null, this));
 
   // private final SysIdRoutine turnRoutine = new SysIdRoutine(
@@ -278,8 +278,8 @@ public class Drivetrain extends SubsystemBase implements Logged {
     frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
     rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    //only rear right is acting up
-    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(180)));
+    //only rear right is acting up, consider changing it to 180 degrees
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
   }
 
   // public Command setStraightCmd(){

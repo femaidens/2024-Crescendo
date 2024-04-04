@@ -102,13 +102,13 @@ public class RobotContainer implements Logged {
     // );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
-    shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
-    // // if default velocity is 0, need to run command when scheduling the command
-    // // if not, make sure that setpoints are changing correctly
-    hopper.setDefaultCommand(hopper.setVelocityCmd());
-    intake.setDefaultCommand(intake.setVelocityCmd());
-    leds.setDefaultCommand(leds.setRainbowCmd());
+    // // // if default velocity is 0, need to run command when scheduling the command
+    // // // if not, make sure that setpoints are changing correctly
+    // hopper.setDefaultCommand(hopper.setVelocityCmd());
+    // intake.setDefaultCommand(intake.setVelocityCmd());
+    // leds.setDefaultCommand(leds.setRainbowCmd());
   }
   
   public void configureAuton() {

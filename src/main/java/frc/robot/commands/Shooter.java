@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
 
@@ -16,55 +18,29 @@ public class Shooter {
     private final ShooterAngle shooterAngle;
     private final ShooterWheel shooterWheel;
     private final Hopper hopper;
+    private final LED led;
 
-    public Shooter(ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper) {
+    public Shooter(ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper, LED led) {
         this.shooterAngle = shooterAngle;
         this.shooterWheel = shooterWheel;
         this.hopper = hopper;
+        this.led = led;
     }
 
-    public Command shoot(double vel) {
-        // CHECKING IS HOPPER FULL
-        // return Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
-        //     .andThen(hopper.feedNote())
-        //     .deadlineWith(shooterWheel.setVelocityCmd(vel))
-        //     .finallyDo(() -> {
-        //         shooterWheel.setVelocitySetpointCmd(0);
-        //         hopper.setVelocitySetpointCmd(0);
-        //         shooterWheel.stopMotors();
-        //         hopper.stopMotor();
-        //         }
-        //     );
-
-        // CHECKING IS SHOOTER AT ANGLE
-        return Commands.waitUntil(() -> shooterWheel.atVelocity() && shooterAngle.atAngle())
-            .andThen(hopper.feedNote())
-            // .andThen(Commands.waitUntil(hopper::isHopperEmpty))
-            .andThen(shooterWheel.setVelocitySetpointCmd(0)
-        );
-        // return Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
-        // .andThen(hopper.feedNote())
-        // .andThen(shooterWheel.setVelocitySetpointCmd(vel))
-        // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0));
-
-        // shoot than go back to default
-        // .onTrue(Commands.waitUntil(() -> shooterWheel.atVelocity() && hopper.isHopperFull())
-        // // .andThen(hopper.feedNote())
-        // .andThen(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.DEFAULT_VELOCITY))
-        // .deadlineWith(shooterWheel.setVelocityCmd(10*360.0))
-        // );
-        // .onTrue(shooter.shoot(ShooterWheelConstants.DEFAULT_VELOCITY));
-        // .onTrue(hopper.setSpeedCmd(-0.1));
-        // .onTrue(hopper.resetStateEmergencyCmd());
+    public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it
+                                                     // necessary?
+        return setShooterSetpoints(angle, vel)
+                .andThen(shoot());
     }
 
     public Command shoot() {
-
-        return Commands.waitUntil(() -> shooterWheel.atVelocity() && shooterAngle.atAngle())
-            .andThen(hopper.feedNote())
-            // .andThen(Commands.waitUntil(hopper::isHopperEmpty))
-            .andThen(shooterWheel.setVelocitySetpointCmd(0)
-        );
+        // TEST ACCURACY OF SHOOTER AT ANGLE
+        return Commands.race(led.setSolidCmd(LEDConstants.RED),
+                Commands.waitUntil(() -> shooterAngle.atAngle()) // shooterWheel.atVelocity() &&
+                        .andThen(hopper.feedNote())
+                        .andThen(shooterWheel.setVelocitySetpointCmd(0))
+                        .andThen(hopper.resetStateCountCmd())) // end of race cmd
+                .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
     }
 
     public Command setShooterSetpoints(double angle, double vel) {
@@ -78,8 +54,8 @@ public class Shooter {
 
     public Command resetAutonSetpoints() {
         return shooterAngle.setAngleSetpointCmd(0)
-        .alongWith(hopper.setVelocitySetpointCmd(0))
-        .alongWith(shooterWheel.setVelocitySetpointCmd(0));
+                .alongWith(hopper.setVelocitySetpointCmd(0))
+                .alongWith(shooterWheel.setVelocitySetpointCmd(0));
     }
 
 }

@@ -79,6 +79,10 @@ public class Intake extends SubsystemBase implements Logged {
     return this.runOnce(() -> setSpeed(speed));
   }
 
+  public Command setOuttakeSpeedCmd(double speed) {
+    return this.run(() -> setSpeed(speed));
+  }
+
   public Command setVelocitySetpointCmd(double setpoint) {
     // return Commands.print("setting intake vel setpoint");
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();

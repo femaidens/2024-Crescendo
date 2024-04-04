@@ -11,18 +11,26 @@ public final class Constants {
 
   public static final double DEGREES = 360.0;
 
+  public static final class LEDConstants{
+    public static final int PINK[] = {255, 71, 221}; 
+    public static final int PURPLE[] = {189, 63, 235}; 
+    public static final int BLUE[] = {51, 116, 225};
+    public static final int RED[] = {255, 0, 0};
+    public static final int GREEN[] = {0, 255, 0};
+  }
+
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.85;
+    public static final double ARM_SPEED = 0.2;//0.85;
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKE_NOTE_SPEED = 2 * DEGREES; // , 6 prev, 3 rotations
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 4.5*DEGREES;
+    public static final double TRANSITION_VEL = 4.5*DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -34,7 +42,7 @@ public final class Constants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
     public static final double ROLLER_SPEED = 0.175;
 
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 35;
 
     // velocities
     public static final double INTAKE_VEL =  2*360;// IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
@@ -65,8 +73,8 @@ public final class Constants {
     
     public static final double AMP_FLUSH = 15 * DEGREES; // 13
 
-    public static final double SPEAKER_FLUSH = 60 * DEGREES; //57 
-    public static final double SPEAKER_STAGE = 70 * DEGREES; //60
+    public static final double SPEAKER_FLUSH = 70 * DEGREES; //57 
+    public static final double SPEAKER_STAGE = 80 * DEGREES; //60
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
@@ -101,7 +109,7 @@ public final class Constants {
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
     public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = 31.0; //43.0
+    public static final double SHOOTER_MIN_ANGLE = 23;
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
@@ -120,7 +128,7 @@ public final class Constants {
 
     // pid -> need to populate
     public static final double kP = 0.11;
-    public static final double kI = 0;
+    public static final double kI = 0.005;
     public static final double kD = 0;
 
     public static final double kS = 0.13601;
@@ -153,7 +161,5 @@ public final class Constants {
     public static final double WHEEL_SPEED = 5.0 * DEGREES;
     // intake wheels
     public static final double AUTON_OUTTAKE_TIME = 2;
-
-
   }
 }

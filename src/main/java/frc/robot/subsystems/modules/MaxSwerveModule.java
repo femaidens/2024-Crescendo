@@ -214,8 +214,14 @@ public class MaxSwerveModule {
    * @param voltage Voltage, in volts
    */
   public void setStraightDrivingVoltage(double voltage){
+    SwerveModuleState correctedDesiredState = new SwerveModuleState();
+    // correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
+
+    turningPID.setReference(correctedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+
     driveMotor.setVoltage(voltage);
-    turningPID.setReference(0.0, CANSparkMax.ControlType.kPosition);
+    // turningPID.setReference(0.0, CANSparkMax.ControlType.kPosition);
   }
 
     

@@ -131,10 +131,10 @@ public final class Constants {
     public static final double kI = 0.005;
     public static final double kD = 0;
 
-    public static final double kS = 0.13601;
-    public static final double kV = 0.001622;
+    public static final double kS = 0;//0.13601;
+    public static final double kV = 0;//0.001622;
     public static final double kA = 0.00050685;
-    public static final double kG = 1.0622;
+    public static final double kG = 0.39; //0.706;//1.0622;
 
   }
 

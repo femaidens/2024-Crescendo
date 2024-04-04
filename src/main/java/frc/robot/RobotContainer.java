@@ -85,16 +85,16 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)
-    );
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
+    // );
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
@@ -206,7 +206,8 @@ public class RobotContainer implements Logged {
             // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
             // setSpeed entire outtake routines
-            .onTrue(intaking.setOuttakeSpeeds(-0.3))
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE)
+                .andThen(intaking.setOuttakeSpeeds(-0.3)))
             .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */
@@ -302,8 +303,13 @@ public class RobotContainer implements Logged {
             // );
             
             // shooting with buttons
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE))
+            // );
+
+            // just setting angle and state limit
             .onTrue(hopper.setStateLimitCmd(1)
-                .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE))
+                .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE))
             );
             
             // testing at angle
@@ -317,25 +323,25 @@ public class RobotContainer implements Logged {
 
     /* * * CONTROL BINDINGS * * */
     /* DRIVETRAIN SYSID */
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
         
     /* DRIVETRAIN TURNING SYSID */
     // driveJoy.a()

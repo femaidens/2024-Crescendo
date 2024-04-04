@@ -206,7 +206,8 @@ public class RobotContainer implements Logged {
             // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
             // setSpeed entire outtake routines
-            .onTrue(intaking.setOuttakeSpeeds(-0.3))
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SHOOTER_MIN_ANGLE)
+                .andThen(intaking.setOuttakeSpeeds(-0.3)))
             .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */

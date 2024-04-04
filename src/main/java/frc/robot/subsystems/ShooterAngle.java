@@ -110,12 +110,12 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void setManualAngle(double input) {
 
     // move up if below max angle
-    if (input > 0 && getAngle() < ShooterAngleConstants.SHOOTER_MAX_ANGLE) {
+    if (input > 0 && getAngle() < ShooterAngleConstants.MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
       pSetpoint = getAngle();
     }
     // move down if above min angle
-    else if (input < 0 && getAngle() > ShooterAngleConstants.SHOOTER_MIN_ANGLE) {
+    else if (input < 0 && getAngle() > ShooterAngleConstants.MIN_ANGLE) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
       pSetpoint = getAngle();
     }

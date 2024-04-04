@@ -364,12 +364,12 @@ public class Drivetrain extends SubsystemBase implements Logged {
     return driveRoutine.quasistatic(direction);
   }
 
-  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
-    return turnAllRoutine.quasistatic(direction);
-  }
-
   public Command driveDynamic(SysIdRoutine.Direction direction) {
     return driveRoutine.dynamic(direction);
+  }
+
+  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
+    return turnAllRoutine.quasistatic(direction);
   }
 
   public Command turnDynamic(SysIdRoutine.Direction direction) {

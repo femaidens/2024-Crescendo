@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "speakerstageshoot"
                 }
               }
             ]
@@ -49,7 +49,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "speakerstageshoot"
                 }
               }
             ]
@@ -74,7 +74,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "speakerstageshoot"
                 }
               }
             ]

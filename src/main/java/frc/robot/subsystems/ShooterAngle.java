@@ -71,7 +71,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
-    trapezoidProfile = new TrapezoidProfile.Constraints(100, 70);
+    trapezoidProfile = new TrapezoidProfile.Constraints(200, 100);
     profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, trapezoidProfile);
 
     shooterAngleMotor.burnFlash();
@@ -81,7 +81,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
-    pSetpoint = 50;//ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */
@@ -128,17 +128,17 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
-    double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
+    // double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
+    // double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
 
-    shooterAngleMotor.setVoltage(ff + voltage); 
+    // shooterAngleMotor.setVoltage(ff + voltage); 
     
     /* setangle with original pid */
-    // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
-    // shooterAngleMotor.setVoltage(voltage);
+    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
+    shooterAngleMotor.setVoltage(voltage);
     
-    System.out.println("angle voltage: " + voltage);
-    // // System.out.println("setting angle");
+    // System.out.println("angle voltage: " + (ff + voltage ));
+    // System.out.println("setting angle");
   }
 
   // for auton commands; overloads setAngle no params

@@ -96,12 +96,12 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    // shooterAngle.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> shooterAngle.setManualAngle(
-    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-    //         shooterAngle)
-    // );
+    shooterAngle.setDefaultCommand(
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+            shooterAngle)
+    );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -113,7 +113,8 @@ public class RobotContainer implements Logged {
     intake.setDefaultCommand(intake.setVelocityCmd());
     // leds.setDefaultCommand(leds.setRainbowCmd());
     led.setDefaultCommand(
-        led.setPurpGreenCmd().andThen(new WaitCommand(3))
+        led.setPurpGreenCmd()
+        //.andThen(new WaitCommand(3))
     );
   }
   
@@ -148,7 +149,7 @@ public class RobotContainer implements Logged {
 
     /* SHOOTER ANGLE SETPOINTS */
         // driveJoy.a()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(28));
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE));
 
         // driveJoy.b()
         //   .onTrue(shooterAngle.setAngleSetpointCmd(35));
@@ -157,7 +158,7 @@ public class RobotContainer implements Logged {
         //   .onTrue(shooterAngle.setAngleSetpointCmd(50));
 
         // driveJoy.y()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(60));
+        //   .onTrue(shooterAngle.setAngleSetpointCmd(64));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -209,7 +210,7 @@ public class RobotContainer implements Logged {
 
             // setSpeed entire outtake routines
             .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE)
-                .andThen(intaking.setOuttakeSpeeds(-0.3)))
+                .andThen(intaking.setOuttakeSpeeds(-0.4)))
             .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */
@@ -300,9 +301,9 @@ public class RobotContainer implements Logged {
 
         // speaker stage
         operJoy.y()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
-            // .alongWith(hopper.setStateLimitCmd(1))
-            // );
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
             
             // shooting with buttons
             // .onTrue(hopper.setStateLimitCmd(1)
@@ -310,9 +311,9 @@ public class RobotContainer implements Logged {
             // );
 
             // just setting angle and state limit
-            .onTrue(hopper.setStateLimitCmd(1)
-                .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE))
-            );
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE))
+            // );
             
             // testing at angle
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));

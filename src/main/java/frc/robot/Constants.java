@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.2;//0.85;
+    public static final double ARM_SPEED = 0.7;//0.85;
   }
 
   public static final class IntakeHopperConstants {
@@ -30,7 +30,7 @@ public final class Constants {
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_VEL = 4.5*DEGREES;
+    public static final double TRANSITION_VEL = 10 * DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -112,11 +112,11 @@ public final class Constants {
     public static final double MIN_ANGLE = 23.0;
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 60.0;//64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
-    public static final double INITIAL_ANGLE = 65.0;
+    public static final double INITIAL_ANGLE = 70.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
-    public static final double SPEAKER_STAGE = 47.0; // actual angle -> 45
+    public static final double SPEAKER_STAGE = 46.0; // actual angle -> 43
     // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = MIN_ANGLE;
 
@@ -128,13 +128,13 @@ public final class Constants {
 
     // pid -> need to populate
     public static final double kP = 0.11;
-    public static final double kI = 0.005;
+    public static final double kI = 0;//0.005;
     public static final double kD = 0;
 
-    public static final double kS = 0;//0.13601;
-    public static final double kV = 0;//0.001622;
-    public static final double kA = 0.00050685;
-    public static final double kG = 0.39; //0.706;//1.0622;
+    public static final double kS = 0.1620;//0.27509; 
+    public static final double kV = 0.00088475;//0.00088475;
+    public static final double kA = 0.00055865; //0.00050685;
+    public static final double kG = 0.39;//0.13502;//0.13002; //0.39; 
 
   }
 

@@ -108,14 +108,14 @@ public final class Constants {
     public static final double P_TOLERANCE = 3.0;
 
     // angles (degrees)
-    public static final double PHYSICAL_OFFSET = 18.5; // 18.3
+    public static final double PHYSICAL_OFFSET = 22; // 18.3
     public static final double MAX_ANGLE = 65.0; //75
     public static final double MIN_ANGLE = 23.0;
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
-    public static final double INITIAL_ANGLE = 69.0;
+    public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
     public static final double SPEAKER_STAGE = 45.0; // actual angle -> 43
     // public static final double SPEAKER_WING = 25.0; // placeholder

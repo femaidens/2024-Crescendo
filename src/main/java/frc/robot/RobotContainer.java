@@ -287,14 +287,14 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH));
-            // .alongWith(hopper.setStateLimitCmd(1))
-            // );
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
             
             // shooting with buttons
-            .onTrue(hopper.setStateLimitCmd(1)
-                .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH))
-            );
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH))
+            // );
             
             // testing at angle 
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
@@ -318,13 +318,14 @@ public class RobotContainer implements Logged {
             // testing at angle
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
 
-        // // speaker wing
+        // speaker wing
         // operJoy.b()
         //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE +3 , ShooterWheelConstants.SPEAKER_STAGE));
         //     .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_WING)
         //         .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
+    /*
     // driveJoy.a()
     // .whileTrue(
     //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
@@ -342,8 +343,10 @@ public class RobotContainer implements Logged {
     // .whileTrue(
     //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
     // );
+    */
 
     /* DRIVETRAIN SYSID */
+    /*
     // driveJoy.a()
     //     .whileTrue(
     //         drivetrain.driveQuasistatic(Direction.kForward)
@@ -363,8 +366,10 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.driveDynamic(Direction.kReverse)
     //     );
-        
+    */
+    
     /* DRIVETRAIN TURNING SYSID */
+    /* 
     // driveJoy.a()
     //     .whileTrue(
     //         drivetrain.turnQuasistatic(Direction.kForward)
@@ -384,6 +389,7 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.turnDynamic(Direction.kReverse)
     //     );
+    */
 
     /* SHOOTER ANGLE SYSID */
     // driveJoy.a()

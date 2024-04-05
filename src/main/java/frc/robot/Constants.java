@@ -24,7 +24,8 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 2 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_VELOCITY = 2 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_SPEED = 0.4;
   }
 
   public static final class HopperConstants {
@@ -112,11 +113,11 @@ public final class Constants {
     public static final double MIN_ANGLE = 23.0;
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 60.0;//64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
-    public static final double INITIAL_ANGLE = 70.0;
+    public static final double INITIAL_ANGLE = 69.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
-    public static final double SPEAKER_STAGE = 46.0; // actual angle -> 43
+    public static final double SPEAKER_STAGE = 45.0; // actual angle -> 43
     // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = MIN_ANGLE;
 

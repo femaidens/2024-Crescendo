@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "right shoot speaker to shoot"
+            "pathName": null
           }
         },
         {
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "right shoot speaker to right note"
+            "pathName": null
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "right speaker adjust "
+            "pathName": null
           }
         },
         {

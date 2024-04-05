@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center flush to left note"
+            "pathName": null
           }
         },
         {
@@ -33,7 +33,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "left note to middle note"
+            "pathName": null
           }
         },
         {
@@ -58,7 +58,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle note to right note"
+            "pathName": null
           }
         },
         {

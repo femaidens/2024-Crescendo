@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "go to amp"
+            "pathName": null
           }
         },
         {
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "taxi from amp"
+            "pathName": null
           }
         },
         {

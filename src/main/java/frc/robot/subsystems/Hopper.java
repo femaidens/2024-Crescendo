@@ -103,10 +103,10 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
-  public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocitySetpointCmd(setpoint)
-        .andThen(setVelocityCmd()));
-  }
+  // public Command setVelocityCmd(double setpoint) {
+  //   return this.run(() -> setVelocitySetpointCmd(setpoint)
+  //       .andThen(setVelocityCmd()));
+  // }
 
   public Command stopMotorCmd() {
     return this.runOnce(() -> stopMotor());

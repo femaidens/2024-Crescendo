@@ -48,4 +48,8 @@ public class Intaking {
         return intake.setOuttakeSpeedCmd(speed)
                 .alongWith(hopper.setOuttakeSpeedCmd(speed));
     }
+
+    public Command setSetpointThenPID(double setpoint) {
+        return hopper.setVelocitySetpointCmd(setpoint).andThen(hopper.setVelocityCmd());
+    }
 }

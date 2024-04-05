@@ -78,7 +78,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
-    pSetpoint = 50;//ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */

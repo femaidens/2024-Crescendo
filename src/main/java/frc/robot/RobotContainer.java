@@ -85,23 +85,23 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)
-    );
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
+    // );
 
-    shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
-    );
+    // shooterAngle.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> shooterAngle.setManualAngle(
+    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //         shooterAngle)
+    // );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
@@ -113,7 +113,7 @@ public class RobotContainer implements Logged {
 
     // for testing alt bindings
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(0));
-    // hopper.setDefaultCommand(hopper.setVelocityCmd(0));
+    // hopper.setDefaultCommand(intaking.setSetpointThenPID(0));
     // intake.setDefaultCommand(intake.setVelocityCmd(0));
 
     led.setDefaultCommand(
@@ -142,14 +142,22 @@ public class RobotContainer implements Logged {
         
         driveJoy.a()
             .onTrue(
-                hopper.setVelocityCmd(HopperConstants.TRANSITION_VEL) // NEED TO TEST
                 // led.setRedCmd().until(hopper::isHopperFull).andThen(led.setGreenCmd().withTimeout(3)) // -> works
+                hopper.setVelocitySetpointCmd(4.5*360.0).andThen(hopper.setVelocityCmd())//HopperConstants.TRANSITION_VEL)
                 // .andThen(Commands.waitUntil(hopper::isHopperFull))
                 // .andThen(hopper.setVelocityCmd()) 
                 // .until(hopper::isHopperEmpty)// don't need a stop one because default is stopping
                 // .andThen(led.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
+
+        driveJoy.b()
+                .onTrue(hopper.setVelocityCmd()
+                    // hopper.setVelocitySetpointCmd(4.5 * 360.0).andThen(hopper.setVelocityCmd())
+                        // .until(hopper::getReceiverStatus)
+                        // .andThen(intaking.setSetpointThenPID(0))
+                        // .andThen(led.setGreenCmd().withTimeout(3))
+        );
 
     /* SHOOTER ANGLE SETPOINTS */
         // driveJoy.a()
@@ -224,11 +232,10 @@ public class RobotContainer implements Logged {
     /* * * HOPPER BUTTONS * * */
         // runs hopper (towards shooter) --> failsafe if the trigger process fails
         operJoy.start()
-            // .onTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL))
-            // .onFalse(hopper.setVelocitySetpointCmd(0));
+            .onTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL))
+            .onFalse(hopper.setVelocitySetpointCmd(0));
 
-            .whileTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL)); 
-            // TEST THE WHILE TRUE VS ON TRUE ON FALSE WITH DEFAULT SETPOINT AS 0
+        
 
         // feeds note from hopper to shooter aka "trigger"
         // operJoy.back()

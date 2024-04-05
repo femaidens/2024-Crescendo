@@ -146,7 +146,7 @@ public class RobotContainer implements Logged {
     // autonChooser.addOption("flush one note", new OneNoteLeft(drivetrain, intaking, shooter));
 
     NamedCommands.registerCommand("shoot", shooter.shoot());
-    NamedCommands.registerCommand("intake", intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED));
+    NamedCommands.registerCommand("intake", intaking.intakeNote());
 
     // AutoBuilder autoBuilder = new AutoBuilder();
         AutoBuilder.configureHolonomic(

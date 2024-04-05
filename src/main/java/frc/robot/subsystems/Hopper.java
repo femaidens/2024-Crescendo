@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Ports.BeamBreakPorts;
 import frc.robot.Ports.HopperPorts;
 import monologue.Logged;
@@ -77,16 +78,18 @@ public class Hopper extends SubsystemBase implements Logged {
   /* COMMANDS */
   public Command feedNote() {
     return Commands.waitUntil(() -> isHopperFull())
-    // .beforeStarting(resetStateCountCmd())
-    .andThen(setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+    .andThen(setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL))
     .andThen(Commands.waitUntil(() -> isHopperEmpty()))
     .andThen(setVelocitySetpointCmd(0));
-    // .finallyDo(() -> setVelocitySetpointCmd(0));
   }
 
   public Command setSpeedCmd(double speed) {
     System.out.println("setting hopper speed");
     return this.runOnce(() -> setSpeed(speed));
+  }
+
+  public Command setOuttakeSpeedCmd(double speed) {
+    return this.run(() -> setSpeed(speed));
   }
 
   // is default command, DO NOT ADD AS PROXY

@@ -89,7 +89,8 @@ public class Intake extends SubsystemBase implements Logged {
   }
 
   public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocity(setpoint));
+    return this.run(() -> setVelocitySetpointCmd(setpoint)
+        .andThen(setVelocityCmd()));
   }
 
   public Command stopMotorCmd() {

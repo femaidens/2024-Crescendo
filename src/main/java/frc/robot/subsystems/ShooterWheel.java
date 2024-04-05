@@ -112,10 +112,9 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     return this.runOnce(() -> stopMotors());
   }
 
-  // default command
-  public Command setVelocityCmd(double angle) {
-    System.out.println("setting wheel velocity with angle");
-    return this.run(() -> setVelocity(angle));
+  public Command setVelocityCmd(double speed) {
+    return this.run(() -> setVelocitySetpointCmd(speed)
+        .andThen(setVelocityCmd()));
   }
 
   // default command

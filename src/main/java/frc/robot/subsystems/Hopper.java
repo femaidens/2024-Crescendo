@@ -94,17 +94,18 @@ public class Hopper extends SubsystemBase implements Logged {
 
   // is default command, DO NOT ADD AS PROXY
   public Command setVelocityCmd() {
-    // return Commands.print("running hopper velocity pid");
+    System.out.println("running hopper velocity pid");
     return this.run(() -> setVelocity());
   }
 
   public Command setVelocitySetpointCmd(double setpoint) {
-    // return Commands.print("setting hopper vel setpoint");
+    System.out.println("setting hopper vel setpoint");
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
   public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocity(setpoint));
+    return this.run(() -> setVelocitySetpointCmd(setpoint)
+        .andThen(setVelocityCmd()));
   }
 
   public Command stopMotorCmd() {
@@ -143,6 +144,7 @@ public class Hopper extends SubsystemBase implements Logged {
 
     // temp = stateCount;
     // resetStateCount();
+
     return stateCount == stateLimit;
   }
 

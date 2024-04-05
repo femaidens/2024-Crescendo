@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.IntakeHopperConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
@@ -26,8 +27,8 @@ public class Intaking {
 
     public Command intakeNote() {
         return Commands.race(
-                led.setSolidCmd(LEDConstants.RED),
-                setIntakeHopperSpeeds(0.3) // runOnce
+                led.setRainbowCmd(),
+                setIntakeHopperSpeeds(IntakeHopperConstants.INTAKING_SPEED) // runOnce
                         .andThen(Commands.waitUntil(hopper::isHopperFull))
                         .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd()))) // end of race cmd
                 .andThen(led.setGreenCmd().withTimeout(2));

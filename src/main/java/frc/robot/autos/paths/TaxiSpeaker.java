@@ -33,7 +33,7 @@ public class TaxiSpeaker extends SequentialCommandGroup {
         .alongWith(hopper.setStateLimitCmd(1)),
       new WaitCommand(2),
       // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(1.5),
-      hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED),
+      hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKING_VELOCITY),
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
       shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),
       // taxi

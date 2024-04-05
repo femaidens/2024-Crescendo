@@ -24,13 +24,14 @@ public final class Constants {
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 2 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_VELOCITY = 2 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_SPEED = 0.4; // initially 0.3
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_VEL = 4.5*DEGREES;
+    public static final double TRANSITION_VEL = 10*DEGREES; // change to 
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -104,7 +105,8 @@ public final class Constants {
 
     // limits
     public static final int CURRENT_LIMIT = 30;
-    public static final double P_TOLERANCE = 3.0;
+    public static final double OG_P_TOLERANCE = 3.0;
+    public static final double PRO_P_TOLERANCE = 1.0;
 
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 18.5; // 18.3
@@ -120,10 +122,8 @@ public final class Constants {
     // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = MIN_ANGLE;
 
-
     // speeds
     public static final double CONSTANT_SPEED = 0.1;
-
     // auton
 
     // pid -> need to populate

@@ -57,10 +57,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
         volts -> setVoltage(volts.in(Volts)), null, this)
   );
 
-
   private final ArmFeedforward shooterAngleFF;
-
-  // possibly add an armFF later
 
   public ShooterAngle() {
     shooterAngleMotor = new CANSparkMax(ShooterPorts.SHOOTER_ANGLE, MotorType.kBrushless);
@@ -76,8 +73,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAngleMotor.burnFlash();
 
-    // shooterAnglePID.setTolerance(ShooterAngleConstants.P_TOLERANCE);
-    profiledShooterAnglePID.setTolerance(2.0);
+    shooterAnglePID.setTolerance(ShooterAngleConstants.OG_P_TOLERANCE);
+    profiledShooterAnglePID.setTolerance(ShooterAngleConstants.PRO_P_TOLERANCE);
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
@@ -137,7 +134,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
     // shooterAngleMotor.setVoltage(voltage);
     
-    System.out.println("angle voltage: " + voltage);
+    System.out.println("angle voltage: " + (voltage+ff));
     // // System.out.println("setting angle");
   }
 

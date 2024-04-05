@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "go to amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ampshoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "taxi from amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "speakerstageshoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

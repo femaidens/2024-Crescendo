@@ -145,7 +145,8 @@ public class RobotContainer implements Logged {
     // autonChooser.addOption("flush three notes", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));
     // autonChooser.addOption("flush one note", new OneNoteLeft(drivetrain, intaking, shooter));
 
-    NamedCommands.registerCommand("shoot", shooter.shoot());
+    NamedCommands.registerCommand("ampshoot", shooter.shoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
+    NamedCommands.registerCommand("speakerstageshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
     NamedCommands.registerCommand("intake", intaking.intakeNote());
 
     // AutoBuilder autoBuilder = new AutoBuilder();

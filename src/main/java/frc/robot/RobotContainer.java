@@ -142,7 +142,7 @@ public class RobotContainer implements Logged {
         
         driveJoy.a()
             .onTrue(
-                hopper.setVelocityCmd(HopperConstants.TRANSITION_VEL)
+                hopper.setVelocityCmd(HopperConstants.TRANSITION_VEL) // NEED TO TEST
                 // led.setRedCmd().until(hopper::isHopperFull).andThen(led.setGreenCmd().withTimeout(3)) // -> works
                 // .andThen(Commands.waitUntil(hopper::isHopperFull))
                 // .andThen(hopper.setVelocityCmd()) 

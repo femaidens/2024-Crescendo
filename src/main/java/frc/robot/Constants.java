@@ -110,16 +110,17 @@ public final class Constants {
     // angles (degrees)
     public static final double PHYSICAL_OFFSET = 22; // 18.3
     public static final double MAX_ANGLE = 65.0; //75
-    public static final double MIN_ANGLE = 23.0;
+    public static final double MIN_ANGLE = 25;//23.0;
 
     //check picture for distances for testing
     public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
-    public static final double INITIAL_ANGLE = 65.0;
+    public static final double INITIAL_ANGLE = 67.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
     public static final double SPEAKER_STAGE = 45.0; // actual angle -> 43
     // public static final double SPEAKER_WING = 25.0; // placeholder
     public static final double DEFAULT_ANGLE = MIN_ANGLE;
+    public static final double INTAKE_ANGLE = 28.0;
 
 
     // speeds
@@ -130,7 +131,7 @@ public final class Constants {
     // pid -> need to populate
     public static final double kP = 0.11;
     public static final double kI = 0;//0.005;
-    public static final double kD = 0;
+    public static final double kD = 0.0009;
 
     public static final double kS = 0.1620;//0.27509; 
     public static final double kV = 0.00088475;//0.00088475;

@@ -19,7 +19,7 @@ import frc.robot.subsystems.*;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TaxiSpeaker extends SequentialCommandGroup {
 
-  /** Creates a new TaxiAmp. */
+  /** Creates a new TaxiSpeaker. */
   public TaxiSpeaker(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());

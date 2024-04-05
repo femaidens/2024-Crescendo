@@ -27,8 +27,7 @@ public class Shooter {
         this.led = led;
     }
 
-    public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it
-                                                     // necessary?
+    public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it necessary?
         return setShooterSetpoints(angle, vel)
                 .andThen(shoot());
     }

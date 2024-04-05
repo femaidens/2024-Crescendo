@@ -85,22 +85,23 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-      new RunCommand(
-          () -> drivetrain.drive( // all joy.get values were prev negative
-              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-              true, false),
-          drivetrain)
-    );
+    // drivetrain.setDefaultCommand(
+    //  // clariy turning with right or with left
+    //   new RunCommand(
+    //       () -> drivetrain.drive( // all joy.get values were prev negative
+    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+    //           true, false),
+    //       drivetrain)
+    // );
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
             () -> shooterAngle.setManualAngle(
                 MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
             shooterAngle)
+        // shooterAngle.setAngleCmd()
     );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -148,17 +149,17 @@ public class RobotContainer implements Logged {
             );
 
     /* SHOOTER ANGLE SETPOINTS */
-        // driveJoy.a()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE));
+        driveJoy.a()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH));
 
-        // driveJoy.b()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(35));
+        driveJoy.b()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE));
 
-        // driveJoy.x()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(50));
+        driveJoy.x()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
-        // driveJoy.y()
-        //   .onTrue(shooterAngle.setAngleSetpointCmd(64));
+        driveJoy.y()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -175,7 +176,7 @@ public class RobotContainer implements Logged {
         // runs intake routine
         operJoy.rightBumper()
             // test entire routine
-            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE)
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
             .andThen(intaking.intakeNote()));
 
             // entire intake routine with setSpeed
@@ -209,8 +210,8 @@ public class RobotContainer implements Logged {
             // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
             // setSpeed entire outtake routines
-            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.MIN_ANGLE)
-                .andThen(intaking.setOuttakeSpeeds(-0.4)))
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
+                .andThen(intaking.setOuttakeSpeeds(-IntakeHopperConstants.INTAKING_SPEED)))
             .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */

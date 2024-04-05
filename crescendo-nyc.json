@@ -11,7 +11,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "5,2": {
+          "5,4": {
             "size": [
               2,
               1
@@ -83,7 +83,7 @@
               ]
             }
           },
-          "5,3": {
+          "5,2": {
             "size": [
               1,
               2
@@ -133,7 +133,7 @@
               "Visuals/Counter clockwise": false
             }
           },
-          "6,3": {
+          "6,2": {
             "size": [
               1,
               2
@@ -147,8 +147,8 @@
               "_children": [
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/at shooterVelocity",
-                  "_title": "at shooterVelocity",
+                  "_source0": "network_table:///SmartDashboard/at shooter angle",
+                  "_title": "at shooter angle",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -156,8 +156,8 @@
                 },
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/at shooterAngle",
-                  "_title": "at shooterAngle",
+                  "_source0": "network_table:///SmartDashboard/at shooter vel",
+                  "_title": "at shooter vel",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -207,25 +207,10 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/state count",
-              "_title": "state count",
+              "_source0": "network_table:///SmartDashboard/intake sp",
+              "_title": "intake sp",
               "_glyph": 148,
               "_showGlyph": false
-            }
-          },
-          "8,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/at min angle",
-              "_title": "at min angle",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           },
           "8,3": {
@@ -235,25 +220,10 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/desired shooter velocity: ",
-              "_title": "desired shooter velocity: ",
+              "_source0": "network_table:///SmartDashboard/state count",
+              "_title": "state count",
               "_glyph": 148,
               "_showGlyph": false
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/at amp angle",
-              "_title": "at amp angle",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           }
         }

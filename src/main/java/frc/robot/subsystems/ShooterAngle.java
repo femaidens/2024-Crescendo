@@ -71,7 +71,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
 
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
-    trapezoidProfile = new TrapezoidProfile.Constraints(200, 100);
+    trapezoidProfile = new TrapezoidProfile.Constraints(150, 200);
     profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, trapezoidProfile);
 
     shooterAngleMotor.burnFlash();
@@ -81,7 +81,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
-    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = 30.0;
+    //ShooterAngleConstants.INITIAL_ANGLE;
   }
 
   /* COMMANDS */
@@ -110,12 +111,12 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   public void setManualAngle(double input) {
 
     // move up if below max angle
-    if (input > 0 && getAngle() < ShooterAngleConstants.MAX_ANGLE) {
+    if (input > 0 ){//&& getAngle() < ShooterAngleConstants.MAX_ANGLE) {
       shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
       pSetpoint = getAngle();
     }
     // move down if above min angle
-    else if (input < 0 && getAngle() > ShooterAngleConstants.MIN_ANGLE) {
+    else if (input < 0){// && getAngle() > ShooterAngleConstants.MIN_ANGLE) {
       shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
       pSetpoint = getAngle();
     }
@@ -128,16 +129,16 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   // sets shooter angle to current setpoint
   public void setAngle() {
-    // double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
-    // double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
+    double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
+    double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
 
-    // shooterAngleMotor.setVoltage(ff + voltage); 
+    shooterAngleMotor.setVoltage(ff + voltage); 
     
     /* setangle with original pid */
-    double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
-    shooterAngleMotor.setVoltage(voltage);
+    // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
+    // shooterAngleMotor.setVoltage(voltage);
     
-    // System.out.println("angle voltage: " + (ff + voltage ));
+    System.out.println("angle voltage: " + (ff + voltage));
     // System.out.println("setting angle");
   }
 
@@ -163,7 +164,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   @Log.NT
   // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
-    return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) % 360;
   }
 
   // public boolean getIsManual() {
@@ -205,7 +206,6 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("current arm angle", getAngle());
     SmartDashboard.putNumber("desired angle", pSetpoint);
 
-    SmartDashboard.putBoolean("at min angle", atAngle());
-    SmartDashboard.putBoolean("at amp angle", atAngle());
+    SmartDashboard.putBoolean("at shooter angle", atAngle());
   }
 }

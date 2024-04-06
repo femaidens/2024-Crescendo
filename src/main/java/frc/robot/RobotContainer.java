@@ -261,7 +261,7 @@ public class RobotContainer implements Logged {
             // reset to default config
             .onTrue(
                 shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH) // amp angle
-                // .alongWith(intaking.setIntakeHopperSetpoints(0))
+                .alongWith(intaking.setIntakeHopperSetpoints(0)) //just commented in
                 .alongWith(shooterWheel.setVelocitySetpointCmd(0))
                 .alongWith(hopper.resetStateCountCmd()) // check to see if this works
             );

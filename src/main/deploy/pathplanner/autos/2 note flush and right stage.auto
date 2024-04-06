@@ -1,26 +1,32 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 4.422
+    },
+    "rotation": -60.0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "speakerflushshoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "go to amp"
+            "pathName": "right flush to right note"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ampshoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "taxi from amp"
+            "name": "intake"
           }
         },
         {

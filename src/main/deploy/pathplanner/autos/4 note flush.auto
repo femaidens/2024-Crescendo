@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "speakerflushshoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "center flush to left note"
@@ -15,12 +21,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
               {
                 "type": "named",
                 "data": {
@@ -43,12 +43,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "speakerstageshoot"
                 }
               }
@@ -65,12 +59,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
               {
                 "type": "named",
                 "data": {

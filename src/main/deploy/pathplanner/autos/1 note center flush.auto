@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "speakerflushshoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "center flush to center note"

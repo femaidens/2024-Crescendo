@@ -5,12 +5,18 @@
       "x": 0.73,
       "y": 4.422
     },
-    "rotation": -60.0
+    "rotation": -60.052600829715836
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "speakerflushshoot"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -24,9 +30,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "right note to speaker flush"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "speakerstageshoot"
+            "name": "speakerflushshoot"
           }
         }
       ]

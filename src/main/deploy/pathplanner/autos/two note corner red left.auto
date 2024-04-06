@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 4.422
+      "x": 0.7462505159385319,
+      "y": 6.692923307721616
     },
-    "rotation": -60.0
+    "rotation": 59.86313544919856
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "speakerflushshoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "right flush to right note"
+            "pathName": "flush left to left note"
           }
         },
         {
@@ -24,9 +30,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "left note to speaker flush"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "speakerstageshoot"
+            "name": "speakerflushshoot"
           }
         }
       ]

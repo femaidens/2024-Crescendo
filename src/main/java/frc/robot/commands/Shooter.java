@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.ShooterAngle;
@@ -48,9 +49,9 @@ public class Shooter {
                 .alongWith(shooterWheel.setVelocitySetpointCmd(vel));
     }
 
-    public Command autonShoot(double vel, double angle) {
-        return shoot().beforeStarting(shooterAngle.setAngleSetpointCmd(angle)); // double check which shoot cmd to call
-    }
+    // public Command autonShoot(double vel, double angle) {
+       
+    // }
 
     public Command resetAutonSetpoints() {
         return shooterAngle.setAngleSetpointCmd(0)

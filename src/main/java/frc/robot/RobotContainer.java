@@ -29,10 +29,11 @@ import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
-import frc.robot.autos.paths.Taxi;
-import frc.robot.autos.paths.TaxiAmp;
-import frc.robot.autos.paths.TaxiSpeaker;
-// import frc.robot.autos.paths.TaxiSpeaker;
+import frc.robot.autos.routines.BlueRightSpeakerTaxi;
+import frc.robot.autos.routines.Taxi;
+import frc.robot.autos.routines.TaxiAmp;
+import frc.robot.autos.routines.TaxiSpeaker;
+// import frc.robot.autos.routines.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
 import frc.robot.commands.Controls;
 import frc.robot.commands.Intaking;
@@ -85,16 +86,16 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-    // drivetrain.setDefaultCommand(
-    //  // clariy turning with right or with left
-    //   new RunCommand(
-    //       () -> drivetrain.drive( // all joy.get values were prev negative
-    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-    //           true, false),
-    //       drivetrain)
-    // );
+    drivetrain.setDefaultCommand(
+     // clariy turning with right or with left
+      new RunCommand(
+          () -> drivetrain.drive( // all joy.get values were prev negative
+              MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+              MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+              true, false),
+          drivetrain)
+    );
 
     shooterAngle.setDefaultCommand(
         new RunCommand(
@@ -124,7 +125,8 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
-  }
+    autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel));  
+}
 
   private void configureButtonBindings() {
 
@@ -288,7 +290,11 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
+            // .alongWith(hopper.setStateLimitCmd(1))
+            // );
+
+            .onTrue(shooter.setShooterSetpoints(AutoConstants.BLUE_RIGHT_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL)
             .alongWith(hopper.setStateLimitCmd(1))
             );
             

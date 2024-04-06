@@ -70,6 +70,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     shooterAngleEncoder = shooterAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterAngleEncoder.setPositionConversionFactor(ShooterAngleConstants.POS_CFACTOR);
 
+
+
     shooterAnglePID = new PIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD);
     trapezoidProfile = new TrapezoidProfile.Constraints(180, 220);
     profiledShooterAnglePID = new ProfiledPIDController(ShooterAngleConstants.kP, ShooterAngleConstants.kI, ShooterAngleConstants.kD, trapezoidProfile);
@@ -81,8 +83,8 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
     shooterAngleFF = new ArmFeedforward(ShooterAngleConstants.kS, ShooterAngleConstants.kG, ShooterAngleConstants.kV);
 
-    pSetpoint = 30.0;
-    //ShooterAngleConstants.INITIAL_ANGLE;
+    pSetpoint = ShooterAngleConstants.INITIAL_ANGLE; 
+    //30.0
   }
 
   /* COMMANDS */

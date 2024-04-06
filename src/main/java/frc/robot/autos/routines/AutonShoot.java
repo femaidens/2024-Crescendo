@@ -32,6 +32,7 @@ public class AutonShoot extends SequentialCommandGroup {
 
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
       shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0))
+      
     );
   }
 }

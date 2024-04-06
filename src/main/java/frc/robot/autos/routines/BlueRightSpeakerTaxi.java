@@ -22,7 +22,7 @@ public class BlueRightSpeakerTaxi extends SequentialCommandGroup {
 
   /** Creates a new TaxiAmp. */
   public BlueRightSpeakerTaxi(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle,
-      ShooterWheel shooterWheel) {
+      ShooterWheel shooterWheel, LED led) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -50,7 +50,7 @@ public class BlueRightSpeakerTaxi extends SequentialCommandGroup {
         new AutonShoot(AutoConstants.BLUE_RIGHT_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL,
             AutoConstants.BLUE_RIGHT_HOPPER,
             drivetrain, hopper, shooterAngle, shooterWheel),
-
+        led.setGreenCmd(),
         // taxi
         new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
             .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward

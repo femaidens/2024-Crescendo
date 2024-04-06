@@ -21,7 +21,7 @@ import frc.robot.subsystems.*;
 public class TaxiSpeaker extends SequentialCommandGroup {
 
   /** Creates a new TaxiAmp. */
-  public TaxiSpeaker(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
+  public TaxiSpeaker(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel, LED led) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -44,13 +44,14 @@ public class TaxiSpeaker extends SequentialCommandGroup {
         // shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),
 
         // shoot
-        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
+        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.AMP_FLUSH,
             HopperConstants.TRANSITION_VEL,
-            drivetrain, hopper, shooterAngle, shooterWheel)
+            drivetrain, hopper, shooterAngle, shooterWheel),
+        led.setGreenCmd(),
 
     // taxi
-    // new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
-    // .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is
+        new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
+        .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is
     // forward
 
     // just setting angle to see if zip tie will break

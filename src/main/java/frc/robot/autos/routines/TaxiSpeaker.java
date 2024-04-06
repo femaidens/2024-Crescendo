@@ -21,9 +21,9 @@ import frc.robot.subsystems.*;
 public class TaxiSpeaker extends SequentialCommandGroup {
 
   /** Creates a new TaxiAmp. */
-  public TaxiSpeaker(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel, LED led) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public TaxiSpeaker(Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel,
+      LED led) {
+
     addCommands(
         // reset gyro
         new InstantCommand(() -> drivetrain.zeroHeading()),
@@ -31,32 +31,27 @@ public class TaxiSpeaker extends SequentialCommandGroup {
         shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
         Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
 
-        // // shoot
-        // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
-        // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
-        // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
-        // .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
-        // .alongWith(hopper.setStateLimitCmd(1)),
-        // // new WaitCommand(2),
-        // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(2),
-        // hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL),
-        // Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
-        // shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),
-
         // shoot
-        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.AMP_FLUSH,
+        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
             HopperConstants.TRANSITION_VEL,
-            drivetrain, hopper, shooterAngle, shooterWheel),
-        led.setGreenCmd(),
+            hopper, shooterAngle, shooterWheel),
+        // led.setGreenCmd().withTimeout(3) //0.5 after qual 42
 
-    // taxi
+        // taxi
         new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
-        .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is
-    // forward
-
-    // just setting angle to see if zip tie will break
-    // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
-    // .withTimeout(2)
+            .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
     );
   }
 }
+
+// // shoot
+// shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
+// Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
+// shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
+// .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_FLUSH))
+// .alongWith(hopper.setStateLimitCmd(1)),
+// // new WaitCommand(2),
+// Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(2),
+// hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL),
+// Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
+// shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),

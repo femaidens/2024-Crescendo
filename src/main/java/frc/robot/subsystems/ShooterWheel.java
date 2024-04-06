@@ -107,6 +107,11 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
+  public Command autonSetVelocitySetpointCmd(double setpoint) {
+    System.out.println("set wheel velocity setpoint");
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+  }
+
   public Command stopMotorsCmd() {
     System.out.println("stopping wheel motors");
     return this.runOnce(() -> stopMotors());

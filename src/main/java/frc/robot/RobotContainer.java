@@ -30,6 +30,7 @@ import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
 import frc.robot.autos.routines.BlueRightSpeakerTaxi;
+import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
 import frc.robot.autos.routines.Taxi;
 import frc.robot.autos.routines.TaxiAmp;
 import frc.robot.autos.routines.TaxiSpeaker;
@@ -125,7 +126,8 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));  
+    autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));  
 }
 
   private void configureButtonBindings() {

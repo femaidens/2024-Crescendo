@@ -103,6 +103,11 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
+  public Command autonSetVelocitySetpointCmd(double setpoint) {
+    // return Commands.print("setting hopper vel setpoint");
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+  }
+
   public Command setVelocityCmd(double setpoint) {
     return this.run(() -> setVelocity(setpoint));
   }
@@ -115,13 +120,26 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> setStateLimit(limit)).asProxy();
   }
 
+  public Command autonSetStateLimitCmd(int limit) {
+    return this.runOnce(() -> setStateLimit(limit));
+  }
+
   public Command resetStateCountCmd() {
     System.out.println("state count reset");
     return this.runOnce(() -> resetStateCount()).asProxy();
   }
 
+  public Command autonResetStateCountCmd() {
+    System.out.println("state count reset");
+    return this.runOnce(() -> resetStateCount());
+  }
+
   public Command resetStateEmergencyCmd() {
     return this.runOnce(() -> resetStateEmergency()).asProxy();
+  }
+
+  public Command autonResetStateEmergencyCmd() {
+    return this.runOnce(() -> resetStateEmergency());
   }
 
   /* * * BEAM BREAK * * */

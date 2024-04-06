@@ -19,20 +19,19 @@ import frc.robot.subsystems.ShooterWheel;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonShoot extends SequentialCommandGroup {
   /** Creates a new AutonShoot. */
-  public AutonShoot(double angle, double wheelVel, double hopperVel, Drivetrain drivetrain, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
+  public AutonShoot(double angle, double wheelVel, double hopperVel, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
     
     addCommands(
       // shoots into the speaker
-      shooterAngle.setAngleSetpointCmd(angle)
-        .alongWith(shooterWheel.setVelocitySetpointCmd(wheelVel))
+      shooterAngle.autonSetAngleSetpointCmd(angle)
+        .alongWith(shooterWheel.autonSetVelocitySetpointCmd(wheelVel))
         .alongWith(hopper.setStateLimitCmd(1)),
 
-      Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(2),
+      Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
       hopper.setVelocitySetpointCmd(hopperVel),
 
-      Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(2.5),
-      shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0))
-      
+      Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(3),
+      shooterWheel.autonSetVelocitySetpointCmd(0).alongWith(hopper.autonSetVelocitySetpointCmd(0))
     );
   }
 }

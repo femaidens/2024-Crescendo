@@ -210,16 +210,6 @@ public class RobotContainer implements Logged {
                 // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
             );
 
-            // TEST resetting state count before setting state count
-            // .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
-            //     .andThen(hopper.resetStateCountCmd())
-            //     .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
-            //     .andThen(Commands.waitUntil(hopper::isHopperEmpty))
-            //     .andThen(hopper.setVelocitySetpointCmd(0))
-            //     .andThen(shooterWheel.setVelocitySetpointCmd(0))
-            //     // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
-            // );
-
             // TEST CALLING CMD
             // .onTrue(hopper.feedNote());
 

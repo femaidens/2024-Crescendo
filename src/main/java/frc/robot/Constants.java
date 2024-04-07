@@ -31,7 +31,7 @@ public final class Constants {
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_VEL = 10 * DEGREES;
+    public static final double TRANSITION_VEL = 11 * DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2

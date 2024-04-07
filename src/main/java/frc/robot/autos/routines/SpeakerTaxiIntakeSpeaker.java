@@ -34,13 +34,11 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
     addCommands(
         // reset gyro
         new InstantCommand(() -> drivetrain.zeroHeading()),
-
-        // makes sure that it's the proper angle
-        // shooterAngle.autonSetAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
+        // // makes sure that it's the proper angle
+        // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
         // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
-        // led.setGreenCmd().withTimeout(1))
 
-        // // set shooter angle and velocity
+        // // shoot
         // new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
         //     HopperConstants.TRANSITION_VEL,
         //     hopper, shooterAngle, shooterWheel),

@@ -308,6 +308,12 @@ public class RobotContainer implements Logged {
             // testing at angle 
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
+        // speaker diagonal flush
+        operJoy.b()
+            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
+
         // speaker stage
         operJoy.y()
             .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
@@ -326,12 +332,6 @@ public class RobotContainer implements Logged {
             
             // testing at angle
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
-
-        // speaker wing
-        // operJoy.b()
-        //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE +3 , ShooterWheelConstants.SPEAKER_STAGE));
-        //     .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_WING)
-        //         .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
     /*

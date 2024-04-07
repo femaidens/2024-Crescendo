@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.subsystems.Hopper;
@@ -37,7 +38,7 @@ public class Shooter {
         // TEST ACCURACY OF SHOOTER AT ANGLE
         return Commands.race(led.setSolidCmd(LEDConstants.RED),
                 Commands.waitUntil(() -> shooterAngle.atAngle()) // shooterWheel.atVelocity() &&
-                        .andThen(hopper.feedNote())
+                        .andThen(hopper.feedNote(HopperConstants.TRANSITION_VEL))
                 // hopper.feedNote()
                         .andThen(shooterWheel.setVelocitySetpointCmd(0))
                         .andThen(hopper.resetStateCountCmd())) // end of race cmd

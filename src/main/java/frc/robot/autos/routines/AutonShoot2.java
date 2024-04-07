@@ -17,18 +17,21 @@ import frc.robot.subsystems.ShooterWheel;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutonShoot extends SequentialCommandGroup {
+public class AutonShoot2 extends SequentialCommandGroup {
   /** Creates a new AutonShoot. */
-  public AutonShoot(double angle, double wheelVel, double hopperVel, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
+  public AutonShoot2(double angle, double wheelVel, double hopperVel, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
     
     addCommands(
       // shoots into the speaker
-      shooterAngle.setAngleSetpointCmd(angle)
-        .alongWith(shooterWheel.setVelocitySetpointCmd(wheelVel))
+      shooterAngle.autonSetAngleSetpointCmd(angle)
+        .alongWith(shooterWheel.autonSetVelocitySetpointCmd(wheelVel))
         .alongWith(hopper.setStateLimitCmd(1)),
 
-      Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
-      hopper.setVelocitySetpointCmd(hopperVel),
+      shooterAngle.setAngleCmd().until(
+        () -> shooterAngle.atAngle()).withTimeout(4),
+
+      // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
+      hopper.autonSetVelocitySetpointCmd(hopperVel),
 
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(3),
       shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0))

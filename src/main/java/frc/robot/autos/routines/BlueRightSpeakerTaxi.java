@@ -50,12 +50,12 @@ public class BlueRightSpeakerTaxi extends SequentialCommandGroup {
         // shoot
         new AutonShoot(AutoConstants.BLUE_RIGHT_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL,
             AutoConstants.BLUE_RIGHT_HOPPER, 
-            hopper, shooterAngle, shooterWheel),
+            hopper, shooterAngle, shooterWheel)
         // led.setGreenCmd().withTimeout(0.5),
 
-        // taxi
-        new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
-            .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
+        // // taxi
+        // new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
+        //     .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
     );
   }
 }

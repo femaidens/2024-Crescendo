@@ -5,23 +5,33 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-
+import monologue.Logged;
+ 
 public final class Constants {
 
   public static final double DEGREES = 360.0;
 
+  public static final class LEDConstants{
+    public static final int PINK[] = {255, 71, 221}; 
+    public static final int PURPLE[] = {189, 63, 235}; 
+    public static final int BLUE[] = {51, 116, 225};
+    public static final int RED[] = {255, 0, 0};
+    public static final int GREEN[] = {0, 255, 0};
+  }
+
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.85;
+    public static final double ARM_SPEED = 0.7;//0.85;
   }
 
   public static final class IntakeHopperConstants {
-    public static final double INTAKE_NOTE_SPEED = 4 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_VELOCITY = 2 * DEGREES; // , 6 prev, 3 rotations
+    public static final double INTAKING_SPEED = 0.4;
   }
 
   public static final class HopperConstants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0 * 4.5); // 360 degrees/sec, 4:1 gr, big neo
     public static final int CURRENT_LIMIT = 35;
-    public static final double TRANSITION_SPEED = 4.5*DEGREES;
+    public static final double TRANSITION_VEL = 10 * DEGREES;
 
     public static final double kS = 0.22973; //values as of 3/2
     public static final double kV = 0.017661; //3/2
@@ -33,7 +43,7 @@ public final class Constants {
     public static final double VEL_CFACTOR = DEGREES / (60.0 * 4.0); // 360 degrees/sec, 4:1 gr, big neo
     public static final double ROLLER_SPEED = 0.175;
 
-    public static final int CURRENT_LIMIT = 0;
+    public static final int CURRENT_LIMIT = 35;
 
     // velocities
     public static final double INTAKE_VEL =  2*360;// IntakeHopperConstants.INTAKE_NOTE_SPEED; // test it out
@@ -60,16 +70,16 @@ public final class Constants {
     public static final double V_TOLERANCE = 2; // 2 degrees/second
 
     // limits
-    public static final int CURRENT_LIMIT = 30;
+    public static final int CURRENT_LIMIT = 50;
     
-    public static final double AMP_FLUSH = 13*DEGREES; // placeholder
+    public static final double AMP_FLUSH = 15 * DEGREES; // 13
 
-    public static final double SPEAKER_FLUSH = 57*DEGREES; // placeholder
-    public static final double SPEAKER_STAGE = 65*DEGREES;
+    public static final double SPEAKER_FLUSH = 70 * DEGREES; //57 
+    public static final double SPEAKER_STAGE = 80 * DEGREES; //60
     // public static final double SPEAKER_WING = 0.0; // placeholder
 
     // speeds (degrees/sec)
-    public static final double DEFAULT_VELOCITY = 5*DEGREES; // check how much voltage this is drawing
+    public static final double DEFAULT_VELOCITY = 5 * DEGREES; // check how much voltage this is drawing
     public static final double SHOOTER_INTAKE_SPEED = -DEFAULT_VELOCITY;
 
     // auton
@@ -98,18 +108,19 @@ public final class Constants {
     public static final double P_TOLERANCE = 3.0;
 
     // angles (degrees)
-    public static final double PHYSICAL_OFFSET = 18.5; // 18.3
-    public static final double SHOOTER_MAX_ANGLE = 65.0; //75
-    public static final double SHOOTER_MIN_ANGLE = 31.0; //43.0
+    public static final double PHYSICAL_OFFSET = 22; // 18.3
+    public static final double MAX_ANGLE = 65.0; //75
+    public static final double MIN_ANGLE = 25;//23.0;
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 62.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
     public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!
-    public static final double SPEAKER_STAGE = 47.0; // actual angle -> 45
+    public static final double SPEAKER_STAGE = 40.0; //45.0; // actual angle -> 43
     // public static final double SPEAKER_WING = 25.0; // placeholder
-    public static final double DEFAULT_ANGLE = SHOOTER_MIN_ANGLE;
+    public static final double DEFAULT_ANGLE = MIN_ANGLE;
+    public static final double INTAKE_ANGLE = 28.0;
 
 
     // speeds
@@ -119,8 +130,13 @@ public final class Constants {
 
     // pid -> need to populate
     public static final double kP = 0.11;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kI = 0;//0.005;
+    public static final double kD = 0.0009;
+
+    public static final double kS = 0.1620;//0.27509; 
+    public static final double kV = 0.00088475;//0.00088475;
+    public static final double kA = 0.00055865; //0.00050685;
+    public static final double kG = 0.39;//0.13502;//0.13002; //0.39; 
 
   }
 
@@ -148,6 +164,9 @@ public final class Constants {
     // intake wheels
     public static final double AUTON_OUTTAKE_TIME = 2;
 
+    public static final double BLUE_RIGHT_FLUSH = 58;
+    public static final double BLUE_RIGHT_WHEEL_VEL = 85*DEGREES;
 
+    public static final double BLUE_RIGHT_HOPPER = 11*DEGREES;
   }
 }

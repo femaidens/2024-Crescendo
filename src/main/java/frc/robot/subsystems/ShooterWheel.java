@@ -107,6 +107,11 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
   }
 
+  public Command autonSetVelocitySetpointCmd(double setpoint) {
+    System.out.println("set wheel velocity setpoint");
+    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+  }
+
   public Command stopMotorsCmd() {
     System.out.println("stopping wheel motors");
     return this.runOnce(() -> stopMotors());
@@ -205,7 +210,7 @@ public class ShooterWheel extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("right shooter vel: ", getFollowerVelocity());
     SmartDashboard.putNumber("desired shooter velocity: ", vSetpoint);
     
-    SmartDashboard.putBoolean("at shooterVelocity", atVelocity());
+    SmartDashboard.putBoolean("at shooter vel", atVelocity());
     // SmartDashboard.putNumber("current shooter wheel voltage: ", leaderMotor.getOut());
   }
 }

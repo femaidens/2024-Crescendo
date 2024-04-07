@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -23,14 +24,17 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
-import frc.robot.autos.paths.Taxi;
-import frc.robot.autos.paths.TaxiAmp;
-import frc.robot.autos.paths.TaxiSpeaker;
-// import frc.robot.autos.paths.TaxiSpeaker;
+import frc.robot.autos.routines.BlueRightSpeakerTaxi;
+import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
+import frc.robot.autos.routines.Taxi;
+import frc.robot.autos.routines.TaxiAmp;
+import frc.robot.autos.routines.TaxiSpeaker;
+// import frc.robot.autos.routines.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
 import frc.robot.commands.Controls;
 import frc.robot.commands.Intaking;
@@ -60,10 +64,10 @@ public class RobotContainer implements Logged {
   private final Climb climb = new Climb();
 
   private final Limelight limelight = new Limelight();
-  private final LED leds = new LED();
+  private final LED led = new LED();
 
-  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper);
-  private final Intaking intaking = new Intaking(intake, hopper);
+  private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper, led);
+  private final Intaking intaking = new Intaking(intake, hopper, led);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -99,8 +103,10 @@ public class RobotContainer implements Logged {
             () -> shooterAngle.setManualAngle(
                 MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
             shooterAngle)
+        // shooterAngle.setAngleCmd()
     );
 
+    // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd());
 
@@ -108,15 +114,21 @@ public class RobotContainer implements Logged {
     // // if not, make sure that setpoints are changing correctly
     hopper.setDefaultCommand(hopper.setVelocityCmd());
     intake.setDefaultCommand(intake.setVelocityCmd());
-    leds.setDefaultCommand(leds.setRainbowCmd());
+    // leds.setDefaultCommand(leds.setRainbowCmd());
+    led.setDefaultCommand(
+        led.setPurpGreenCmd()
+        //.andThen(new WaitCommand(3))
+    );
   }
   
   public void configureAuton() {
     SmartDashboard.putData("Choose Auto: ", autonChooser);
     autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel));
-  }
+    autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));  
+}
 
   private void configureButtonBindings() {
 
@@ -131,13 +143,27 @@ public class RobotContainer implements Logged {
             .onFalse(drivetrain.regularCmd());
         
         // tests led after trigger is triggered -> works!
-        driveJoy.a()
+        driveJoy.start()
             .onTrue(
                 // intaking.setIntakeHopperSetpoints(0)
-                Commands.waitUntil(hopper::isHopperFull)
-                .andThen(leds.setGreenCmd().withTimeout(3))
+                led.setRedCmd().until(hopper::isHopperFull).andThen(led.setGreenCmd().withTimeout(3)) // -> works
+                // Commands.waitUntil(hopper::isHopperFull)
+                // .andThen(leds.setGreenCmd().withTimeout(3))
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
+
+    /* SHOOTER ANGLE SETPOINTS */
+        driveJoy.a()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH));
+
+        driveJoy.b()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE));
+
+        driveJoy.x()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
+
+        driveJoy.y()
+          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -153,20 +179,27 @@ public class RobotContainer implements Logged {
     /* * * INTAKE BUTTONS * * */
         // runs intake routine
         operJoy.rightBumper()
-            // entire intake routine
-            .onTrue(intake.setSpeedCmd(0.3).alongWith(hopper.setSpeedCmd(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
-                .andThen(Commands.waitUntil(hopper::isHopperFull))
-                .andThen(intaking.setIntakeHopperSetpoints(0))
-                // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
-                .andThen(leds.setGreenCmd().withTimeout(2))
-                // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
-            );
+            // test entire routine
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
+            .andThen(intaking.intakeNote()));
+
+            // entire intake routine with setSpeed
+            // .onTrue(leds.setSolidCmd(LEDConstants.RED) // test led red
+            //     .andThen(intaking.setIntakeHopperSpeeds(0.3)) // bc it's a runOnce, it automatically went to setting sp to 0
+            //     .andThen(Commands.waitUntil(hopper::isHopperFull))
+            //     .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd())) 
+            //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
+            //     .andThen(leds.setGreenCmd().withTimeout(2))
+            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
+            // );
+            
+            // entire intake routine with setVelocity
             // .onTrue(intaking.moveNote(IntakeHopperConstants.INTAKE_NOTE_SPEED) // bc it's a runOnce, it automatically went to setting sp to 0
             //     .andThen(Commands.waitUntil(hopper::isHopperFull))
             //     .andThen(intaking.setIntakeHopperSetpoints(0))
             //     // .andThen(() -> hopper.resetStateCountCmd()) // testing, commented out before
             //     .andThen(leds.setGreenCmd().withTimeout(2))
-            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // need to test to see if andThen or .finallyDo works better
+            //     // .finallyDo(() -> leds.setLedGreen()).withTimeout(2) // doesn't work
             // );
 
             // unit testing 
@@ -174,79 +207,68 @@ public class RobotContainer implements Logged {
             // .onTrue(intaking.setIntakeHopperSetpoints(3*360))
             // .onFalse(intaking.setIntakeHopperSetpoints(0));
             
-            // just intake mech
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.INTAKE_VEL))
-            // .onFalse(intake.setVelocitySetpointCmd(0.0));
-            
         // runs outtake
         operJoy.leftBumper()
-            // entire outtake routine
-            .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
-            .onFalse(intaking.setIntakeHopperSetpoints(0));
-            // separate motion
-            // .onTrue(intake.setSpeedCmd(-IntakeConstants.ROLLER_SPEED))
-            // .onFalse(intake.stopMotorCmd());
+            // setVelocity entire outtake routine
+            // .onTrue(intaking.setIntakeHopperSetpoints(-IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            // .onFalse(intaking.setIntakeHopperSetpoints(0));
 
-            // .onTrue(intake.setVelocitySetpointCmd(IntakeConstants.OUTTAKE_VEL))
-            // .onFalse(intake.setVelocitySetpointCmd(0.0));
-
+            // setSpeed entire outtake routines
+            .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
+                .andThen(intaking.setOuttakeSpeeds(-IntakeHopperConstants.INTAKING_SPEED)))
+            .onFalse(intaking.setOuttakeSpeeds(0));
 
     /* * * HOPPER BUTTONS * * */
-        // runs hopper (towards shooter)
+        // runs hopper (towards shooter) --> failsafe if the trigger process fails
         operJoy.start()
-            // .onTrue(hopper.setHopperSpeedCmd(0.7))
-            // .onFalse(hopper.stopHopperMotorCmd());
-            .onTrue(hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED))
+            .onTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_VEL))
             .onFalse(hopper.setVelocitySetpointCmd(0));
 
-        // runs reverse hopper (towards intake)
-        operJoy.back() // feeds note from hopper to shooter
-            .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
-                .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
-                .andThen(Commands.waitUntil(hopper::isHopperEmpty))
-                .andThen(hopper.setVelocitySetpointCmd(0))
-                .andThen(shooterWheel.setVelocitySetpointCmd(0))
-                .andThen(hopper.resetStateCountCmd()) // testing, commented in before
-                // .finallyDo(() -> leds.setPurpleCmd()).withTimeout(2)
-            );
-
-            // TEST CALLING CMD
+        // feeds note from hopper to shooter aka "trigger"
+        // operJoy.back()
+            // test the feedNote command
             // .onTrue(hopper.feedNote());
 
-            // FAIL SAFE simple hopper FEED
-            // .onTrue(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
-            // .onFalse(hopper.setVelocitySetpointCmd(0));
+            // entire trigger process
+            // .onTrue(
+            //     hopper.feedNote()
+            //     .andThen(shooterWheel.setVelocitySetpoint(0))
+            //     .andThen(hopper.resetStateCountCmd())
+            //     .andThen(led.setSolid(LEDConstants.GREEN).withTimeout(2))
+            // )
+
+            // og entire trigger process; if feedNote doesn't work
+            // .onTrue(Commands.waitUntil(() -> hopper.isHopperFull())
+            //     .andThen(hopper.setVelocitySetpointCmd(HopperConstants.TRANSITION_SPEED))
+            //     .andThen(Commands.waitUntil(hopper::isHopperEmpty))
+            //     .andThen(hopper.setVelocitySetpointCmd(0)) // where feedNote ends
+            //     .andThen(shooterWheel.setVelocitySetpointCmd(0))
+            //     .andThen(hopper.resetStateCountCmd()) // testing, commented in before
+            //     .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(2))
+            // );
 
     /* * * SHOOTER WHEEL * * */
         // shooting -> positive
         // voltage ramping shooter
         operJoy.rightTrigger()
-            .onTrue(hopper.resetStateEmergencyCmd()
-        );
-            // .onTrue(shooter.shoot(25.0*360));
+            // .onTrue(hopper.resetStateEmergencyCmd()
+            .onTrue(shooter.shoot()
 
+            // failsafe if shooting with abxy doesn't work
+            // .onTrue(shooter.shoot());
+        );
             // just run shooter
             // .onTrue(shooterWheel.setVelocityCmd(ShooterWheelConstants.AMP_FLUSH));
         
-        // // runs shooter intake -> negative
-        // // TODO: CHANGE setSpeed to velocity later; FIGURE OUT SHOOTER INTAKE ROUTINE
+        // runs shooter intake -> negative
         operJoy.leftTrigger()
             // reset to default config
             .onTrue(
-                shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SHOOTER_MIN_ANGLE) // amp angle
-                // .alongWith(intaking.setIntakeHopperSetpoints(0))
+                shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH) // amp angle
+                .alongWith(intaking.setIntakeHopperSetpoints(0)) //just commented in
                 .alongWith(shooterWheel.setVelocitySetpointCmd(0))
-                // .alongWith(hopper.resetStateCountCmd())
+                .alongWith(hopper.resetStateCountCmd()) // check to see if this works
             );
-            // .onTrue(shooterWheel.setVelocitySetpointCmd(0)
-            //     .alongWith(hopper.setVelocitySetpointCmd(0))
-            //     .alongWith(shooterWheel.stopMotorsCmd())
-            // );
-            // shooter intake
-            // .onTrue(
-            //     new RunCommand(() -> shooterWheel.setSpeed(-0.5), shooterWheel))
-            // .onFalse(
-            //     new InstantCommand(() -> shooterWheel.stopMotors(), shooterWheel));
 
     /* * * SHOOTER ANGLE BUTTONS * * */
         // toggles arm manual -> made default command
@@ -260,9 +282,9 @@ public class RobotContainer implements Logged {
             .alongWith(hopper.setStateLimitCmd(2))
             );
 
-            // shooting with button cmd
-            // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.AMP_FLUSH)
-                // .andThen(shooter.shoot(ShooterWheelConstants.AMP_FLUSH))
+            // shooting with buttons
+            // .onTrue(hopper.setStateLimitCmd(2)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH))
             // );
 
             // testing at angle 
@@ -270,20 +292,17 @@ public class RobotContainer implements Logged {
         
         // speaker flush
         operJoy.x()
-            .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
-            .alongWith(hopper.setStateLimitCmd(1))
-            );
-            //  .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
+            // .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH)
             // .alongWith(hopper.setStateLimitCmd(1))
             // );
-            
 
-            // .onTrue(shooterWheel.setVelocitySetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
-
+            .onTrue(shooter.setShooterSetpoints(AutoConstants.BLUE_RIGHT_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL)
+            .alongWith(hopper.setStateLimitCmd(1))
+            );
             
             // shooting with buttons
-            // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH)
-            //     .andThen(shooter.shoot(ShooterWheelConstants.SPEAKER_FLUSH))
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH))
             // );
             
             // testing at angle 
@@ -294,40 +313,72 @@ public class RobotContainer implements Logged {
             .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE)
             .alongWith(hopper.setStateLimitCmd(1))
             );
-            // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE)
-            //     .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_STAGE)));
+            
+            // shooting with buttons
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE))
+            // );
+
+            // just setting angle and state limit
+            // .onTrue(hopper.setStateLimitCmd(1)
+            //     .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE))
+            // );
             
             // testing at angle
             // .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
 
-        // // speaker wing
+        // speaker wing
         // operJoy.b()
         //     .onTrue(shooter.setShooterSetpoints(ShooterAngleConstants.SPEAKER_STAGE +3 , ShooterWheelConstants.SPEAKER_STAGE));
         //     .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_WING)
         //         .alongWith(shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.SPEAKER_WING)));
 
     /* * * CONTROL BINDINGS * * */
+    /*
+    // driveJoy.a()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+
+    // driveJoy.b()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
+    // driveJoy.x()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+    // driveJoy.y()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
+    */
+
     /* DRIVETRAIN SYSID */
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    /*
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
-
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
+    */
+    
+    /* DRIVETRAIN TURNING SYSID */
+    /* 
     // driveJoy.a()
     //     .whileTrue(
     //         drivetrain.turnQuasistatic(Direction.kForward)
@@ -347,9 +398,26 @@ public class RobotContainer implements Logged {
     //     .whileTrue(
     //         drivetrain.turnDynamic(Direction.kReverse)
     //     );
-        // driveJoy.a().onTrue(shooterAngle.setAngleSetpointCmd(53));
-        // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
-        // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
+    */
+
+    /* SHOOTER ANGLE SYSID */
+    // driveJoy.a()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+
+    // driveJoy.b()
+    // .whileTrue(
+    //     shooterAngle.quasiCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
+    // driveJoy.x()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kForward).until(shooterAngle::atMaxAngle)
+    // );
+    // driveJoy.y()
+    // .whileTrue(
+    //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
+    // );
 
         /*
          * controlTypes: pid, sysid

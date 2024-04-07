@@ -1,4 +1,4 @@
-package frc.robot.autos.paths;
+package frc.robot.autos.routines;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -30,7 +30,7 @@ public class TaxiAmp extends SequentialCommandGroup {
       shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH),
       // Commands.waitUntil(() -> shooterAngle.atAngle())
         shooterWheel.setVelocitySetpointCmd(ShooterWheelConstants.AMP_FLUSH)
-        .alongWith(hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKE_NOTE_SPEED)),
+        .alongWith(hopper.setVelocitySetpointCmd(IntakeHopperConstants.INTAKING_VELOCITY)),
       shooterWheel.setVelocityCmd()
         .alongWith(hopper.setVelocityCmd()),
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(1.5),

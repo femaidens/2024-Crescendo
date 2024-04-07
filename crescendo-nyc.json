@@ -11,7 +11,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "5,2": {
+          "5,4": {
             "size": [
               2,
               1
@@ -83,7 +83,7 @@
               ]
             }
           },
-          "5,3": {
+          "5,2": {
             "size": [
               1,
               2
@@ -133,7 +133,7 @@
               "Visuals/Counter clockwise": false
             }
           },
-          "6,3": {
+          "6,2": {
             "size": [
               1,
               2
@@ -147,8 +147,8 @@
               "_children": [
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/at shooterVelocity",
-                  "_title": "at shooterVelocity",
+                  "_source0": "network_table:///SmartDashboard/at shooter angle",
+                  "_title": "at shooter angle",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -156,8 +156,8 @@
                 },
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/at shooterAngle",
-                  "_title": "at shooterAngle",
+                  "_source0": "network_table:///SmartDashboard/at shooter vel",
+                  "_title": "at shooter vel",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -207,28 +207,52 @@
             ],
             "content": {
               "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intake sp",
+              "_title": "intake sp",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/state count",
               "_title": "state count",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "8,4": {
+          "9,1": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/at min angle",
-              "_title": "at min angle",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/hopper vel",
+              "_title": "hopper vel",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_showGlyph": false
             }
           },
-          "8,3": {
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/left shooter vel: ",
+              "_title": "left shooter vel: ",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,3": {
             "size": [
               1,
               1
@@ -241,19 +265,95 @@
               "_showGlyph": false
             }
           },
-          "9,1": {
+          "8,4": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/at amp angle",
-              "_title": "at amp angle",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tx",
+              "_title": "tx",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_showGlyph": false
+            }
+          },
+          "9,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ta",
+              "_title": "ta",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intake vel",
+              "_title": "intake vel",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/hopper sp",
+              "_title": "hopper sp",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/right shooter vel: ",
+              "_title": "right shooter vel: ",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/current arm angle",
+              "_title": "current arm angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ty",
+              "_title": "ty",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }

@@ -7,6 +7,7 @@ package frc.robot.autos.routines;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -15,6 +16,8 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.commands.Intaking;
+import frc.robot.commands.ShooterSetRPM;
+import frc.robot.commands.ShooterToAngle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
@@ -32,19 +35,22 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        // reset gyro
+      // reset gyro
         new InstantCommand(() -> drivetrain.zeroHeading()),
         // // makes sure that it's the proper angle
-        // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
-        // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
-
+        shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
+        Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
+        // new ShooterSetRPM(shooterWheel, hopper, 200, 1),
+        // new ShooterToAngle(shooterAngle, ShooterAngleConstants.SPEAKER_FLUSH), 
+        
+        // shoot
         // // shoot
-        // new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
-        //     HopperConstants.TRANSITION_VEL,
-        //     hopper, shooterAngle, shooterWheel),
-
+        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
+            HopperConstants.TRANSITION_VEL,
+            hopper, shooterAngle, shooterWheel),
+          
         // //* drive and intake at once, arbritary timeout time
-        new TaxiIntake(drivetrain, intaking, shooterAngle)
+        new TaxiIntake1(drivetrain, intaking, shooterAngle)
 
         // new AutonShoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE,
         //     HopperConstants.TRANSITION_VEL,
@@ -52,9 +58,6 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
 
         // led.setGreenCmd().withTimeout(2)
         //* 
-
-   
-
     );
   }
 }

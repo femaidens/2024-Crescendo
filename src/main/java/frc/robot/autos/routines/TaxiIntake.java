@@ -16,17 +16,19 @@ import frc.robot.subsystems.ShooterAngle;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TaxiIntake extends ParallelCommandGroup {
-  /** Creates a new TaxiIntake. */
+  /** Creates a new TaxiIntake1. */
   public TaxiIntake(Drivetrain drivetrain, Intaking intaking, ShooterAngle shooterAngle) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+
         new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
             .withTimeout(4),
 
         Commands.waitSeconds(1)
-            .andThen(intaking.intakeNote())
-            .alongWith(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE))
+            .andThen(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE))
+            .alongWith(intaking.intakeNote())
+            .withTimeout(4)
     );
   }
 }

@@ -33,9 +33,9 @@ import frc.robot.DrivetrainConstants.ModuleConstants.Drive;
 import frc.robot.DrivetrainConstants.ModuleConstants.Turning;
 import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
-import frc.robot.autos.paths.Taxi;
-import frc.robot.autos.paths.TaxiAmp;
-import frc.robot.autos.paths.TaxiSpeaker;
+// import frc.robot.autos.paths.Taxi;
+// import frc.robot.autos.paths.TaxiAmp;
+// import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.commands.ThreeNoteFlushAuto;
 // import frc.robot.autos.paths.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
@@ -144,7 +144,6 @@ public class RobotContainer implements Logged {
     // autonChooser = AutonBuilder.
     // autonChooser.addOption("flush three notes", new ThreeNoteFlushAuto(drivetrain, intaking, shooter));
     // autonChooser.addOption("flush one note", new OneNoteLeft(drivetrain, intaking, shooter));
-
     NamedCommands.registerCommand("ampshoot", shooter.shoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
     NamedCommands.registerCommand("speakerstageshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
     NamedCommands.registerCommand("intake", intaking.intakeNote());

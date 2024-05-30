@@ -22,6 +22,28 @@ public class Controls {
     private Intake intake;
     private Drivetrain drivetrain;
 
+    public enum ControlType {
+        PID,
+        SYSID
+    }
+
+    public enum Subsystem {
+        SHOOTER_ANGLE,
+        SHOOTER_WHEEL,
+        HOPPER,
+        INTAKE,
+        DRIVETRAIN
+    }
+
+    public enum Button {
+        A, 
+        B, 
+        X, 
+        Y,
+        RIGHT_BUMPER,
+        LEFT_BUMPER
+    }
+
     public Controls(ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper, Intake intake, Drivetrain drivetrain) {
         this.shooterAngle = shooterAngle;
         this.shooterWheel = shooterWheel;
@@ -29,62 +51,70 @@ public class Controls {
         this.intake = intake;
         this.drivetrain = drivetrain;
     }
-
-    public Command controlSwitch(String controlType, String subsystem, String button) {
+    /**
+     * @param controlType - PID, SYSID
+     * @param subsystem - [PID: SHOOTER_ANGLE, SHOOTER_WHEEL] [SYSID: HOPPER, INTAKE, DRIVETRAIN]
+     * @param button A, B, X, Y, RIGHT_BUMPER, LEFT_BUMPER
+    */
+    public Command controlSwitch(ControlType controlType, Subsystem subsystem, Button button) {
         switch(controlType) {
-            case "pid" :
-                pidSwitch(subsystem, button);
-            case "sysid" : 
-                sysidSwitch(subsystem, button);
+            case PID :
+                return pidSwitch(subsystem, button);
+            case SYSID : 
+                return sysidSwitch(subsystem, button);
             default :
                 return new PrintCommand("no control test running");
             }
     }
     
-    public Command pidSwitch(String subsystem, String button) {
+    public Command pidSwitch(Subsystem subsystem, Button button) {
         switch(subsystem) {
-            case "shooterAngle" :
+            case SHOOTER_ANGLE :
                 switch(button) {
-                    case "a" : return shooterAngle.setAngleSetpointCmd(19.9);
-                    case "b" : return shooterAngle.setAngleSetpointCmd(25.0);
-                    case "x" : return shooterAngle.setAngleSetpointCmd(45.0);
-                    case "y" : return shooterAngle.setAngleSetpointCmd(60.0);
+                    case A : return shooterAngle.setAngleSetpointCmd(19.9);
+                    case B : return shooterAngle.setAngleSetpointCmd(25.0);
+                    case X : return shooterAngle.setAngleSetpointCmd(45.0);
+                    case Y : return shooterAngle.setAngleSetpointCmd(60.0);
+                    default : return new PrintCommand("invalid control"); 
                 }
-            case "shooterWheel" :
+            case SHOOTER_WHEEL :
                 switch(button) {
-                    case "a" : return shooterWheel.setVelocitySetpointCmd(0);
-                    case "b" : return shooterWheel.setVelocitySetpointCmd(2.0 * 360);
-                    case "x" : return shooterWheel.setVelocitySetpointCmd(5.0 * 360);
-                    case "y" : return shooterWheel.setVelocitySetpointCmd(10.0 * 360);
+                    case A : return shooterWheel.setVelocitySetpointCmd(0);
+                    case B : return shooterWheel.setVelocitySetpointCmd(2.0 * 360);
+                    case X : return shooterWheel.setVelocitySetpointCmd(5.0 * 360);
+                    case Y : return shooterWheel.setVelocitySetpointCmd(10.0 * 360);
+                    default : return new PrintCommand("invalid control");
                 }
             default : return new PrintCommand("");
         }
     }
 
-    public Command sysidSwitch(String subsystem, String button) {
+    public Command sysidSwitch(Subsystem subsystem, Button button) {
         switch(subsystem) {
-            case "hopper" :
+            case HOPPER :
                 switch(button) {
-                    case "a" : return hopper.hopperQuas(SysIdRoutine.Direction.kForward);
-                    case "b" : return hopper.hopperQuas(SysIdRoutine.Direction.kReverse);
-                    case "x" : return hopper.hopperDyna(SysIdRoutine.Direction.kForward);
-                    case "y" : return hopper.hopperDyna(SysIdRoutine.Direction.kReverse);
+                    case A : return hopper.hopperQuas(SysIdRoutine.Direction.kForward);
+                    case B : return hopper.hopperQuas(SysIdRoutine.Direction.kReverse);
+                    case X : return hopper.hopperDyna(SysIdRoutine.Direction.kForward);
+                    case Y : return hopper.hopperDyna(SysIdRoutine.Direction.kReverse);
+                    default : return new PrintCommand("invalid control");
                 }
-            case "intake" :
+            case INTAKE :
                 switch(button) {
-                    case "a" : return intake.intakeQuas(SysIdRoutine.Direction.kForward);
-                    case "b" : return intake.intakeQuas(SysIdRoutine.Direction.kReverse);
-                    case "x" : return intake.intakeDyna(SysIdRoutine.Direction.kForward);
-                    case "y" : return intake.intakeDyna(SysIdRoutine.Direction.kReverse);
+                    case A : return intake.intakeQuas(SysIdRoutine.Direction.kForward);
+                    case B : return intake.intakeQuas(SysIdRoutine.Direction.kReverse);
+                    case X : return intake.intakeDyna(SysIdRoutine.Direction.kForward);
+                    case Y : return intake.intakeDyna(SysIdRoutine.Direction.kReverse);
+                    default : return new PrintCommand("invalid control");
                 }
-            case "drivetrain" :
+            case DRIVETRAIN :
                 switch(button) {
-                    case "a" : return drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward);
-                    case "b" : return drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse);
-                    case "x" : return drivetrain.driveDynamic(SysIdRoutine.Direction.kForward);
-                    case "y" : return drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse);
-                    case "rightBumper" : return drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward); 
-                    case "leftBumper" : return drivetrain.turnDynamic(SysIdRoutine.Direction.kForward);
+                    case A : return drivetrain.driveQuasistatic(SysIdRoutine.Direction.kForward);
+                    case B : return drivetrain.driveQuasistatic(SysIdRoutine.Direction.kReverse);
+                    case X : return drivetrain.driveDynamic(SysIdRoutine.Direction.kForward);
+                    case Y : return drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse);
+                    case RIGHT_BUMPER : return drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward); 
+                    case LEFT_BUMPER : return drivetrain.turnDynamic(SysIdRoutine.Direction.kForward);
                 }
             default : return new PrintCommand("");
         }

@@ -35,6 +35,7 @@ import frc.robot.autos.paths.TaxiSpeaker;
 import frc.robot.commands.Controls;
 import frc.robot.commands.Intaking;
 import frc.robot.commands.Shooter;
+import frc.robot.commands.Controls.*;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;
@@ -385,24 +386,19 @@ public class RobotContainer implements Logged {
         // driveJoy.b().onTrue(shooterAngle.setAngleSetpointCmd(63));
         // driveJoy.x().onTrue(shooterAngle.setAngleSetpointCmd(33));
 
-        /*
-         * controlTypes: pid, sysid
-         * pid subsystems: shooterAngle, shooterWheel
-         * sysid subsystems: hopper, intake, drivetrain
-         * buttons: a, b, x, y, rightBumper, leftBumper
-        */
+    /* CONTROLS, MODIFIED */
         // driveJoy.a()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "a"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.A));
         // driveJoy.b()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "b"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.B));
         // driveJoy.x()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "x"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.X));
         // driveJoy.y()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "y"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.Y));
         // driveJoy.rightBumper()
-        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
+        //     .onTrue(controls.controlSwitch(ControlType.SYSID, Subsystem.SHOOTER_ANGLE, Button.RIGHT_BUMPER));
         // driveJoy.leftBumper()
-        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
+        //     .onTrue(controls.controlSwitch(ControlType.SYSID, Subsystem.SHOOTER_ANGLE, Button.LEFT_BUMPER));
   }
 
   /**

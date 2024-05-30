@@ -86,7 +86,7 @@ public class Hopper extends SubsystemBase implements Logged {
 
   public Command setSpeedCmd(double speed) {
     System.out.println("setting hopper speed");
-    return this.runOnce(() -> setSpeed(speed));
+    return this.runOnce(() -> hopperMotor.set(speed));
   }
 
   // is default command, DO NOT ADD AS PROXY
@@ -105,7 +105,7 @@ public class Hopper extends SubsystemBase implements Logged {
   }
 
   public Command stopMotorCmd() {
-    return this.runOnce(() -> stopMotor());
+    return this.runOnce(() -> hopperMotor.stopMotor());
   }
 
   public Command setStateLimitCmd(int limit) {
@@ -177,11 +177,6 @@ public class Hopper extends SubsystemBase implements Logged {
     return stateChange;
   }
 
-  // sets fractional duty cycle
-  public void setSpeed(double speed) {
-    hopperMotor.set(speed);
-  }
-
   public void setVelocity() {
     double voltage = hopperFF.calculate(vSetpoint);
     hopperMotor.setVoltage(voltage);
@@ -198,10 +193,6 @@ public class Hopper extends SubsystemBase implements Logged {
 
   public double getVelocity() {
     return hopperEncoder.getVelocity();
-  }
-
-  public void stopMotor() {
-    hopperMotor.stopMotor();
   }
 
   /* SYSID */

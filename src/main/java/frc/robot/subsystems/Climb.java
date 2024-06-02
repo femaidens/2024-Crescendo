@@ -41,7 +41,10 @@ public class Climb extends SubsystemBase implements Logged {
   }
 
   public Command stopMotorsCmd() {
-    return this.runOnce(() -> stopMotors());
+    return this.runOnce(() -> rightArm.stopMotor())
+    .alongWith(
+      this.runOnce(() -> leftArm.stopMotor())
+    ); //ew indeed 
   }
 
   public void extendClimbArm() {
@@ -58,18 +61,19 @@ public class Climb extends SubsystemBase implements Logged {
     }
   }
 
-  public void retractClimbArm() {
+  public Command retractClimbArm() {
     if(isTopActivated()){ // stop retracting if top hits bottom
-      rightArm.set(0);
-      leftArm.set(0);
       System.out.println("top switch activated!");
+      return this.runOnce(() -> rightArm.set(0))
+      .alongWith(this.runOnce(() -> leftArm.set(0)));
     }
-
     else {
       // check inversion of motors
-      rightArm.set(-ClimberConstants.ARM_SPEED);
-      leftArm.set(ClimberConstants.ARM_SPEED);
       System.out.println("retracting arm");
+      return this.runOnce(() -> rightArm.set(-ClimberConstants.ARM_SPEED))
+      .alongWith(
+        this.runOnce(() -> leftArm.set(ClimberConstants.ARM_SPEED))
+      );
     }
     
   }
@@ -82,10 +86,6 @@ public class Climb extends SubsystemBase implements Logged {
     return !botSwitch.get(); // check to see if it needs to be negated
   }
 
-  public void stopMotors() {
-    rightArm.set(0);
-    leftArm.set(0);
-  }
 
   @Override
   public void periodic() {

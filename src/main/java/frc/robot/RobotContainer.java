@@ -98,13 +98,13 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
-        // shooterAngle.setAngleCmd()
-    );
+    // shooterAngle.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> shooterAngle.setManualAngle(
+    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //         shooterAngle)
+    //     // shooterAngle.setAngleCmd()
+    // );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -152,18 +152,18 @@ public class RobotContainer implements Logged {
                 // cannot put the withTimeout outside otherwise, it gives it 3 secs for the entier thing)
             );
 
-    /* SHOOTER ANGLE SETPOINTS */
-        driveJoy.a()
-          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH));
+    // /* SHOOTER ANGLE SETPOINTS */
+    //     driveJoy.a()
+    //       .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.AMP_FLUSH));
 
-        driveJoy.b()
-          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE));
+    //     driveJoy.b()
+    //       .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE));
 
-        driveJoy.x()
-          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
+    //     driveJoy.x()
+    //       .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_FLUSH));
 
-        driveJoy.y()
-          .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
+    //     driveJoy.y()
+    //       .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.SPEAKER_STAGE));
 
     /* * * CLIMB BUTTONS * * */
         // extend climb arm
@@ -355,27 +355,27 @@ public class RobotContainer implements Logged {
     */
 
     /* DRIVETRAIN SYSID */
-    /*
-    // driveJoy.a()
-    //     .whileTrue(
-    //         drivetrain.driveQuasistatic(Direction.kForward)
-    //     );
+    
+    driveJoy.a()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kForward)
+        );
 
-    // driveJoy.b()
-    //     .whileTrue(
-    //         drivetrain.driveQuasistatic(Direction.kReverse)
-    //     );
+    driveJoy.b()
+        .whileTrue(
+            drivetrain.driveQuasistatic(Direction.kReverse)
+        );
 
-    // driveJoy.x()
-    //     .whileTrue(
-    //         drivetrain.driveDynamic(Direction.kForward)
-    //     );
+    driveJoy.x()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kForward)
+        );
 
-    // driveJoy.y()
-    //     .whileTrue(
-    //         drivetrain.driveDynamic(Direction.kReverse)
-    //     );
-    */
+    driveJoy.y()
+        .whileTrue(
+            drivetrain.driveDynamic(Direction.kReverse)
+        );
+    
     
     /* DRIVETRAIN TURNING SYSID */
     /* 

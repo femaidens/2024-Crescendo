@@ -31,7 +31,7 @@ public class MaxSwerveModule {
 
   private final SparkPIDController drivePID;
   private final SparkPIDController turningPID;
-  // private final PIDController drivePID;
+  private final PIDController driveWPIPID;
   // private final PIDController turningPID;
 
   private final SimpleMotorFeedforward driveFF;
@@ -51,12 +51,11 @@ public class MaxSwerveModule {
     turningEncoder = turningMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
     drivePID = driveMotor.getPIDController();
+
     turningPID = turningMotor.getPIDController();
 
-    drivePID.setFeedbackDevice(driveEncoder);
+    //drivePID.setFeedbackDevice(driveEncoder);
     turningPID.setFeedbackDevice(turningEncoder);
-
-    // driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
 
     driveEncoder.setPositionConversionFactor(Drive.DRIVE_ENCODER_PFACTOR);
     driveEncoder.setVelocityConversionFactor(Drive.DRIVE_ENCODER_VFACTOR);
@@ -66,7 +65,7 @@ public class MaxSwerveModule {
 
     turningEncoder.setInverted(Turning.ENCODER_INVERTED);
 
-    // drivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
+    driveWPIPID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
     // turningPID = new PIDController(Turning.kP, Turning.kI, Turning.kD);
 
     driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
@@ -180,7 +179,32 @@ public class MaxSwerveModule {
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     // drivePID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
-    driveFF.calculate(optimizedDesiredState.speedMetersPerSecond);
+    double voltage = driveFF.calculate(optimizedDesiredState.speedMetersPerSecond) + driveWPIPID.calculate(driveEncoder.getVelocity(),optimizedDesiredState.speedMetersPerSecond);
+    driveMotor.setVoltage(voltage);
+    turningPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+
+    this.desiredState = desiredState;
+  }
+
+  /**
+   * Sets the desired state for the module, without drive motor PID.
+   *
+   * @param desiredState Desired state with speed and angle.
+   */
+  public void setDesiredStatePIDFF(SwerveModuleState desiredState){
+    // Apply chassis angular offset to the desired state.
+    SwerveModuleState correctedDesiredState = new SwerveModuleState();
+    correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
+
+    // Optimize the reference state to avoid spinning further than 90 degrees.
+    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+        new Rotation2d(turningEncoder.getPosition()));
+
+    // Command driving and turning SPARKS MAX towards their respective setpoints.
+    // drivePID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+    double voltage = driveFF.calculate(optimizedDesiredState.speedMetersPerSecond);
+    driveMotor.setVoltage(voltage);
     turningPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     this.desiredState = desiredState;

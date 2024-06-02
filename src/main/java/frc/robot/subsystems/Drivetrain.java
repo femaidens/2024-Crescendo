@@ -259,10 +259,10 @@ public class Drivetrain extends SubsystemBase implements Logged {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
 
-    frontLeft.setDesiredState(swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    rearLeft.setDesiredState(swerveModuleStates[2]);
-    rearRight.setDesiredState(swerveModuleStates[3]);
+    frontLeft.setDesiredStateNoPID(swerveModuleStates[0]);
+    frontRight.setDesiredStateNoPID(swerveModuleStates[1]);
+    rearLeft.setDesiredStateNoPID(swerveModuleStates[2]);
+    rearRight.setDesiredStateNoPID(swerveModuleStates[3]);
 
   }
 

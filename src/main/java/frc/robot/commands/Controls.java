@@ -75,7 +75,7 @@ public class Controls {
                     case B : return shooterAngle.setAngleSetpointCmd(25.0);
                     case X : return shooterAngle.setAngleSetpointCmd(45.0);
                     case Y : return shooterAngle.setAngleSetpointCmd(60.0);
-                    default : return new PrintCommand("invalid control"); 
+                    default : return new PrintCommand("invalid shooterangle pid control"); 
                 }
             case SHOOTER_WHEEL :
                 switch(button) {
@@ -83,7 +83,7 @@ public class Controls {
                     case B : return shooterWheel.setVelocitySetpointCmd(2.0 * 360);
                     case X : return shooterWheel.setVelocitySetpointCmd(5.0 * 360);
                     case Y : return shooterWheel.setVelocitySetpointCmd(10.0 * 360);
-                    default : return new PrintCommand("invalid control");
+                    default : return new PrintCommand("invalid shooterwheel pid control");
                 }
             default : return new PrintCommand("");
         }
@@ -97,7 +97,7 @@ public class Controls {
                     case B : return hopper.hopperQuas(SysIdRoutine.Direction.kReverse);
                     case X : return hopper.hopperDyna(SysIdRoutine.Direction.kForward);
                     case Y : return hopper.hopperDyna(SysIdRoutine.Direction.kReverse);
-                    default : return new PrintCommand("invalid control");
+                    default : return new PrintCommand("invalid hopper sysid control");
                 }
             case INTAKE :
                 switch(button) {
@@ -105,7 +105,7 @@ public class Controls {
                     case B : return intake.intakeQuas(SysIdRoutine.Direction.kReverse);
                     case X : return intake.intakeDyna(SysIdRoutine.Direction.kForward);
                     case Y : return intake.intakeDyna(SysIdRoutine.Direction.kReverse);
-                    default : return new PrintCommand("invalid control");
+                    default : return new PrintCommand("invalid intake sysid control");
                 }
             case DRIVETRAIN :
                 switch(button) {
@@ -115,8 +115,9 @@ public class Controls {
                     case Y : return drivetrain.driveDynamic(SysIdRoutine.Direction.kReverse);
                     case RIGHT_BUMPER : return drivetrain.turnQuasistatic(SysIdRoutine.Direction.kForward); 
                     case LEFT_BUMPER : return drivetrain.turnDynamic(SysIdRoutine.Direction.kForward);
+                    default : return new PrintCommand("invalid drive sysid control");
                 }
-            default : return new PrintCommand("");
+            default : return new PrintCommand("invalid sysid control");
         }
     }
 }

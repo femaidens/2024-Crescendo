@@ -83,9 +83,9 @@ public final class DrivetrainConstants {
       public static final double kI = 0;
       public static final double kD = 0.01;
 
-      public static final double kS = 0.0; // placeholder --> run sysid
-      public static final double kA = 0.0; // placeholder 
-      public static final double kV = 0.0; //placeholder
+      public static final double kS = 0.18484; // placeholder --> run sysid
+      public static final double kA = 0.41189; // placeholder 
+      public static final double kV = 2.7542; //placeholder
       
       public static final double kFF = 1 / DRIVE_WHEEL_FREE_SPEED_RPS;
       public static final double kMinOutput = -1;

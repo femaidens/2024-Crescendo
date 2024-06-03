@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
@@ -40,40 +41,33 @@ public class Climb extends SubsystemBase implements Logged {
     return this.run(() -> retractClimbArm());
   }
 
-  public Command stopMotorsCmd() {
-    return this.runOnce(() -> rightArm.stopMotor())
-    .alongWith(
-      this.runOnce(() -> leftArm.stopMotor())
-    ); //ew indeed 
+  public void stopMotors() {
+    rightArm.set(0);
+    leftArm.set(0);
+    //ew indeed 
   }
 
-  public void extendClimbArm() {
-    if(isBotActivated()){ // stop extending if bottom hits top
-      rightArm.set(0);
-      leftArm.set(0);
-      System.out.println("bottom limit switch hit!");
-    }
+/**
+ * Extends arm until bottom limit switch is activated
+ * 
+ */
 
+  public Command extendClimbArm() {
+    if(isBotActivated()){ // stop extending if bottom hits top
+      return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("bottom limit switch hit!"));
+    }
     else {
-      rightArm.set(ClimberConstants.ARM_SPEED);
-      leftArm.set(-ClimberConstants.ARM_SPEED);
-      System.out.println("extending arm");
+      return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("extending arm"));
     }
   }
 
   public Command retractClimbArm() {
     if(isTopActivated()){ // stop retracting if top hits bottom
-      System.out.println("top switch activated!");
-      return this.runOnce(() -> rightArm.set(0))
-      .alongWith(this.runOnce(() -> leftArm.set(0)));
+      return this.run(() -> stopMotors()).alongWith(new PrintCommand("top switch activated!"));
     }
     else {
       // check inversion of motors
-      System.out.println("retracting arm");
-      return this.runOnce(() -> rightArm.set(-ClimberConstants.ARM_SPEED))
-      .alongWith(
-        this.runOnce(() -> leftArm.set(ClimberConstants.ARM_SPEED))
-      );
+      return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("retracting arm"));
     }
     
   }
@@ -85,6 +79,16 @@ public class Climb extends SubsystemBase implements Logged {
   public boolean isBotActivated() {
     return !botSwitch.get(); // check to see if it needs to be negated
   }
+
+  /**
+   * Sets the speed of both climb motors
+   * @param speed PWM value
+   */
+  public void setSpeed(double speed){
+    rightArm.set(speed);
+    leftArm.set(-speed);
+  }
+
 
 
   @Override

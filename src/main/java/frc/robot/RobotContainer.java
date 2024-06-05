@@ -419,6 +419,7 @@ public class RobotContainer implements Logged {
     //     shooterAngle.dynaCmd(SysIdRoutine.Direction.kReverse).until(shooterAngle::atMinAngle)
     // );
 
+    /* CONTROLS, MODIFIED */
         /*
          * controlTypes: pid, sysid
          * pid subsystems: shooterAngle, shooterWheel
@@ -426,17 +427,17 @@ public class RobotContainer implements Logged {
          * buttons: a, b, x, y, rightBumper, leftBumper
         */
         // driveJoy.a()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "a"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.A));
         // driveJoy.b()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "b"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.B));
         // driveJoy.x()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "x"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.X));
         // driveJoy.y()
-        //     .onTrue(controls.controlSwitch("pid", "shooterAngle", "y"));
+        //     .onTrue(controls.controlSwitch(ControlType.PID, Subsystem.SHOOTER_ANGLE, Button.Y));
         // driveJoy.rightBumper()
-        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "rightBumper"));
+        //     .onTrue(controls.controlSwitch(ControlType.SYSID, Subsystem.SHOOTER_ANGLE, Button.RIGHT_BUMPER));
         // driveJoy.leftBumper()
-        //     .onTrue(controls.controlSwitch("sysid", "drivetrain", "leftBumper"));
+        //     .onTrue(controls.controlSwitch(ControlType.SYSID, Subsystem.SHOOTER_ANGLE, Button.LEFT_BUMPER));
   }
 
   /**

@@ -163,7 +163,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   @Log.NT
   // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
-    return shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET;
+    return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) % 360;
   }
 
   // public boolean getIsManual() {

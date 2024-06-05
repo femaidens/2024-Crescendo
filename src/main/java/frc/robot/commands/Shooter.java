@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.LED;
@@ -30,17 +31,19 @@ public class Shooter {
     public Command shoot(double angle, double vel) { // figure out what to do with the velocity param -> is it
                                                      // necessary?
         return setShooterSetpoints(angle, vel)
-                .andThen(shoot());
+            .alongWith(new PrintCommand("set angle"))
+            .andThen(shoot());
     }
 
     public Command shoot() {
         // TEST ACCURACY OF SHOOTER AT ANGLE
         return Commands.race(led.setSolidCmd(LEDConstants.RED),
                 Commands.waitUntil(() -> shooterAngle.atAngle()) // shooterWheel.atVelocity() &&
+                        .andThen(new PrintCommand("angle reached"))
                         .andThen(hopper.feedNote())
                         .andThen(shooterWheel.setVelocitySetpointCmd(0))
                         .andThen(hopper.resetStateCountCmd())) // end of race cmd
-                .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
+                .andThen(led.setSolidCmd(LEDConstants.GREEN)).withTimeout(3);
     }
 
     public Command setShooterSetpoints(double angle, double vel) {

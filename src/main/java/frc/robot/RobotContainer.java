@@ -83,7 +83,7 @@ public class RobotContainer implements Logged {
 
   private SendableChooser<Command> autonChooser;
 
-    // private final ThreeNoteFlushAuto auton = new ThreeNoteFlushAuto(drivetrain, intaking, shooter);
+//   autonChooser.addOption("Three Note Flush Auto", new ThreeNoteFlushAuto());
 
   public RobotContainer() {
     // configurations
@@ -104,16 +104,16 @@ public class RobotContainer implements Logged {
 
   public void configureDefaultCommands() {
 
-   // drivetrain.setDefaultCommand(
-     // clariy turning with right or with left
-    //   new RunCommand(
-    //       () -> drivetrain.drive( // all joy.get values were prev negative
-    //           MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-    //           MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
-    //           true, false),
-    //       drivetrain)
-    //);
+//    drivetrain.setDefaultCommand(
+//     //  clarify turning with right or with left
+//       new RunCommand(
+//           () -> drivetrain.drive( // all joy.get values were prev negative
+//               MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+//               MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+//               MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1),
+//               true, false),
+//           drivetrain)
+//     );
 
     // shooterAngle.setDefaultCommand(
     //     new RunCommand(
@@ -147,8 +147,7 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("ampshoot", shooter.shoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
     NamedCommands.registerCommand("speakerstageshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
     NamedCommands.registerCommand("intake", intaking.intakeNote());
-    NamedCommands.registerCommand("speakerflushshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH));
-
+    NamedCommands.registerCommand("speakerflushshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH).withTimeout(3.0));
     // AutoBuilder autoBuilder = new AutoBuilder();
         AutoBuilder.configureHolonomic(
         drivetrain::getPose, 

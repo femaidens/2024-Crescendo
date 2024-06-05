@@ -38,7 +38,8 @@
       "/FMSInfo": "FMSInfo",
       "/Robot/robotContainer/shooterAngle/profiledShooterAnglePID": "ProfiledPIDController",
       "/Robot/robotContainer/shooterAngle/shooterAnglePID": "PIDController",
-      "/SmartDashboard/Choose Auto: ": "String Chooser"
+      "/SmartDashboard/Choose Auto: ": "String Chooser",
+      "/SmartDashboard/Field": "Field2d"
     }
   },
   "NetworkTables Info": {
@@ -286,7 +287,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 702,
           "series": [
             {
               "color": [

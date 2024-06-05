@@ -18,25 +18,18 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
-import frc.robot.Constants.LEDConstants;
 import frc.robot.Ports.BeamBreakPorts;
 import frc.robot.Ports.HopperPorts;
 import monologue.Logged;
-import monologue.Annotations.Log;
 
 public class Hopper extends SubsystemBase implements Logged {
 
-  // @Log.NT
   private final CANSparkMax hopperMotor;
 
-  // @Log.NT
   private final RelativeEncoder hopperEncoder;
 
-  // @Log.NT
   private final SimpleMotorFeedforward hopperFF;
-  // private final PIDController hopperPID;
 
-  // @Log.NT
   private final DigitalInput receiver;
 
   private final SysIdRoutine hopperRoutine;
@@ -83,37 +76,32 @@ public class Hopper extends SubsystemBase implements Logged {
     .andThen(setVelocitySetpointCmd(0));
   }
 
-  public Command setSpeedCmd(double speed) {
-    System.out.println("setting hopper speed");
-    return this.runOnce(() -> setSpeed(speed));
-  }
-
   public Command setOuttakeSpeedCmd(double speed) {
     return this.run(() -> setSpeed(speed));
   }
 
-  // is default command, DO NOT ADD AS PROXY
   public Command setVelocityCmd() {
-    // return Commands.print("running hopper velocity pid");
-    return this.run(() -> setVelocity());
+    double voltage = hopperFF.calculate(vSetpoint);
+    return this.run(() -> hopperMotor.setVoltage(voltage));
   }
 
+   public Command setVelocityCmd(double setpoint) {
+    return setVelocitySetpointCmd(setpoint)
+    .andThen(setVelocityCmd());
+  }
+
+  //not sure if this works
   public Command setVelocitySetpointCmd(double setpoint) {
-    // return Commands.print("setting hopper vel setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
+    return this.runOnce(() -> vSetpoint = setpoint).asProxy();
   }
 
   public Command autonSetVelocitySetpointCmd(double setpoint) {
     // return Commands.print("setting hopper vel setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint));
-  }
-
-  public Command setVelocityCmd(double setpoint) {
-    return this.run(() -> setVelocity(setpoint));
+    return this.runOnce(() -> vSetpoint = setpoint);
   }
 
   public Command stopMotorCmd() {
-    return this.runOnce(() -> stopMotor());
+    return this.runOnce(() -> setSpeed(0));
   }
 
   public Command setStateLimitCmd(int limit) {
@@ -142,7 +130,17 @@ public class Hopper extends SubsystemBase implements Logged {
     return this.runOnce(() -> resetStateEmergency());
   }
 
-  /* * * BEAM BREAK * * */
+   // sets fractional duty cycle
+  public void setSpeed(double speed) {
+    hopperMotor.set(speed);
+  }
+
+  public double getVelocity() {
+    return hopperEncoder.getVelocity();
+  }
+
+
+   /* * * BEAM BREAK * * */
   public boolean getReceiverStatus() {
     return receiver.get();
     // true = unbroken
@@ -196,33 +194,6 @@ public class Hopper extends SubsystemBase implements Logged {
     lastState = currentState;
 
     return stateChange;
-  }
-
-  // sets fractional duty cycle
-  public void setSpeed(double speed) {
-    hopperMotor.set(speed);
-  }
-
-  public void setVelocity() {
-    double voltage = hopperFF.calculate(vSetpoint);
-    hopperMotor.setVoltage(voltage);
-  }
-
-  public void setVelocity(double setpoint) {
-    setVelocitySetpoint(setpoint);
-    setVelocity();
-  }
-
-  public void setVelocitySetpoint(double setpoint) {
-    vSetpoint = setpoint;
-  }
-
-  public double getVelocity() {
-    return hopperEncoder.getVelocity();
-  }
-
-  public void stopMotor() {
-    hopperMotor.stopMotor();
   }
 
   /* SYSID */

@@ -169,12 +169,12 @@ public class RobotContainer implements Logged {
         // extend climb arm
         operJoy.povUp()
             .onTrue(climb.extendClimbCmd())
-            .onFalse(climb.stopMotorsCmd());
+            .onFalse(climb.stopClimbCmd());
 
         // retract climb arm
         operJoy.povDown()
             .onTrue(climb.retractClimbCmd())
-            .onFalse(climb.stopMotorsCmd());
+            .onFalse(climb.stopClimbCmd());
 
     /* * * INTAKE BUTTONS * * */
         // runs intake routine

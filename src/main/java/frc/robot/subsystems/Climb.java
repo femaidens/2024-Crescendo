@@ -33,26 +33,11 @@ public class Climb extends SubsystemBase implements Logged {
   }
 
   /* COMMANDS */
+  /**
+   * Extends arm until bottom limit switch is activated
+   * @return Command
+   */
   public Command extendClimbCmd() {
-    return this.run(() -> extendClimbArm());
-  }
-
-  public Command retractClimbCmd() {
-    return this.run(() -> retractClimbArm());
-  }
-
-  public void stopMotors() {
-    rightArm.set(0);
-    leftArm.set(0);
-    //ew indeed 
-  }
-
-/**
- * Extends arm until bottom limit switch is activated
- * 
- */
-
-  public Command extendClimbArm() {
     if(isBotActivated()){ // stop extending if bottom hits top
       return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("bottom limit switch hit!"));
     }
@@ -61,15 +46,36 @@ public class Climb extends SubsystemBase implements Logged {
     }
   }
 
-  public Command retractClimbArm() {
+  /**
+   * Retracts arm until top limit switch is activated
+   * @return Command
+   */
+  public Command retractClimbCmd() {
     if(isTopActivated()){ // stop retracting if top hits bottom
-      return this.run(() -> stopMotors()).alongWith(new PrintCommand("top switch activated!"));
+      return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("top switch activated!"));
     }
     else {
       // check inversion of motors
       return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("retracting arm"));
     }
     
+  }
+
+  /**
+   * Stops both climb motors
+   * @return Command 
+   */
+  public Command stopClimbCmd() {
+    return this.run(() -> setSpeed(0));
+  }
+
+  /**
+   * Sets the speed of both climb motors
+   * @param speed PWM value, positive is extend, negative is retract
+   */
+  public void setSpeed(double speed){
+    rightArm.set(speed);
+    leftArm.set(-speed);
   }
 
   public boolean isTopActivated() {
@@ -79,17 +85,6 @@ public class Climb extends SubsystemBase implements Logged {
   public boolean isBotActivated() {
     return !botSwitch.get(); // check to see if it needs to be negated
   }
-
-  /**
-   * Sets the speed of both climb motors
-   * @param speed PWM value
-   */
-  public void setSpeed(double speed){
-    rightArm.set(speed);
-    leftArm.set(-speed);
-  }
-
-
 
   @Override
   public void periodic() {

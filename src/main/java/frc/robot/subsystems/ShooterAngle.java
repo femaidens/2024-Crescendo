@@ -97,7 +97,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
   }
 
   public Command setAngleCmd(double angle) {
-    return this.run(() -> setAngle(angle)).asProxy();
+    return this.run(() -> setAngle(angle)); //why was this a proxy
   }
 
   public Command setAngleCmd() {

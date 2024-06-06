@@ -45,6 +45,22 @@ public class Shooter {
                 .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
     }
 
+    //comment out default shooterangle and shooterwheel beforehand
+    public Command modifiedShoot(double angle, double vel) { // figure out what to do with the velocity param -> is it necessary?
+        return setShooterSetpoints(angle, vel)
+                .andThen(modifiedShoot());
+    }
+    public Command modifiedShoot(){
+        return Commands.race(
+                led.setSolidCmd(LEDConstants.RED),
+                shooterAngle.setAngleCmd().alongWith(shooterWheel.setVelocityCmd()).until(shooterAngle::atAngle) //.withTimeout(3)
+                        .andThen(hopper.feedNote(HopperConstants.TRANSITION_VEL))
+                        .andThen(shooterWheel.setVelocityCmd(0)) //.andThen(shooterWheel.run(() -> shooterWheel.stopMotors()))
+                        .andThen(hopper.resetStateCountCmd())
+                )
+                .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
+    }
+
     public Command setShooterSetpoints(double angle, double vel) {
         return shooterAngle.setAngleSetpointCmd(angle)
                 .alongWith(shooterWheel.setVelocitySetpointCmd(vel));

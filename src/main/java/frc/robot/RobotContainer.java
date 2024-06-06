@@ -147,7 +147,7 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("ampshoot", shooter.shoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH));
     NamedCommands.registerCommand("speakerstageshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE));
     NamedCommands.registerCommand("intake", intaking.intakeNote());
-    NamedCommands.registerCommand("speakerflushshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH).withTimeout(3.0));
+    NamedCommands.registerCommand("speakerflushshoot", shooter.shoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH).withTimeout(6.0));
     // AutoBuilder autoBuilder = new AutoBuilder();
         AutoBuilder.configureHolonomic(
         drivetrain::getPose, 

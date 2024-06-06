@@ -33,6 +33,8 @@ import frc.robot.autos.routines.BlueRightSpeakerTaxi;
 import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
 import frc.robot.autos.routines.Taxi;
 import frc.robot.autos.routines.TaxiAmp;
+import frc.robot.autos.routines.TaxiIntake;
+import frc.robot.autos.routines.TaxiIntake1;
 import frc.robot.autos.routines.TaxiSpeaker;
 // import frc.robot.autos.routines.TaxiSpeaker;
 // import frc.robot.autos.AutoDrive;
@@ -98,13 +100,13 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
-        // shooterAngle.setAngleCmd()
-    );
+    // shooterAngle.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> shooterAngle.setManualAngle(
+    //             MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //         shooterAngle)
+    //     // shooterAngle.setAngleCmd()
+    // );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -127,7 +129,9 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi amp", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
     autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));  
+    autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));
+    autonChooser.addOption("taxi intake", new TaxiIntake(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
+    autonChooser.addOption("racing taxi intake", new TaxiIntake1(drivetrain, intaking, shooterAngle)); 
 }
 
   private void configureButtonBindings() {

@@ -21,14 +21,11 @@ public class TaxiIntake1 extends ParallelRaceGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
         new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
             .withTimeout(6),
 
-        Commands.waitSeconds(1)
-            .andThen(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE))
+           shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
             .alongWith(intaking.intakeNote())
-            .withTimeout(4)
-    );
+            .withTimeout(6));
   }
 }

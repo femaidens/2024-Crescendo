@@ -7,17 +7,21 @@ package frc.robot.autos.routines;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.commands.Intaking;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.ShooterAngle;
+import frc.robot.subsystems.ShooterWheel;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TaxiIntake extends ParallelCommandGroup {
   /** Creates a new TaxiIntake1. */
-  public TaxiIntake(Drivetrain drivetrain, Intaking intaking, ShooterAngle shooterAngle) {
+  public TaxiIntake(Drivetrain drivetrain, Intaking intaking, ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -28,7 +32,7 @@ public class TaxiIntake extends ParallelCommandGroup {
         Commands.waitSeconds(1)
             .andThen(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE))
             .alongWith(intaking.intakeNote())
-            .withTimeout(4)
+            .andThen(new AutonShoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel))
     );
   }
 }

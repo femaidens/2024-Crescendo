@@ -72,7 +72,7 @@ public final class Constants {
     // limits
     public static final int CURRENT_LIMIT = 50;
     
-    public static final double AMP_FLUSH = 15 * DEGREES; // 13
+    public static final double AMP_FLUSH = 9 * DEGREES; // 13
 
     public static final double SPEAKER_FLUSH = 70 * DEGREES; //57 
     public static final double SPEAKER_STAGE = 80 * DEGREES; //60
@@ -113,7 +113,7 @@ public final class Constants {
     public static final double MIN_ANGLE = 25;//23.0;
 
     //check picture for distances for testing
-    public static final double AMP_FLUSH = 64.0; // placeholder acc angle is 58, but set setpoint to be 60-61
+    public static final double AMP_FLUSH = 66.0; // placeholder acc angle is 58, but set setpoint to be 60-61
 
     public static final double INITIAL_ANGLE = 65.0;
     public static final double SPEAKER_FLUSH = 60.0; // tested; worked!

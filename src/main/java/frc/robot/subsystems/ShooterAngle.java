@@ -4,30 +4,26 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants.ShooterAngleConstants;
-import frc.robot.Ports.ShooterPorts;
-import monologue.Annotations.Log;
-
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.ShooterAngleConstants;
+import frc.robot.Ports.ShooterPorts;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class ShooterAngle extends SubsystemBase implements Logged {
@@ -89,59 +85,78 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   /* COMMANDS */
   // default commands
-  public Command setManualAngleCmd(double input) {
-    // return Commands.print("setting manual angle setpoint");
-    return this.run(() -> setManualAngle(input));
-  }
-
-  public Command setAngleSetpointCmd(double angle) {
-    // return Commands.print("set regular angle setpoint");
-    return this.runOnce(() -> setAngleSetpoint(angle)).asProxy();
-  }
-
-  public Command autonSetAngleSetpointCmd(double angle) {
-    // return Commands.print("set regular angle setpoint");
-    return this.runOnce(() -> setAngleSetpoint(angle));
-  }
-
-  public Command setAngleCmd(double angle) {
-    return this.run(() -> setAngle(angle)).asProxy();
-  }
-
-  public Command autonSetAngleCmd(double angle) {
-    return this.run(() -> setAngle(angle));
-  }
-
-  public Command setAngleCmd() {
-    // return Commands.print("running angle pid");
-    return this.run(() -> setAngle());
-  }
-
-  // sets shooter angle based on joystick input
+  
+  /**
+   * Sets shooter angle based on joystick input, currently NOT accounting for max and min angle limits
+   * @param input Joystick input, PWM value, positive is up, negative is down
+   * @return Parallel Run and Proxy Commands
+   * @Note Not sure if this sequence works, especially runonce to set angle after run command
+   */
   // accounts for the max and min angle limits
-  public void setManualAngle(double input) {
+  public Command setManualAngleCmd(double input) {
 
     // move up if below max angle
     if (input > 0 ){//&& getAngle() < ShooterAngleConstants.MAX_ANGLE) {
-      shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
-      pSetpoint = getAngle();
+      return this.run(() -> setSpeed(ShooterAngleConstants.CONSTANT_SPEED))
+      .alongWith(setAngleSetpointCmd(getAngle()));
     }
     // move down if above min angle
     else if (input < 0){// && getAngle() > ShooterAngleConstants.MIN_ANGLE) {
-      shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
-      pSetpoint = getAngle();
+      return this.run(() -> setSpeed(-ShooterAngleConstants.CONSTANT_SPEED))
+      .alongWith(setAngleSetpointCmd(getAngle()));
     }
     // run PID
     else {
-      setAngle();
-      // stopMotor();
+      return setAngleCmd();
     }
   }
 
-  // sets shooter angle to current setpoint
+  /**
+   * Sets the angle setpoint for shooter angle position, as a proxy
+   * @param angle In degrees
+   * @return Proxy Command
+   */
+  public Command setAngleSetpointCmd(double angle) {
+    System.out.println("shooter angle changed");
+    return this.runOnce(() -> pSetpoint = angle).asProxy();
+  }
+
+  /**
+   * Not a proxy, sets the anfle setpoint for shooter angle psoition
+   * @param angle In degrees
+   * @return RunOnce Command
+   */
+  public Command autonSetAngleSetpointCmd(double angle) {
+    System.out.println("shooter angle changed");
+    return this.runOnce(() -> pSetpoint = angle);
+  }
+
+  /**
+   * Runs the shooter angle motor to reach the angle position
+   * @param angle In degrees
+   * @return Sequential Proxy, then Run Command
+   */
+  public Command setAngleCmd(double angle) {
+    return setAngleSetpointCmd(angle)
+    .andThen(setAngleCmd());
+  }
+
+  /**
+   * Runs the shooter angle motor to reach the setpoint angle, given in the subsystem. Uses profiled PID
+   * @return Run Command
+   */
+  public Command setAngleCmd() {
+    return this.run(() -> setAngle());
+  }
+
+  /*  METHODS  */
+
+  /**
+   * Runs the shooter angle motor to an angle position, given in the subsystem. In degrees
+   */
   public void setAngle() {
     double voltage = profiledShooterAnglePID.calculate(getAngle(), pSetpoint);
-    double ff = shooterAngleFF.calculate((Math.PI*profiledShooterAnglePID.getSetpoint().position)/180.0, (Math.PI*profiledShooterAnglePID.getSetpoint().velocity)/180.0);
+    double ff = shooterAngleFF.calculate((Math.PI * profiledShooterAnglePID.getSetpoint().position) / 180.0, (Math.PI * profiledShooterAnglePID.getSetpoint().velocity) / 180.0);
 
     shooterAngleMotor.setVoltage(ff + voltage); 
     
@@ -150,44 +165,30 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     // shooterAngleMotor.setVoltage(voltage);
     
     System.out.println("angle voltage: " + (ff + voltage));
-    // System.out.println("setting angle");
   }
 
-  // for auton commands; overloads setAngle no params
-  public void setAngle(double setpoint) {
-    setAngleSetpoint(setpoint);
-    setAngle();
+  /**
+   * Sets the fractional duty cycle of the angle motor
+   * @param speed PWM value, positive is up, negative is down
+   */
+  public void setSpeed(double speed){
+    shooterAngleMotor.set(speed);
   }
 
-  // changes setpoint accordingly
-  public void setAngleSetpoint(double setpoint) {
-    // isManual = false;
-    pSetpoint = setpoint;
-    System.out.println("shooter angle changed");
-  }
-
-  // @Log.NT
-  // public double getSetpoint() {
-  //   //return shooterAnglePID.getSetpoint();
-  //   return profiledShooterAnglePID.getGoal();
-  // }
-
+  /**
+   * Returns the current measured angle of the shooter pivot
+   * @return Double, angle in degrees
+   */
   @Log.NT
-  // added physical offset lowest angle is 18.3 deg above the horizontal
   public double getAngle() {
     return (shooterAngleEncoder.getPosition() + ShooterAngleConstants.PHYSICAL_OFFSET) % 360;
   }
 
-  // public boolean getIsManual() {
-  // return isManual;
-  // }
-
-  public void stopMotor() {
-    shooterAngleMotor.stopMotor();
-  }
-
+  /**
+   * Returns if the current measured angle is within the threshold of the setpoint
+   * @return Boolean
+   */
   public boolean atAngle() {
-    // return shooterAnglePID.atSetpoint();
     return profiledShooterAnglePID.atSetpoint();
   }
 

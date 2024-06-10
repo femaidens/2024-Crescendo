@@ -5,30 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeHopperConstants;
-import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
-import frc.robot.DrivetrainConstants.OIConstants;
-import frc.robot.Ports.*;
+import frc.robot.Ports.JoystickPorts;
 import frc.robot.autos.routines.BlueRightSpeakerTaxi;
 import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
 import frc.robot.autos.routines.Taxi;
@@ -48,8 +36,6 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterAngle;
 import frc.robot.subsystems.ShooterWheel;
 import monologue.Logged;
-
-import org.littletonrobotics.urcl.URCL;
 
 public class RobotContainer implements Logged {
 
@@ -99,10 +85,11 @@ public class RobotContainer implements Logged {
     );
 
     shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
+        shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
+        // new RunCommand(
+        //     () -> shooterAngle.setManualAngle(
+        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+        //     shooterAngle)
         // shooterAngle.setAngleCmd()
     );
 

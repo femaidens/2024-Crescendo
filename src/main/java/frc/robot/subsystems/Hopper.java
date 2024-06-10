@@ -103,7 +103,7 @@ public class Hopper extends SubsystemBase implements Logged {
   /**
    * Runs the velocity of the hopper
    * @param setpoint Velocity of the hopper in degrees per second
-   * @return Sequential RunOnce, then Run Command
+   * @return Sequential Proxy, then Run Command
    */
   public Command setVelocityCmd(double setpoint) {
     return setVelocitySetpointCmd(setpoint)
@@ -172,15 +172,24 @@ public class Hopper extends SubsystemBase implements Logged {
     }
   }
 
+  /**
+   * Force reset the state count to 0, as a proxy
+   * @return Proxy Command
+   */
   public Command forceResetStateCmd() {
-    return this.runOnce(() ->  stateCount = 0);
+    return this.runOnce(() ->  stateCount = 0).asProxy();
   }
 
+  /**
+   * Not a proxy, force reset the state count to 0
+   * @return RunOnce Command
+   */
   public Command autonForceResetStateCmd() {
     return this.runOnce(() ->  stateCount = 0);
   }
 
   /* METHODS */
+  
   /**
    * Sets fractional duty cycle
    * @param speed PWM value, negative is outtake, positive is intake

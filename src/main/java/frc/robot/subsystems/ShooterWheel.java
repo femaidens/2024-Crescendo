@@ -102,80 +102,105 @@ public class ShooterWheel extends SubsystemBase implements Logged {
   }
 
   /* COMMANDS */
+  
+  /**
+   * Sets the velocity setpoint of shooter wheels, as proxy
+   * @param setpoint Velocity of wheels in degrees per second
+   * @return Proxy Command
+   */
   public Command setVelocitySetpointCmd(double setpoint) {
     System.out.println("set wheel velocity setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint)).asProxy();
+    return this.runOnce(() ->  vSetpoint = setpoint).asProxy();
   }
 
+  /**
+   * Not a proxy, sets the velocity setpoint of shooter wheels
+   * @param setpoint Velocity of the wheels in degrees per second
+   * @return RunOnce Command
+   */
   public Command autonSetVelocitySetpointCmd(double setpoint) {
     System.out.println("set wheel velocity setpoint");
-    return this.runOnce(() -> setVelocitySetpoint(setpoint));
+    return this.runOnce(() ->  vSetpoint = setpoint);
   }
 
+  /**
+   * Stops the shooter wheel motors
+   * @return RunOnce Command
+   */
   public Command stopMotorsCmd() {
     System.out.println("stopping wheel motors");
-    return this.runOnce(() -> stopMotors());
+    return this.runOnce(() -> setSpeed(0));
   }
 
-  // default command
-  public Command setVelocityCmd(double angle) {
+  /**
+   * Runs the velocity of the shooter wheel
+   * @param setpoint Velocity in degrees per second
+   * @return Sequential Proxy, then Run Command
+   */
+  public Command setVelocityCmd(double setpoint) {
     System.out.println("setting wheel velocity with angle");
-    return this.run(() -> setVelocity(angle));
+    return setVelocitySetpointCmd(setpoint)
+    .andThen(this.run(() -> setVelocity()));
   }
 
-  // default command
+  /**
+   * Runs the velocity of the shooter wheel, based on the setpoint in the subsystem. In degrees per second
+   * @return Run Command
+   */
   public Command setVelocityCmd() {
     System.out.println("setting wheel velocity w/o angle");
     return this.run(() -> setVelocity());
   }
 
-  // sets fractional duty cycle
+  /**
+   * Sets the fractional duty cycle
+   * @param speed PWM value, positive is shooting out
+   */
   public void setSpeed(double speed) {
     leaderMotor.set(speed);
   }
 
-  public void setVelocity(double setpoint) {
-    setVelocitySetpoint(setpoint);
-    setVelocity();
-  }
-
-  // sets the velocity of shooter wheels in degrees per second
+  /**
+   * Sets the velocity of the shooter wheels in degrees per second
+   */
   public void setVelocity() {
     double ff = shooterWheel.calculate(vSetpoint);
     double error = shooterWheelPID.calculate(getLeaderVelocity(), vSetpoint);
 
     leaderMotor.setVoltage(ff + error);
-    // System.out.println("shooter wheel voltage: " + (ff + error));
   }
 
-  public void setVelocitySetpoint(double setpoint) {
-    vSetpoint = setpoint;
-  }
-
-  // checks if current velocity is within error margin of vSetpoint
+  /**
+   * Returns if current velocity is within error margin of vSetpoint
+   * @return Boolean
+   */
   public boolean atVelocity() {
-    // System.out.println("shooter wheel at velocity");
     return shooterWheelPID.atSetpoint();
   }
 
+  /**
+   * Returns the desired velocity
+   * @return Double, in degrees per second
+   */
   @Log.NT
   public double getSetpoint() {
     return shooterWheelPID.getSetpoint();
   }
 
-  // returns the velocities of shooter motors
+  /**
+   * Returns the measured velocity of the leading motor (the left one)
+   * @return Double, in degrees per second
+   */
   public double getLeaderVelocity() {
     return leaderEncoder.getVelocity();
   }
 
+  /**
+   * Returns the measured velocity of following motor (the right one)
+   * @return Double, in degrees per second
+   */
   public double getFollowerVelocity() {
     return followerEncoder.getVelocity();
-  }
-
-  // stops the motors for the shooter wheels
-  public void stopMotors() {
-    leaderMotor.setVoltage(0);
-    // leaderFlex.setVoltage(0);
   }
 
   /* SYSID */

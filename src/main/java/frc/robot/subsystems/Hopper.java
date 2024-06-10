@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
@@ -69,6 +70,12 @@ public class Hopper extends SubsystemBase implements Logged {
   }
 
   /* COMMANDS */
+
+  /**
+   * Feeds the note from the hopper to the shooter, until it is shot out
+   * @param vel Velocity of the hopper, in degrees per second
+   * @return Sequential Wait and Proxy Commands
+   */
   public Command feedNote(double vel) {
     return Commands.waitUntil(() -> isHopperFull())
     .andThen(setVelocitySetpointCmd(vel))
@@ -76,116 +83,167 @@ public class Hopper extends SubsystemBase implements Logged {
     .andThen(setVelocitySetpointCmd(0));
   }
 
-  public Command setOuttakeSpeedCmd(double speed) {
+  /**
+   * Sets the fractional duty cycle of the hopper
+   * @param speed PWM values, positive is intake, negative is outtake
+   * @return Run Command
+   */
+  public Command setSpeedCmd(double speed) {
     return this.run(() -> setSpeed(speed));
   }
 
+  /**
+   * Runs the velocity of the hopper, based on setpoint in the subsystem. In degrees per second
+   * @return Run Command
+   */
   public Command setVelocityCmd() {
-    double voltage = hopperFF.calculate(vSetpoint);
-    return this.run(() -> hopperMotor.setVoltage(voltage));
+    return this.run(() -> setVelocity());
   }
 
-   public Command setVelocityCmd(double setpoint) {
+  /**
+   * Runs the velocity of the hopper
+   * @param setpoint Velocity of the hopper in degrees per second
+   * @return Sequential RunOnce, then Run Command
+   */
+  public Command setVelocityCmd(double setpoint) {
     return setVelocitySetpointCmd(setpoint)
     .andThen(setVelocityCmd());
   }
 
-  //not sure if this works
+  /**
+   * Sets the setpoint for hopper velocity
+   * @param setpoint Desired velocity in degrees per second
+   * @return Proxy Command
+   */
   public Command setVelocitySetpointCmd(double setpoint) {
     return this.runOnce(() -> vSetpoint = setpoint).asProxy();
   }
 
+  /**
+   * Sets the setpoint for hopper velocity
+   * @param setpoint Desired velocity in degrees per second
+   * @return RunOnce Command
+   */
   public Command autonSetVelocitySetpointCmd(double setpoint) {
     // return Commands.print("setting hopper vel setpoint");
     return this.runOnce(() -> vSetpoint = setpoint);
   }
 
-  public Command stopMotorCmd() {
-    return this.runOnce(() -> setSpeed(0));
-  }
-
+  /**
+   * Sets the state limit for the beam break, as proxy
+   * @param limit Either 1 - speaker, or 2 - amp
+   * @return Proxy Command
+   */
   public Command setStateLimitCmd(int limit) {
-    return this.runOnce(() -> setStateLimit(limit)).asProxy();
+    return this.runOnce(() -> stateLimit = limit).asProxy();
   }
 
+  /**
+   * Not a proxy, sets the state limit for the beam break
+   * @param limit Either 1 - speaker, or 2 - amp
+   * @return RunOnce Command
+   */
   public Command autonSetStateLimitCmd(int limit) {
-    return this.runOnce(() -> setStateLimit(limit));
+    return this.runOnce(() -> stateLimit = limit);
   }
 
+  /**
+   * Reset the state count, if state count is greater than the threshold
+   * @return Proxy Command
+   */
   public Command resetStateCountCmd() {
-    System.out.println("state count reset");
-    return this.runOnce(() -> resetStateCount()).asProxy();
+    if(stateCount >= stateLimit) {
+      return this.runOnce(() -> stateCount = 0).asProxy();
+    } else {
+      return new PrintCommand("State count is still under threshold");
+    }
   }
 
+  /**
+   * Not a proxy, reset the state count, if state count is greater than the threshold
+   * @return RunOnce Command
+   */
   public Command autonResetStateCountCmd() {
     System.out.println("state count reset");
-    return this.runOnce(() -> resetStateCount());
+    if(stateCount >= stateLimit) {
+      return this.runOnce(() -> stateCount = 0);
+    } else {
+      return new PrintCommand("State count is still under threshold");
+    }
   }
 
-  public Command resetStateEmergencyCmd() {
-    return this.runOnce(() -> resetStateEmergency()).asProxy();
+  public Command forceResetStateCmd() {
+    return this.runOnce(() ->  stateCount = 0);
   }
 
-  public Command autonResetStateEmergencyCmd() {
-    return this.runOnce(() -> resetStateEmergency());
+  public Command autonForceResetStateCmd() {
+    return this.runOnce(() ->  stateCount = 0);
   }
 
-   // sets fractional duty cycle
+  /* METHODS */
+  /**
+   * Sets fractional duty cycle
+   * @param speed PWM value, negative is outtake, positive is intake
+   */
   public void setSpeed(double speed) {
     hopperMotor.set(speed);
   }
 
+  /**
+   * Runs the velocity of the hopper, based on the setpoint in the subsystem. In degrees per second
+   */
+  public void setVelocity(){
+    double voltage = hopperFF.calculate(vSetpoint);
+    hopperMotor.setVoltage(voltage);
+  }
+
+  /**
+   * Returns the velocity of the hopper, in degrees per second
+   * @return double, in degrees per second
+   */
   public double getVelocity() {
     return hopperEncoder.getVelocity();
   }
 
 
-   /* * * BEAM BREAK * * */
+  /* * * BEAM BREAK * * */
+   
+  /**
+   * Return the receiver status
+   * @return Boolean, true = unbroken; false = broken
+   */
   public boolean getReceiverStatus() {
     return receiver.get();
-    // true = unbroken
-    // false = broken
   }
 
-  // hopper is empty once state change count == 2;
+  
   // @Log.NT
+  /**
+   * Returns if the hopper is empty, i.e. if state count is equal to 2 (amp) or 1 (speaker)
+   * @return Boolean
+   */
   public boolean isHopperEmpty() {
-    // int temp;
-
     if (hasStateChanged()) {
       stateCount++;
       System.out.println(stateCount);
     }
-
-    // temp = stateCount;
-    // resetStateCount();
     return stateCount == stateLimit;
   }
 
   // @Log.NT
+  /**
+   * Returns if the hopper is full, using receiver status
+   * @return Boolean
+   */
   public boolean isHopperFull() {
-    // if(stateCount>=2) {
-    //   resetStateCount();
-    // }
     return !getReceiverStatus();
   }
 
-  public void resetStateCount() {
-    if(stateCount >= stateLimit) {
-      stateCount = 0;
-    }
-    // System.out.println("hopper state count reset");
-  }
-
-  public void resetStateEmergency() {
-    stateCount = 0;
-  }
-
-  public void setStateLimit(int limit) {
-    stateLimit = limit;
-  }
-
   // checks if beam break has changed from broken to unbroken
+  /**
+   * Returns if the receiver status has changed
+   * @return Boolean
+   */
   public boolean hasStateChanged() {
 
     boolean stateChange;

@@ -16,7 +16,6 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.commands.Intaking;
-import frc.robot.commands.ShooterSetRPM;
 import frc.robot.commands.ShooterToAngle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;

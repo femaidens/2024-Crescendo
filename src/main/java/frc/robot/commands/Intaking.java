@@ -31,7 +31,7 @@ public class Intaking {
                 led.setRainbowCmd(),
                 setIntakeHopperSpeeds(IntakeHopperConstants.INTAKING_SPEED) // runOnce
                         .andThen(Commands.waitUntil(hopper::isHopperFull))
-                        .andThen(intake.stopMotorCmd().alongWith(hopper.stopMotorCmd()))) // end of race cmd
+                        .andThen(intake.stopMotorCmd().alongWith(hopper.setSpeedCmd(0)))) // end of race cmd
                 .andThen(led.setGreenCmd().withTimeout(2));
     }
 
@@ -47,6 +47,6 @@ public class Intaking {
 
     public Command setOuttakeSpeeds(double speed) {
         return intake.setOuttakeSpeedCmd(speed)
-                .alongWith(hopper.setOuttakeSpeedCmd(speed));
+                .alongWith(hopper.setSpeedCmd(speed));
     }
 }

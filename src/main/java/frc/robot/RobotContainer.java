@@ -84,14 +84,14 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    shooterAngle.setDefaultCommand(
-        shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
+    //shooterAngle.setDefaultCommand(
+      //  shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
         // new RunCommand(
         //     () -> shooterAngle.setManualAngle(
         //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
         //     shooterAngle)
         // shooterAngle.setAngleCmd()
-    );
+    //);
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));

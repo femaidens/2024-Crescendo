@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double ARM_SPEED = 0.7;//0.85;
+    public static final double ARM_SPEED = 0.4;//0.85;
   }
 
   public static final class IntakeHopperConstants {

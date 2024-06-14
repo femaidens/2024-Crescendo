@@ -42,7 +42,7 @@ public class Climb extends SubsystemBase implements Logged {
       return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("bottom limit switch hit!"));
     }
     else {
-      return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("extending arm"));
+      return this.run(() -> setSpeed(ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("extending arm"));
     }
   }
 

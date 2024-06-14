@@ -228,67 +228,18 @@
           },
           "9,1": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/hopper vel",
-              "_title": "hopper vel",
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "Field",
               "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/left shooter vel: ",
-              "_title": "left shooter vel: ",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/desired shooter velocity: ",
-              "_title": "desired shooter velocity: ",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/tx",
-              "_title": "tx",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ta",
-              "_title": "ta",
-              "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
             }
           },
           "10,0": {
@@ -304,7 +255,20 @@
               "_showGlyph": false
             }
           },
-          "10,1": {
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/hopper vel",
+              "_title": "hopper vel",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,2": {
             "size": [
               1,
               1
@@ -317,7 +281,20 @@
               "_showGlyph": false
             }
           },
-          "10,2": {
+          "9,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/left shooter vel: ",
+              "_title": "left shooter vel: ",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
             "size": [
               1,
               1
@@ -330,17 +307,32 @@
               "_showGlyph": false
             }
           },
-          "10,3": {
+          "8,4": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/current arm angle",
-              "_title": "current arm angle",
+              "_source0": "network_table:///SmartDashboard/desired shooter velocity: ",
+              "_title": "desired shooter velocity: ",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "9,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/at shooterVelocity",
+              "_title": "at shooterVelocity",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           },
           "10,4": {
@@ -350,8 +342,8 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ty",
-              "_title": "ty",
+              "_source0": "network_table:///SmartDashboard/current arm angle",
+              "_title": "current arm angle",
               "_glyph": 148,
               "_showGlyph": false
             }

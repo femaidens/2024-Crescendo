@@ -40,7 +40,7 @@ public class Climb extends SubsystemBase implements Logged {
     return this.run(() -> retractClimbArm());
   }
 
-  public Command stopMotorsCmd() {
+  public Command stopClimbCmd() {
     return this.runOnce(() -> stopMotors());
   }
 

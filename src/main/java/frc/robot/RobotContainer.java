@@ -85,7 +85,7 @@ public class RobotContainer implements Logged {
     );
 
     //shooterAngle.setDefaultCommand(
-      //  shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
+       // shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
         // new RunCommand(
         //     () -> shooterAngle.setManualAngle(
         //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),

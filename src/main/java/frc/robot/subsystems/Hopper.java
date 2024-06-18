@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
@@ -80,7 +81,8 @@ public class Hopper extends SubsystemBase implements Logged {
     return Commands.waitUntil(() -> isHopperFull())
     .andThen(setVelocitySetpointCmd(vel))
     .andThen(Commands.waitUntil(() -> isHopperEmpty()))
-    .andThen(setVelocitySetpointCmd(0));
+    .andThen(setVelocitySetpointCmd(0))
+    .andThen(resetStateCountCmd());
   }
 
   /**
@@ -152,11 +154,13 @@ public class Hopper extends SubsystemBase implements Logged {
    * @return Proxy Command
    */
   public Command resetStateCountCmd() {
-    if(stateCount >= stateLimit) {
-      return this.runOnce(() -> stateCount = 0).asProxy();
-    } else {
-      return new PrintCommand("State count is still under threshold");
-    }
+    return new ProxyCommand(() -> {
+      if(stateCount >= stateLimit) {
+        return this.runOnce(() -> stateCount = 0);
+      } else {
+        return new PrintCommand("State count is still under threshold");
+      }
+    }); 
   }
 
   /**
@@ -279,6 +283,7 @@ public class Hopper extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("state count", stateCount);
+    SmartDashboard.putNumber("state limit", stateLimit);
     SmartDashboard.putNumber("hopper vel", getVelocity());
     SmartDashboard.putNumber("hopper sp", vSetpoint);
 

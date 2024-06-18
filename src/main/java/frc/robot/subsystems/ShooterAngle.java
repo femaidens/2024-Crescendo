@@ -93,21 +93,22 @@ public class ShooterAngle extends SubsystemBase implements Logged {
    * @Note Not sure if this sequence works, especially runonce to set angle after run command
    */
   // accounts for the max and min angle limits
-  public Command setManualAngleCmd(double input) {
+  public void setManualAngle(double input) {
 
     // move up if below max angle
     if (input > 0 ){//&& getAngle() < ShooterAngleConstants.MAX_ANGLE) {
-      return this.run(() -> setSpeed(ShooterAngleConstants.CONSTANT_SPEED))
-      .alongWith(setAngleSetpointCmd(getAngle()));
+      shooterAngleMotor.set(ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // move down if above min angle
     else if (input < 0){// && getAngle() > ShooterAngleConstants.MIN_ANGLE) {
-      return this.run(() -> setSpeed(-ShooterAngleConstants.CONSTANT_SPEED))
-      .alongWith(setAngleSetpointCmd(getAngle()));
+      shooterAngleMotor.set(-ShooterAngleConstants.CONSTANT_SPEED);
+      pSetpoint = getAngle();
     }
     // run PID
     else {
-      return setAngleCmd();
+      setAngle();
+      // stopMotor();
     }
   }
 
@@ -164,7 +165,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
     // double voltage = shooterAnglePID.calculate(getAngle(), pSetpoint); // with p and i constant
     // shooterAngleMotor.setVoltage(voltage);
     
-    System.out.println("angle voltage: " + (ff + voltage));
+    // System.out.println("angle voltage: " + (ff + voltage));
   }
 
   /**

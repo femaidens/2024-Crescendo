@@ -38,10 +38,9 @@ public class Shooter {
         // TEST ACCURACY OF SHOOTER AT ANGLE
         return Commands.race(led.setSolidCmd(LEDConstants.RED),
                 Commands.waitUntil(() -> shooterAngle.atAngle()) // shooterWheel.atVelocity() &&
-                        .andThen(hopper.feedNote(HopperConstants.TRANSITION_VEL))
-                // hopper.feedNote()
+                        .andThen(hopper.feedNote(HopperConstants.TRANSITION_VEL)) //not working
                         .andThen(shooterWheel.setVelocitySetpointCmd(0))
-                        .andThen(hopper.resetStateCountCmd())) // end of race cmd
+                        ) // end of race cmd
                 .andThen(led.setSolidCmd(LEDConstants.GREEN).withTimeout(3));
     }
 

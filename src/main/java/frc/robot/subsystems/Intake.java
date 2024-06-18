@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase implements Logged {
 
   public Command setSpeedCmd(double speed) {
     // return Commands.print("setting intake speed");
-    return this.runOnce(() -> setSpeed(speed));
+    return this.run(() -> setSpeed(speed));
   }
 
   public Command setOuttakeSpeedCmd(double speed) {

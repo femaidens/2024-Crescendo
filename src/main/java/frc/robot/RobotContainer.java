@@ -53,7 +53,7 @@ public class RobotContainer implements Logged {
   private final LED led = new LED();
 
   private final Shooter shooter = new Shooter(shooterAngle, shooterWheel, hopper, led);
-  private final Intaking intaking = new Intaking(intake, hopper, led);
+  private final Intaking intaking = new Intaking(intake, hopper, shooterWheel, led);
   private final Controls controls = new Controls(shooterAngle, shooterWheel, hopper, intake, drivetrain);
 
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -84,14 +84,14 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    //shooterAngle.setDefaultCommand(
-       // shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
-        // new RunCommand(
-        //     () -> shooterAngle.setManualAngle(
-        //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-        //     shooterAngle)
-        // shooterAngle.setAngleCmd()
-    //);
+    shooterAngle.setDefaultCommand(
+    //    shooterAngle.setManualAngleCmd(MathUtil.applyDeadband(-operJoy.getRightY(), 0.1))
+        new RunCommand(
+            () -> shooterAngle.setManualAngle(
+                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+            shooterAngle)
+        // shooterAngle.setAngleCmd();
+    );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -168,7 +168,9 @@ public class RobotContainer implements Logged {
         operJoy.rightBumper()
             // test entire routine
             .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
-            .andThen(intaking.intakeNote()));
+            .andThen(intaking.intakeNote()).asProxy()
+            .andThen(intaking.reverseShooterWheels()).asProxy()
+            .andThen(shooterWheel.setVelocitySetpointCmd(0)));
 
             // entire intake routine with setSpeed
             // .onTrue(leds.setSolidCmd(LEDConstants.RED) // test led red
@@ -212,7 +214,8 @@ public class RobotContainer implements Logged {
             .onFalse(hopper.setVelocitySetpointCmd(0));
 
         // feeds note from hopper to shooter aka "trigger"
-        // operJoy.back()
+        operJoy.back()
+            .onTrue(hopper.forceResetStateCmd());
             // test the feedNote command
             // .onTrue(hopper.feedNote());
 

@@ -43,6 +43,7 @@ public class ShooterAngle extends SubsystemBase implements Logged {
 
   private final TrapezoidProfile.Constraints trapezoidProfile;
 
+  @Log.NT
   private double pSetpoint;
 
   private final SysIdRoutine.Config config = new SysIdRoutine.Config(Volts.of(0.4).per(Seconds.of(1)),

@@ -36,7 +36,7 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       // reset gyro
-        new InstantCommand(() -> drivetrain.zeroHeading()),
+        new InstantCommand(() -> drivetrain.zeroHeading()).asProxy(),
         // // makes sure that it's the proper angle
         shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
         Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
@@ -47,10 +47,10 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
         // // shoot
         new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
             HopperConstants.TRANSITION_VEL,
-            hopper, shooterAngle, shooterWheel),
+            hopper, shooterAngle, shooterWheel).asProxy(),
           
         // //* drive and intake at once, arbritary timeout time
-        new TaxiIntake1(drivetrain, intaking, shooterAngle)
+        new TaxiIntake1(drivetrain, intaking, shooterAngle).asProxy()
 
         // new AutonShoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE,
         //     HopperConstants.TRANSITION_VEL,

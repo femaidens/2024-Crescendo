@@ -26,13 +26,13 @@ public class TaxiIntake extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-        new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
+        new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain).asProxy()
             .withTimeout(4),
 
         Commands.waitSeconds(1)
             .andThen(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE))
-            .alongWith(intaking.intakeNote())
-            .andThen(new AutonShoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel))
+            .alongWith(intaking.intakeNote().asProxy())
+            .andThen(new AutonShoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel).asProxy())
     );
   }
 }

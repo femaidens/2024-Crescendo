@@ -24,7 +24,7 @@ public class TaxiIntake1 extends ParallelRaceGroup {
         new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
             .withTimeout(6),
 
-           shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
+           shooterAngle.autonSetAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
             .alongWith(intaking.intakeNote())
             .withTimeout(6));
   }

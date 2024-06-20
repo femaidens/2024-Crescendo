@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.Ports.*;
@@ -51,14 +52,15 @@ public class Climb extends SubsystemBase implements Logged {
    * @return Command
    */
   public Command retractClimbCmd() {
-    if(isTopActivated()){ // stop retracting if top hits bottom
-      return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("top switch activated!"));
-    }
-    else {
-      // check inversion of motors
-      return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("retracting arm"));
-    }
-    
+    return new ProxyCommand(() -> {
+      if(isTopActivated()){ // stop retracting if top hits bottom
+        return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("top switch activated!"));
+      }
+      else {
+        // check inversion of motors
+        return this.run(() -> setSpeed(-ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("retracting arm"));
+      }
+    });
   }
 
   /**

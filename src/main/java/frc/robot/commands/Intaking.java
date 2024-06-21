@@ -59,6 +59,6 @@ public class Intaking {
 
     public Command reverseShooterWheels() {
         return shooterWheel.setVelocitySetpointCmd(-7200)
-        .andThen(new WaitCommand(0.5));
+        .andThen(new WaitCommand(1));
     }
 }

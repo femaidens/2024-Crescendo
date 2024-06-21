@@ -6,6 +6,7 @@ package frc.robot.autos.routines;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterAngleConstants;
@@ -23,11 +24,13 @@ public class AutonShoot extends SequentialCommandGroup {
     
     addCommands(
       // shoots into the speaker
-      shooterAngle.setAngleSetpointCmd(angle)
-        .alongWith(shooterWheel.setVelocitySetpointCmd(wheelVel))
-        .alongWith(hopper.setStateLimitCmd(1)),
+      shooterWheel.setVelocitySetpointCmd(wheelVel),
+      hopper.setStateLimitCmd(2),
 
-      Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
+      shooterAngle.setAngleSetpointCmd(angle),
+
+      Commands.waitUntil(shooterAngle::atAngle).withTimeout(3),
+  
       hopper.setVelocitySetpointCmd(hopperVel),
 
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(3),

@@ -39,12 +39,14 @@ public class Climb extends SubsystemBase implements Logged {
    * @return Command
    */
   public Command extendClimbCmd() {
-    if(isBotActivated()){ // stop extending if bottom hits top
-      return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("bottom limit switch hit!"));
-    }
-    else {
-      return this.run(() -> setSpeed(ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("extending arm"));
-    }
+    return new ProxyCommand(() -> {
+      if(isBotActivated()){ // stop extending if bottom hits top
+        return this.run(() -> setSpeed(0)).alongWith(new PrintCommand("bottom limit switch hit!"));
+      }
+      else {
+        return this.run(() -> setSpeed(ClimberConstants.ARM_SPEED)).alongWith(new PrintCommand("extending arm"));
+      }
+  });
   }
 
   /**

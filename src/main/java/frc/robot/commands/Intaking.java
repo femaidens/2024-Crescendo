@@ -33,7 +33,7 @@ public class Intaking {
     public Command intakeNote() {
         return Commands.race(
                 led.setRainbowCmd(),
-                setIntakeHopperSpeeds(IntakeHopperConstants.INTAKING_SPEED) // runOnce
+                setDiffIntakeHopperSpeeds(IntakeHopperConstants.INTAKING_SPEED, IntakeHopperConstants.HOPPER_SPEED) // runOnce
                         .andThen(Commands.waitUntil(hopper::isHopperFull))
                         .andThen(intake.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0))))
                         // .andThen(shooterWheel.setVelocitySetpointCmd(-3600))) // end of race cmd
@@ -52,6 +52,10 @@ public class Intaking {
                 .alongWith(hopper.setSpeedCmd(speed));
     }
 
+     public Command setDiffIntakeHopperSpeeds(double speed, double hopperSpeed) {
+        return intake.setSpeedCmd(speed)
+                .alongWith(hopper.setSpeedCmd(hopperSpeed));
+    }
     public Command setOuttakeSpeeds(double speed) {
         return intake.setOuttakeSpeedCmd(speed)
                 .alongWith(hopper.setOuttakeSpeedCmd(speed));

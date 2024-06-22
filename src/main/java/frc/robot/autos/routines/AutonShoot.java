@@ -25,7 +25,7 @@ public class AutonShoot extends SequentialCommandGroup {
     addCommands(
       // shoots into the speaker
       shooterWheel.setVelocitySetpointCmd(wheelVel),
-      hopper.setStateLimitCmd(2),
+      hopper.setStateLimitCmd(1),
 
       shooterAngle.setAngleSetpointCmd(angle),
 

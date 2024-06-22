@@ -29,6 +29,7 @@ import frc.robot.Constants.ShooterAngleConstants;
 import frc.robot.Constants.ShooterWheelConstants;
 import frc.robot.DrivetrainConstants.OIConstants;
 import frc.robot.Ports.*;
+import frc.robot.autos.routines.BlueLeftSpeakerTaxi;
 import frc.robot.autos.routines.BlueRightSpeakerTaxi;
 import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
 import frc.robot.autos.routines.Taxi;
@@ -132,6 +133,8 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));
     autonChooser.addOption("taxi intake", new TaxiIntake(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
     autonChooser.addOption("racing taxi intake", new TaxiIntake1(drivetrain, intaking, shooterAngle)); 
+    autonChooser.addOption("blue LEFT speaker taxi", new BlueLeftSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
+
 }
 
   private void configureButtonBindings() {
@@ -185,9 +188,9 @@ public class RobotContainer implements Logged {
         operJoy.rightBumper()
             // test entire routine
             .onTrue(shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INTAKE_ANGLE)
-            .andThen(intaking.intakeNote().asProxy())
-            .andThen(intaking.reverseShooterWheels().asProxy())
-            .andThen(shooterWheel.setVelocitySetpointCmd(0)));
+            .andThen(intaking.intakeNote().asProxy()));
+            // .andThen(intaking.reverseShooterWheels().asProxy())
+            // .andThen(shooterWheel.setVelocitySetpointCmd(0)));
 
             // entire intake routine with setSpeed
             // .onTrue(leds.setSolidCmd(LEDConstants.RED) // test led red
@@ -363,25 +366,25 @@ public class RobotContainer implements Logged {
 
     /* DRIVETRAIN SYSID */
     
-    driveJoy.a()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kForward)
-        );
+    // driveJoy.a()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kForward)
+    //     );
 
-    driveJoy.b()
-        .whileTrue(
-            drivetrain.driveQuasistatic(Direction.kReverse)
-        );
+    // driveJoy.b()
+    //     .whileTrue(
+    //         drivetrain.driveQuasistatic(Direction.kReverse)
+    //     );
 
-    driveJoy.x()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kForward)
-        );
+    // driveJoy.x()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kForward)
+    //     );
 
-    driveJoy.y()
-        .whileTrue(
-            drivetrain.driveDynamic(Direction.kReverse)
-        );
+    // driveJoy.y()
+    //     .whileTrue(
+    //         drivetrain.driveDynamic(Direction.kReverse)
+    //     );
     
     
     /* DRIVETRAIN TURNING SYSID */

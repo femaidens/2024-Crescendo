@@ -34,12 +34,12 @@ public class TaxiSpeaker extends SequentialCommandGroup {
         // shoot
         new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
             HopperConstants.TRANSITION_VEL,
-            hopper, shooterAngle, shooterWheel),
+            hopper, shooterAngle, shooterWheel)
         // led.setGreenCmd().withTimeout(3) //0.5 after qual 42
 
         // taxi
-        new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
-            .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
+    //     new RunCommand(() -> drivetrain.drive(0.15, 0, 0, true, false), drivetrain)
+    //         .withTimeout(AutoConstants.TAXI_SPEAKER_TIME) // positive because intake is forward
     );
   }
 }

@@ -20,9 +20,9 @@ import frc.robot.subsystems.ShooterWheel;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TaxiIntake extends SequentialCommandGroup {
+public class TaxiIntakeSpeaker extends SequentialCommandGroup {
   /** Creates a new TaxiIntake1. */
-  public TaxiIntake(Drivetrain drivetrain, Intaking intaking, ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper) {
+  public TaxiIntakeSpeaker(Drivetrain drivetrain, Intaking intaking, ShooterAngle shooterAngle, ShooterWheel shooterWheel, Hopper hopper) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -35,6 +35,6 @@ public class TaxiIntake extends SequentialCommandGroup {
 
       shooterWheel.setVelocitySetpointCmd(0),
 
-      new AutonShoot(ShooterAngleConstants.AMP_FLUSH, ShooterWheelConstants.AMP_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel).asProxy());
+      new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, 1, ShooterWheelConstants.SPEAKER_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel).asProxy());
   }
 }

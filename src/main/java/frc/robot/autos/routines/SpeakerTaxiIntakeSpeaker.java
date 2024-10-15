@@ -45,12 +45,12 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
         
         // shoot
         // // shoot
-        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, ShooterWheelConstants.SPEAKER_FLUSH,
+        new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, 1, ShooterWheelConstants.SPEAKER_FLUSH,
             HopperConstants.TRANSITION_VEL,
             hopper, shooterAngle, shooterWheel).asProxy(),
           
         // //* drive and intake at once, arbritary timeout time
-        new TaxiIntake1(drivetrain, intaking, shooterAngle).asProxy()
+        new TaxiIntakeSpeaker(drivetrain, intaking, shooterAngle, shooterWheel, hopper).asProxy()
 
         // new AutonShoot(ShooterAngleConstants.SPEAKER_STAGE, ShooterWheelConstants.SPEAKER_STAGE,
         //     HopperConstants.TRANSITION_VEL,

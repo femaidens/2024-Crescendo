@@ -331,6 +331,32 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "9,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Sim/backgroundColor",
+              "_title": "Arm Sim/backgroundColor",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Sim/ArmPivot/x",
+              "_title": "Arm Sim/ArmPivot/x",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }

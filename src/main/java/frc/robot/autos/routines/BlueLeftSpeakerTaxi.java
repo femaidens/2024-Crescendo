@@ -36,7 +36,7 @@ public class BlueLeftSpeakerTaxi extends SequentialCommandGroup {
       shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
       Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(3),
 
-      new AutonShoot(AutoConstants.BLUE_RIGHT_FLUSH, AutoConstants.BLUE_RIGHT_WHEEL_VEL,
+      new AutonShoot(AutoConstants.BLUE_RIGHT_FLUSH, 1, AutoConstants.BLUE_RIGHT_WHEEL_VEL,
       AutoConstants.BLUE_RIGHT_HOPPER, 
       hopper, shooterAngle, shooterWheel),
 

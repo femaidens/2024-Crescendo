@@ -6,6 +6,7 @@ package frc.robot.autos.routines;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.HopperConstants;
@@ -20,21 +21,25 @@ import frc.robot.subsystems.ShooterWheel;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutonShoot extends SequentialCommandGroup {
   /** Creates a new AutonShoot. */
-  public AutonShoot(double angle, double wheelVel, double hopperVel, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
+  public AutonShoot(double angle, int stateLimit, double wheelVel, double hopperVel, Hopper hopper, ShooterAngle shooterAngle, ShooterWheel shooterWheel) {
     
     addCommands(
       // shoots into the speaker
       shooterWheel.setVelocitySetpointCmd(wheelVel),
-      hopper.setStateLimitCmd(1),
+      hopper.setStateLimitCmd(stateLimit),
 
       shooterAngle.setAngleSetpointCmd(angle),
 
-      Commands.waitUntil(shooterAngle::atAngle).withTimeout(3),
+      new WaitCommand(3)
+      // Commands.waitUntil(shooterAngle::atAngle)
+      // .withTimeout(3)
+      ,
   
       hopper.setVelocitySetpointCmd(hopperVel),
 
       Commands.waitUntil(() -> hopper.isHopperEmpty()).withTimeout(3),
-      shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0))
+      shooterWheel.setVelocitySetpointCmd(0).alongWith(hopper.setVelocitySetpointCmd(0)),
+      hopper.resetStateEmergencyCmd()
     );
   }
 }

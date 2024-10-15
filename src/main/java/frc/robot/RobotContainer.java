@@ -34,7 +34,8 @@ import frc.robot.autos.routines.BlueRightSpeakerTaxi;
 import frc.robot.autos.routines.SpeakerTaxiIntakeSpeaker;
 import frc.robot.autos.routines.Taxi;
 import frc.robot.autos.routines.TaxiAmp;
-import frc.robot.autos.routines.TaxiIntake;
+import frc.robot.autos.routines.TaxiIntakeAmp;
+import frc.robot.autos.routines.TaxiIntakeSpeaker;
 import frc.robot.autos.routines.TaxiIntake1;
 import frc.robot.autos.routines.TaxiSpeaker;
 // import frc.robot.autos.routines.TaxiSpeaker;
@@ -131,7 +132,8 @@ public class RobotContainer implements Logged {
     autonChooser.addOption("taxi speaker", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
     autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
     autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("taxi intake", new TaxiIntake(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
+    autonChooser.addOption("taxi intake amp", new TaxiIntakeAmp(drivetrain, intaking, shooterAngle, shooterWheel, hopper));
+    autonChooser.addOption("taxi intake SPEAKER", new TaxiIntakeSpeaker(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
     autonChooser.addOption("racing taxi intake", new TaxiIntake1(drivetrain, intaking, shooterAngle)); 
     autonChooser.addOption("blue LEFT speaker taxi", new BlueLeftSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
 
@@ -178,7 +180,7 @@ public class RobotContainer implements Logged {
             .onTrue(climb.extendClimbCmd())
             .onFalse(climb.stopClimbCmd());
 
-        // retract climb arm
+        // // retract climb arm
         operJoy.povDown()
             .onTrue(climb.retractClimbCmd())
             .onFalse(climb.stopClimbCmd());

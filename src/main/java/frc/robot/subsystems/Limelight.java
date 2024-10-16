@@ -9,7 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.subsystems.Drivetrain.*;
 public class Limelight extends SubsystemBase {
   private NetworkTable table;
   private NetworkTableEntry tv;
@@ -17,6 +17,7 @@ public class Limelight extends SubsystemBase {
   private NetworkTableEntry ta;
   private NetworkTableEntry ts;
   private NetworkTableEntry ty;
+  private Drivetrain drive = new Drivetrain();
 
   /** Creates a new Limelight. */
   public Limelight() {
@@ -28,6 +29,14 @@ public class Limelight extends SubsystemBase {
     ty = table.getEntry("ty");
   }
 
+  // drive! 
+
+public static void align(Drivetrain drive, double tx){
+    drive.drive(0,0,.15,false,false); 
+    if (tx < 30 && tx > -30){
+
+    }
+}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

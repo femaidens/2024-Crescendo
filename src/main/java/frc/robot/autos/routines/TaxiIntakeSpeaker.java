@@ -35,6 +35,6 @@ public class TaxiIntakeSpeaker extends SequentialCommandGroup {
 
       shooterWheel.setVelocitySetpointCmd(0),
 
-      new AutonShoot(ShooterAngleConstants.SPEAKER_FLUSH, 1, ShooterWheelConstants.SPEAKER_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel).asProxy());
+      new AutonShoot(ShooterAngleConstants.SPEAKER_STAGE, 1, ShooterWheelConstants.SPEAKER_FLUSH, HopperConstants.TRANSITION_VEL, hopper, shooterAngle, shooterWheel).asProxy());
   }
 }

@@ -38,8 +38,8 @@ public class SpeakerTaxiIntakeSpeaker extends SequentialCommandGroup {
       // reset gyro
         new InstantCommand(() -> drivetrain.zeroHeading()).asProxy(),
         // // makes sure that it's the proper angle
-        shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
-        Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
+        // shooterAngle.setAngleSetpointCmd(ShooterAngleConstants.INITIAL_ANGLE),
+        // Commands.waitUntil(() -> shooterAngle.atAngle()).withTimeout(4),
         // new ShooterSetRPM(shooterWheel, hopper, 200, 1),
         // new ShooterToAngle(shooterAngle, ShooterAngleConstants.SPEAKER_FLUSH), 
         

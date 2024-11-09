@@ -11,6 +11,8 @@ import monologue.Logged;
 import frc.robot.DrivetrainConstants.*;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -82,14 +84,16 @@ public class Drivetrain extends SubsystemBase implements Logged {
   private final List<MaxSwerveModule> modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
   /* SYSID INSTANTIATIONS */
-  private final SysIdRoutine driveRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+  private final SysIdRoutine driveRoutine = new SysIdRoutine( 
+      new SysIdRoutine.Config(), 
+      new SysIdRoutine.Mechanism(
+          // volts -> setDriveMotorsVoltage(frontLeft, frontRight, rearLeft, rearRight, volts.in(Units.Volts)),
+          volts -> modules.forEach(m -> m.setStraightDrivingVoltage(volts.in(Units.Volts))),
           null, this));
 
-  private final SysIdRoutine turnRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
-          volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
+  // private final SysIdRoutine turnRoutine = new SysIdRoutine(
+  //     new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+  //         volts -> rearLeft.setTurnVoltage(volts.in(Units.Volts)), null, this));
 
   private final SysIdRoutine turnAllRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
@@ -255,10 +259,10 @@ public class Drivetrain extends SubsystemBase implements Logged {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.MAX_SPEED);
 
-    frontLeft.setDesiredState(swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    rearLeft.setDesiredState(swerveModuleStates[2]);
-    rearRight.setDesiredState(swerveModuleStates[3]);
+    frontLeft.setDesiredStateNoPID(swerveModuleStates[0]);
+    frontRight.setDesiredStateNoPID(swerveModuleStates[1]);
+    rearLeft.setDesiredStateNoPID(swerveModuleStates[2]);
+    rearRight.setDesiredStateNoPID(swerveModuleStates[3]);
 
   }
 
@@ -268,6 +272,14 @@ public class Drivetrain extends SubsystemBase implements Logged {
     frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+  }
+
+  public void setStraight(){
+    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    //only rear right is acting up, consider changing it to 180 degrees
+    rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
   }
 
   // sets the swerve ModuleStates.
@@ -289,6 +301,13 @@ public class Drivetrain extends SubsystemBase implements Logged {
     // Arrays.stream(swerveModules).forEach(RevSwerveModule::resetEncoders);
   }
 
+  public void setDriveMotorsVoltage(MaxSwerveModule motor1, MaxSwerveModule motor2, MaxSwerveModule motor3, MaxSwerveModule motor4, double voltage) {
+    System.out.println(voltage);
+    motor1.setDriveVoltage(voltage);
+    motor2.setDriveVoltage(voltage);
+    motor3.setDriveVoltage(voltage);
+    motor4.setDriveVoltage(-voltage);
+  }
   // zeros heading/resets/calibrates gyro
   public void zeroHeading() {
     gyro.reset();
@@ -345,15 +364,15 @@ public class Drivetrain extends SubsystemBase implements Logged {
     return driveRoutine.quasistatic(direction);
   }
 
-  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
-    return turnRoutine.quasistatic(direction);
-  }
-
   public Command driveDynamic(SysIdRoutine.Direction direction) {
     return driveRoutine.dynamic(direction);
   }
 
+  public Command turnQuasistatic(SysIdRoutine.Direction direction) {
+    return turnAllRoutine.quasistatic(direction);
+  }
+
   public Command turnDynamic(SysIdRoutine.Direction direction) {
-    return turnRoutine.dynamic(direction);
+    return turnAllRoutine.dynamic(direction);
   }
 }

@@ -103,13 +103,13 @@ public class RobotContainer implements Logged {
           drivetrain)
     );
 
-    shooterAngle.setDefaultCommand(
-        new RunCommand(
-            () -> shooterAngle.setManualAngle(
-                MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
-            shooterAngle)
-        // shooterAngle.setAngleCmd()
-    );
+    // shooterAngle.setDefaultCommand(
+    //     // new RunCommand(
+    //     //     () -> shooterAngle.setManualAngle(
+    //     //         MathUtil.applyDeadband(-operJoy.getRightY(), 0.1)),
+    //     //     shooterAngle)
+    //     // shooterAngle.setAngleCmd()
+    // );
 
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
     // shooterWheel.setDefaultCommand(shooterWheel.setVelocityCmd(ShooterWheelConstants.DEFAULT_VELOCITY));
@@ -127,17 +127,17 @@ public class RobotContainer implements Logged {
   }
   
   public void configureAuton() {
-    SmartDashboard.putData("Choose Auto: ", autonChooser);
-    autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
-    autonChooser.addOption("speaker", new Speaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("amp taxi", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
-    autonChooser.addOption("speaker taxi", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("blue LEFT speaker taxi", new BlueLeftSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));
-    autonChooser.addOption("taxi intake amp", new TaxiIntakeAmp(drivetrain, intaking, shooterAngle, shooterWheel, hopper));
-    autonChooser.addOption("taxi intake SPEAKER", new TaxiIntakeSpeaker(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
-    autonChooser.addOption("racing taxi intake", new TaxiIntake1(drivetrain, intaking, shooterAngle)); 
+    // SmartDashboard.putData("Choose Auto: ", autonChooser);
+    // autonChooser.addOption("taxi", new Taxi(drivetrain, hopper, shooterAngle, shooterWheel, AutoConstants.DRIVE_TIME));
+    // autonChooser.addOption("speaker", new Speaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    // autonChooser.addOption("amp taxi", new TaxiAmp(drivetrain, hopper, shooterAngle, shooterWheel));
+    // autonChooser.addOption("speaker taxi", new TaxiSpeaker(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    // autonChooser.addOption("blue right speaker taxi", new BlueRightSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    // autonChooser.addOption("blue LEFT speaker taxi", new BlueLeftSpeakerTaxi(drivetrain, hopper, shooterAngle, shooterWheel, led));
+    // autonChooser.addOption("speaker taxi intake shoot", new SpeakerTaxiIntakeSpeaker(drivetrain, intaking, hopper, shooterAngle, shooterWheel, led));
+    // autonChooser.addOption("taxi intake amp", new TaxiIntakeAmp(drivetrain, intaking, shooterAngle, shooterWheel, hopper));
+    // autonChooser.addOption("taxi intake SPEAKER", new TaxiIntakeSpeaker(drivetrain, intaking, shooterAngle, shooterWheel, hopper));  
+    // autonChooser.addOption("racing taxi intake", new TaxiIntake1(drivetrain, intaking, shooterAngle)); 
 }
 
   private void configureButtonBindings() {
@@ -458,6 +458,6 @@ public class RobotContainer implements Logged {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autonChooser.getSelected();
+    return null;//autonChooser.getSelected();
   }
 }

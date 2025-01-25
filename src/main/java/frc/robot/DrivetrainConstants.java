@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 // import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public final class DrivetrainConstants {
+public final class DrivetrainConstants  {
 
   public static final class OIConstants {
     public static final double DEADBAND = 0.05;
